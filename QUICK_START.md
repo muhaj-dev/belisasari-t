@@ -1,8 +1,8 @@
-# 🚀 Wojat Platform - Quick Start Guide
+# 🚀 Belisasari Platform - Quick Start Guide
 
 ## Single Command to Run All Phases
 
-The Wojat platform now supports running all phases with a single command! This includes:
+The Belisasari platform now supports running all phases with a single command! This includes:
 - **Phase 1**: Data Collection & Display (Frontend)
 - **Phase 2**: Social Media Automation (ElizaOS Agents)  
 - **Phase 3**: AI-Powered Frontend (Frontend)
@@ -13,9 +13,9 @@ The Wojat platform now supports running all phases with a single command! This i
 ### **Option 1: Using npm/yarn (Recommended)**
 ```bash
 # Install all dependencies and start everything
-npm run wojat
+npm run belisasari
 # or
-yarn wojat
+yarn belisasari
 # or
 npm run start:all
 # or
@@ -238,5 +238,5 @@ If you encounter issues:
 
 ---
 
-**🎯 Ready to hunt for memecoins? Run `npm run wojat` and let the AI do the work!** 🚀
+**🎯 Ready to hunt for memecoins? Run `npm run belisasari` and let the AI do the work!** 🚀
 

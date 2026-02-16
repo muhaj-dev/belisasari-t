@@ -76,8 +76,8 @@ docker-compose up -d
 
 The Docker build should now work correctly:
 1. **Frontend builds successfully** - No more ESLint errors
-2. **All services deploy** - Complete Wojat platform deployment
+2. **All services deploy** - Complete Belisasari platform deployment
 3. **Dynamic configuration** - Works on any EC2 instance
 4. **Clean code** - No unused variables or hardcoded values
 
-The Wojat platform is now ready for successful Docker deployment!
+The Belisasari platform is now ready for successful Docker deployment!

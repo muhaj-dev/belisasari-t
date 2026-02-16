@@ -278,7 +278,7 @@ export class RealtimeService {
     if (Notification.permission === 'granted') {
       new Notification(`Alert: ${alert.token}`, {
         body: alert.message,
-        icon: '/wojat.png',
+        icon: '/belisasari.png',
         tag: `alert_${alert.token}`
       });
     }

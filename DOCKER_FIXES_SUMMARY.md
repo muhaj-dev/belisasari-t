@@ -121,4 +121,4 @@ The Docker build should now work correctly for all services:
 - ✅ **elizaos-agents** - Uses npm ci (has package-lock.json)
 - ✅ **frontend** - Uses yarn (has yarn.lock)
 
-All services will build successfully and the Wojat Platform can be deployed using Docker Compose!
+All services will build successfully and the Belisasari Platform can be deployed using Docker Compose!

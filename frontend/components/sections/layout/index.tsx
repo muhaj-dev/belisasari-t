@@ -63,14 +63,14 @@ export default function Layout({
           }}
         >
           <Image
-            src="/wojat.png"
-            alt="Wojat Logo"
+            src="/belisasari.png"
+            alt="Belisasari Logo"
             width={40}
             height={40}
             className="rounded-full"
           />
           <p className="font-bold text-lg sm:text-2xl crypto-futuristic tracking-widest text-iris-primary">
-            Wojat
+            Belisasari
           </p>
         </div>
 
@@ -92,7 +92,7 @@ export default function Layout({
             variant="ghost"
             className="hidden lg:flex hover:bg-transparent hover:border-[1px] hover:border-white transform transition hover:scale-105"
             onClick={() => {
-              window.open("https://x.com/wojat118721", "_blank");
+              window.open("https://x.com/belisasari", "_blank");
             }}
           >
             <p className="sen text-sm sm:text-md font-bold">Follow on</p>
@@ -156,7 +156,7 @@ export default function Layout({
           variant="ghost"
           className="hidden lg:flex hover:bg-transparent hover:border-[1px] hover:border-white transform transition hover:scale-105"
           onClick={() => {
-            window.open("https://x.com/wojat118721", "_blank");
+            window.open("https://x.com/belisasari", "_blank");
           }}
         >
           <p className="sen text-sm sm:text-md font-bold">Follow on</p>

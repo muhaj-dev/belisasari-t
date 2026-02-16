@@ -1,4 +1,4 @@
-name: Deploy Wojat Platform
+name: Deploy Belisasari Platform
 
 on:
   push:
@@ -39,9 +39,9 @@ jobs:
           file: ./frontend/Dockerfile
           push: true
           tags: |
-            ${{ env.DOCKER_USERNAME }}/wojat-frontend:latest
-          cache-from: type=registry,ref=${{ env.DOCKER_USERNAME }}/wojat-frontend:buildcache
-          cache-to: type=registry,ref=${{ env.DOCKER_USERNAME }}/wojat-frontend:buildcache,mode=max
+            ${{ env.DOCKER_USERNAME }}/belisasari-frontend:latest
+          cache-from: type=registry,ref=${{ env.DOCKER_USERNAME }}/belisasari-frontend:buildcache
+          cache-to: type=registry,ref=${{ env.DOCKER_USERNAME }}/belisasari-frontend:buildcache,mode=max
 
       - name: Build and push ElizaOS Agents image
         uses: docker/build-push-action@v4
@@ -50,9 +50,9 @@ jobs:
           file: ./elizaos-agents/Dockerfile
           push: true
           tags: |
-            ${{ env.DOCKER_USERNAME }}/wojat-elizaos-agents:latest
-          cache-from: type=registry,ref=${{ env.DOCKER_USERNAME }}/wojat-elizaos-agents:buildcache
-          cache-to: type=registry,ref=${{ env.DOCKER_USERNAME }}/wojat-elizaos-agents:buildcache,mode=max
+            ${{ env.DOCKER_USERNAME }}/belisasari-elizaos-agents:latest
+          cache-from: type=registry,ref=${{ env.DOCKER_USERNAME }}/belisasari-elizaos-agents:buildcache
+          cache-to: type=registry,ref=${{ env.DOCKER_USERNAME }}/belisasari-elizaos-agents:buildcache,mode=max
 
       - name: Build and push Bitquery Service image
         uses: docker/build-push-action@v4
@@ -61,9 +61,9 @@ jobs:
           file: ./bitquery/Dockerfile
           push: true
           tags: |
-            ${{ env.DOCKER_USERNAME }}/wojat-bitquery:latest
-          cache-from: type=registry,ref=${{ env.DOCKER_USERNAME }}/wojat-bitquery:buildcache
-          cache-to: type=registry,ref=${{ env.DOCKER_USERNAME }}/wojat-bitquery:buildcache,mode=max
+            ${{ env.DOCKER_USERNAME }}/belisasari-bitquery:latest
+          cache-from: type=registry,ref=${{ env.DOCKER_USERNAME }}/belisasari-bitquery:buildcache
+          cache-to: type=registry,ref=${{ env.DOCKER_USERNAME }}/belisasari-bitquery:buildcache,mode=max
 
       - name: Build and push JS Scraper Scheduled image
         uses: docker/build-push-action@v4
@@ -72,9 +72,9 @@ jobs:
           file: ./js-scraper/Dockerfile.scheduled
           push: true
           tags: |
-            ${{ env.DOCKER_USERNAME }}/wojat-js-scraper-scheduled:latest
-          cache-from: type=registry,ref=${{ env.DOCKER_USERNAME }}/wojat-js-scraper-scheduled:buildcache
-          cache-to: type=registry,ref=${{ env.DOCKER_USERNAME }}/wojat-js-scraper-scheduled:buildcache,mode=max
+            ${{ env.DOCKER_USERNAME }}/belisasari-js-scraper-scheduled:latest
+          cache-from: type=registry,ref=${{ env.DOCKER_USERNAME }}/belisasari-js-scraper-scheduled:buildcache
+          cache-to: type=registry,ref=${{ env.DOCKER_USERNAME }}/belisasari-js-scraper-scheduled:buildcache,mode=max
 
       - name: Build and push JS Scraper Manual image
         uses: docker/build-push-action@v4
@@ -83,9 +83,9 @@ jobs:
           file: ./js-scraper/Dockerfile
           push: true
           tags: |
-            ${{ env.DOCKER_USERNAME }}/wojat-js-scraper-manual:latest
-          cache-from: type=registry,ref=${{ env.DOCKER_USERNAME }}/wojat-js-scraper-manual:buildcache
-          cache-to: type=registry,ref=${{ env.DOCKER_USERNAME }}/wojat-js-scraper-manual:buildcache,mode=max
+            ${{ env.DOCKER_USERNAME }}/belisasari-js-scraper-manual:latest
+          cache-from: type=registry,ref=${{ env.DOCKER_USERNAME }}/belisasari-js-scraper-manual:buildcache
+          cache-to: type=registry,ref=${{ env.DOCKER_USERNAME }}/belisasari-js-scraper-manual:buildcache,mode=max
 
       - name: Deploy to Ubuntu server
         uses: appleboy/ssh-action@master
@@ -94,38 +94,38 @@ jobs:
           username: ${{ env.HOST_USERNAME }}
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
-            echo "Wojat Platform Deployment started at $(date '+%Y-%m-%d %H:%M:%S UTC')"
+            echo "Belisasari Platform Deployment started at $(date '+%Y-%m-%d %H:%M:%S UTC')"
             
-            # Create wojat directory if it doesn't exist
-            mkdir -p ~/wojat
-            cd ~/wojat
+            # Create belisasari directory if it doesn't exist
+            mkdir -p ~/belisasari
+            cd ~/belisasari
             docker-compose down && docker-compose up -d
             
             # Create env directory if it doesn't exist
-            mkdir -p ~/wojat/env
+            mkdir -p ~/belisasari/env
             
             # Verify environment configuration
-            echo "Checking Wojat platform environment configuration..."
+            echo "Checking Belisasari platform environment configuration..."
             
             # Get EC2 public IP for reference
             PUBLIC_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
             echo "EC2 Public IP: $PUBLIC_IP"
             
             # Check if .env file exists on server
-            if [ -f "/home/ubuntu/wojat/.env" ]; then
+            if [ -f "/home/ubuntu/belisasari/.env" ]; then
               echo "✅ Found existing .env file on server"
               echo "Backing up existing .env file..."
-              cp /home/ubuntu/wojat/.env /home/ubuntu/wojat/.env.backup.$(date +%Y%m%d_%H%M%S)
+              cp /home/ubuntu/belisasari/.env /home/ubuntu/belisasari/.env.backup.$(date +%Y%m%d_%H%M%S)
               
               # Show environment variables that are configured (masked)
               echo "Current environment configuration:"
-              grep -E "^(SUPABASE_|OPENAI_|SOLANA_|BITQUERY_|CONSUMER_|ZORO_|TELEGRAM_|DB_|NODE_ENV|PORT|HOST)" /home/ubuntu/wojat/.env | sed 's/=.*/=***/' || echo "No environment variables found"
+              grep -E "^(SUPABASE_|OPENAI_|SOLANA_|BITQUERY_|CONSUMER_|ZORO_|TELEGRAM_|DB_|NODE_ENV|PORT|HOST)" /home/ubuntu/belisasari/.env | sed 's/=.*/=***/' || echo "No environment variables found"
               
             else
-              echo "⚠️ No .env file found at /home/ubuntu/wojat/.env"
+              echo "⚠️ No .env file found at /home/ubuntu/belisasari/.env"
               echo "Please create the .env file on the server with the following variables:"
               echo ""
-              echo "# Wojat Platform Environment Variables"
+              echo "# Belisasari Platform Environment Variables"
               echo "NODE_ENV=production"
               echo "PORT=3000"
               echo "HOST=0.0.0.0"
@@ -160,28 +160,28 @@ jobs:
               echo "TELEGRAM_GROUP_ID=your_telegram_group_id_here"
               echo ""
               echo "# Discord Configuration - REMOVED"
-              echo "# Discord functionality has been removed from Wojat platform"
+              echo "# Discord functionality has been removed from Belisasari platform"
               echo ""
               echo "# Database Configuration"
-              echo "DATABASE_URL=postgresql://username:password@localhost:5432/wojat_db"
+              echo "DATABASE_URL=postgresql://username:password@localhost:5432/belisasari_db"
               echo "DB_HOST=localhost"
               echo "DB_PORT=5432"
-              echo "DB_NAME=wojat_db"
-              echo "DB_USER=wojat_user"
+              echo "DB_NAME=belisasari_db"
+              echo "DB_USER=belisasari_user"
               echo "DB_PASSWORD=your_db_password_here"
               echo ""
               echo "# Server Information"
               echo "SERVER_PUBLIC_IP=$PUBLIC_IP"
               echo ""
               echo "Creating empty .env file for you to fill in..."
-              touch /home/ubuntu/wojat/.env
+              touch /home/ubuntu/belisasari/.env
             fi
             
             # Test if Supabase connection is configured
             echo "Testing Supabase connection configuration..."
-            if grep -q "SUPABASE_URL=" /home/ubuntu/wojat/.env && grep -q "SUPABASE_ANON_KEY=" /home/ubuntu/wojat/.env; then
+            if grep -q "SUPABASE_URL=" /home/ubuntu/belisasari/.env && grep -q "SUPABASE_ANON_KEY=" /home/ubuntu/belisasari/.env; then
               echo "✅ Supabase configuration found in .env file"
-              SUPABASE_URL=$(grep "SUPABASE_URL=" /home/ubuntu/wojat/.env | cut -d'=' -f2)
+              SUPABASE_URL=$(grep "SUPABASE_URL=" /home/ubuntu/belisasari/.env | cut -d'=' -f2)
               echo "Supabase URL: $SUPABASE_URL"
             else
               echo "⚠️ Supabase configuration not found in .env file"
@@ -189,64 +189,64 @@ jobs:
             fi
             
             # Stop and remove existing containers
-            echo "Stopping existing Wojat containers..."
-            sudo docker stop wojat-frontend wojat-elizaos-agents wojat-bitquery wojat-js-scraper || true
-            sudo docker rm wojat-frontend wojat-elizaos-agents wojat-bitquery wojat-js-scraper || true
+            echo "Stopping existing Belisasari containers..."
+            sudo docker stop belisasari-frontend belisasari-elizaos-agents belisasari-bitquery belisasari-js-scraper || true
+            sudo docker rm belisasari-frontend belisasari-elizaos-agents belisasari-bitquery belisasari-js-scraper || true
             
             # Pull latest images
-            echo "Pulling latest Wojat images..."
-            sudo docker pull ${{ env.DOCKER_USERNAME }}/wojat-frontend:latest
-            sudo docker pull ${{ env.DOCKER_USERNAME }}/wojat-elizaos-agents:latest
-            sudo docker pull ${{ env.DOCKER_USERNAME }}/wojat-bitquery:latest
-            sudo docker pull ${{ env.DOCKER_USERNAME }}/wojat-js-scraper-scheduled:latest
+            echo "Pulling latest Belisasari images..."
+            sudo docker pull ${{ env.DOCKER_USERNAME }}/belisasari-frontend:latest
+            sudo docker pull ${{ env.DOCKER_USERNAME }}/belisasari-elizaos-agents:latest
+            sudo docker pull ${{ env.DOCKER_USERNAME }}/belisasari-bitquery:latest
+            sudo docker pull ${{ env.DOCKER_USERNAME }}/belisasari-js-scraper-scheduled:latest
             
-            # Create Docker network for Wojat services
-            echo "Creating Wojat Docker network..."
-            sudo docker network create wojat-network || true
+            # Create Docker network for Belisasari services
+            echo "Creating Belisasari Docker network..."
+            sudo docker network create belisasari-network || true
             
             # Run Frontend container
-            echo "Starting Wojat Frontend container..."
+            echo "Starting Belisasari Frontend container..."
             sudo docker run -d \
-              --name wojat-frontend \
-              --network wojat-network \
+              --name belisasari-frontend \
+              --network belisasari-network \
               --restart unless-stopped \
               -p 3000:3000 \
-              -v /home/ubuntu/wojat/.env:/app/.env:ro \
-              ${{ env.DOCKER_USERNAME }}/wojat-frontend:latest
+              -v /home/ubuntu/belisasari/.env:/app/.env:ro \
+              ${{ env.DOCKER_USERNAME }}/belisasari-frontend:latest
             
             # Run ElizaOS Agents container
-            echo "Starting Wojat ElizaOS Agents container..."
+            echo "Starting Belisasari ElizaOS Agents container..."
             sudo docker run -d \
-              --name wojat-elizaos-agents \
-              --network wojat-network \
+              --name belisasari-elizaos-agents \
+              --network belisasari-network \
               --restart unless-stopped \
               -p 3001:3001 \
-              -v /home/ubuntu/wojat/.env:/app/.env:ro \
-              ${{ env.DOCKER_USERNAME }}/wojat-elizaos-agents:latest
+              -v /home/ubuntu/belisasari/.env:/app/.env:ro \
+              ${{ env.DOCKER_USERNAME }}/belisasari-elizaos-agents:latest
             
             # Run Bitquery Service container
-            echo "Starting Wojat Bitquery Service container..."
+            echo "Starting Belisasari Bitquery Service container..."
             sudo docker run -d \
-              --name wojat-bitquery \
-              --network wojat-network \
+              --name belisasari-bitquery \
+              --network belisasari-network \
               --restart unless-stopped \
               -p 3002:3002 \
-              -v /home/ubuntu/wojat/.env:/app/.env:ro \
-              ${{ env.DOCKER_USERNAME }}/wojat-bitquery:latest
+              -v /home/ubuntu/belisasari/.env:/app/.env:ro \
+              ${{ env.DOCKER_USERNAME }}/belisasari-bitquery:latest
             
             # Run JS Scraper Scheduled container
-            echo "Starting Wojat JS Scraper Scheduled container..."
+            echo "Starting Belisasari JS Scraper Scheduled container..."
             sudo docker run -d \
-              --name wojat-js-scraper \
-              --network wojat-network \
+              --name belisasari-js-scraper \
+              --network belisasari-network \
               --restart unless-stopped \
               -p 3003:3003 \
-              -v /home/ubuntu/wojat/.env:/app/.env:ro \
-              -v wojat-js-scraper-logs:/var/log \
-              ${{ env.DOCKER_USERNAME }}/wojat-js-scraper-scheduled:latest
+              -v /home/ubuntu/belisasari/.env:/app/.env:ro \
+              -v belisasari-js-scraper-logs:/var/log \
+              ${{ env.DOCKER_USERNAME }}/belisasari-js-scraper-scheduled:latest
             
             # Verify deployment
-            echo "Verifying Wojat Platform deployment..."
+            echo "Verifying Belisasari Platform deployment..."
             sleep 15
             
             # Check all containers
@@ -255,7 +255,7 @@ jobs:
             
             # Test database connection from within containers
             echo "Testing Supabase database connections from containers..."
-            for container in wojat-frontend wojat-elizaos-agents wojat-bitquery wojat-js-scraper; do
+            for container in belisasari-frontend belisasari-elizaos-agents belisasari-bitquery belisasari-js-scraper; do
               if sudo docker exec $container timeout 10 bash -c "curl -s -o /dev/null -w '%{http_code}' \$SUPABASE_URL/rest/v1/" 2>/dev/null | grep -q "200\|401"; then
                 echo "✅ $container can reach Supabase API"
               else
@@ -265,7 +265,7 @@ jobs:
             
             # Check container logs for any errors
             echo "Checking container logs for errors..."
-            for container in wojat-frontend wojat-elizaos-agents wojat-bitquery wojat-js-scraper; do
+            for container in belisasari-frontend belisasari-elizaos-agents belisasari-bitquery belisasari-js-scraper; do
               if sudo docker ps | grep -q $container; then
                 echo "=== $container logs (last 10 lines) ==="
                 sudo docker logs --tail 10 $container
@@ -279,12 +279,12 @@ jobs:
             
             # Check JS Scraper scheduled service specifically
             echo "=== JS Scraper Scheduled Service Status ==="
-            if sudo docker ps | grep -q wojat-js-scraper; then
+            if sudo docker ps | grep -q belisasari-js-scraper; then
               echo "✅ JS Scraper scheduled service is running"
               echo "Checking cron schedule..."
-              sudo docker exec wojat-js-scraper crontab -l || echo "Could not retrieve cron schedule"
+              sudo docker exec belisasari-js-scraper crontab -l || echo "Could not retrieve cron schedule"
               echo "Checking cron logs..."
-              sudo docker exec wojat-js-scraper tail -10 /var/log/scraper-cron.log 2>/dev/null || echo "No cron logs available yet"
+              sudo docker exec belisasari-js-scraper tail -10 /var/log/scraper-cron.log 2>/dev/null || echo "No cron logs available yet"
               echo ""
               echo "JS Scraper will run every 3 hours:"
               echo "  - TikTok scraper: Every 3 hours at :00 minutes"
@@ -294,7 +294,7 @@ jobs:
               echo "❌ JS Scraper scheduled service is not running"
             fi
             
-            echo "Wojat Platform deployment completed at $(date '+%Y-%m-%d %H:%M:%S UTC')"
+            echo "Belisasari Platform deployment completed at $(date '+%Y-%m-%d %H:%M:%S UTC')"
 
       - name: Verify Deployment
         uses: appleboy/ssh-action@master
@@ -304,14 +304,14 @@ jobs:
           username: ${{ env.HOST_USERNAME }}
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
-            echo "=== Wojat Platform Deployment Verification ==="
+            echo "=== Belisasari Platform Deployment Verification ==="
             
             # Check all container status
             echo "Container Status:"
             sudo docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
             
             # Check container details
-            for container in wojat-frontend wojat-elizaos-agents wojat-bitquery wojat-js-scraper; do
+            for container in belisasari-frontend belisasari-elizaos-agents belisasari-bitquery belisasari-js-scraper; do
               if sudo docker ps | grep -q $container; then
                 echo "=== $container Details ==="
                 sudo docker inspect $container --format='Status: {{.State.Status}} | Started At: {{.State.StartedAt}}'
@@ -326,14 +326,14 @@ jobs:
             
             # Verify environment files are mounted
             echo "=== Environment File Verification ==="
-            for container in wojat-frontend wojat-elizaos-agents wojat-bitquery wojat-js-scraper; do
+            for container in belisasari-frontend belisasari-elizaos-agents belisasari-bitquery belisasari-js-scraper; do
               echo "Checking $container environment file:"
               sudo docker exec $container ls -la /app/.env || echo "Environment file not found in $container!"
             done
             
             # Show environment configuration (masked)
             echo "=== Environment Configuration ==="
-            sudo docker exec wojat-frontend grep -E "^(SUPABASE_|OPENAI_|SOLANA_|BITQUERY_|CONSUMER_|ZORO_|TELEGRAM_|DB_|NODE_ENV|PORT|HOST)" /app/.env | sed 's/=.*/=***/' || echo "No environment config found"
+            sudo docker exec belisasari-frontend grep -E "^(SUPABASE_|OPENAI_|SOLANA_|BITQUERY_|CONSUMER_|ZORO_|TELEGRAM_|DB_|NODE_ENV|PORT|HOST)" /app/.env | sed 's/=.*/=***/' || echo "No environment config found"
             
             # Final health checks
             echo "=== Final Health Checks ==="
@@ -348,36 +348,36 @@ jobs:
             
             # Test Supabase connectivity from containers
             echo "Testing Supabase connectivity from containers:"
-            for container in wojat-frontend wojat-elizaos-agents wojat-bitquery wojat-js-scraper; do
+            for container in belisasari-frontend belisasari-elizaos-agents belisasari-bitquery belisasari-js-scraper; do
               echo "Testing $container Supabase connectivity..."
               sudo docker exec $container timeout 5 bash -c "curl -s -o /dev/null -w 'Supabase API: %{http_code}\n' \$SUPABASE_URL/rest/v1/" 2>/dev/null || echo "$container: Supabase API test failed"
             done
             
             # Check for Supabase-related errors in logs
             echo "Checking for Supabase-related errors in container logs:"
-            for container in wojat-frontend wojat-elizaos-agents wojat-bitquery wojat-js-scraper; do
+            for container in belisasari-frontend belisasari-elizaos-agents belisasari-bitquery belisasari-js-scraper; do
               echo "=== $container logs (Supabase-related) ==="
               sudo docker logs --tail 10 $container | grep -i "supabase\|database\|connection\|error" || echo "No Supabase-related messages in recent logs"
             done
             
             # JS Scraper Scheduled Service Verification
             echo "=== JS Scraper Scheduled Service Verification ==="
-            if sudo docker ps | grep -q wojat-js-scraper; then
+            if sudo docker ps | grep -q belisasari-js-scraper; then
               echo "✅ JS Scraper scheduled service is running"
               echo "Cron Schedule:"
-              sudo docker exec wojat-js-scraper crontab -l
+              sudo docker exec belisasari-js-scraper crontab -l
               echo ""
               echo "Recent Cron Logs:"
-              sudo docker exec wojat-js-scraper tail -20 /var/log/scraper-cron.log 2>/dev/null || echo "No cron logs available yet"
+              sudo docker exec belisasari-js-scraper tail -20 /var/log/scraper-cron.log 2>/dev/null || echo "No cron logs available yet"
               echo ""
               echo "Service Status:"
-              sudo docker exec wojat-js-scraper ps aux | grep cron || echo "Cron daemon not found"
+              sudo docker exec belisasari-js-scraper ps aux | grep cron || echo "Cron daemon not found"
             else
               echo "❌ JS Scraper scheduled service is not running"
             fi
             
             echo ""
-            echo "=== Wojat Platform Deployment Verification Complete ==="
+            echo "=== Belisasari Platform Deployment Verification Complete ==="
             echo "🌐 Frontend accessible at: http://$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4):3000"
             echo "🤖 ElizaOS Agents accessible at: http://$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4):3001"
             echo "📊 Bitquery Service accessible at: http://$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4):3002"
@@ -390,13 +390,13 @@ jobs:
             echo "  - Outlight scraper: Every 3 hours at :40 minutes"
             echo ""
             echo "📝 Management Commands:"
-            echo "  - View Bitquery logs: sudo docker logs wojat-bitquery"
-            echo "  - Check Bitquery cron: sudo docker exec wojat-bitquery crontab -l"
-            echo "  - View Bitquery cron logs: sudo docker exec wojat-bitquery tail -f /var/log/bitquery-cron.log"
-            echo "  - Run Bitquery manually: sudo docker exec wojat-bitquery su -s /bin/bash bitquery -c 'cd /app && node index.mjs'"
-            echo "  - View JS Scraper logs: sudo docker logs wojat-js-scraper"
-            echo "  - Check JS Scraper cron: sudo docker exec wojat-js-scraper crontab -l"
-            echo "  - View JS Scraper cron logs: sudo docker exec wojat-js-scraper tail -f /var/log/scraper-cron.log"
-            echo "  - Run TikTok manually: sudo docker exec wojat-js-scraper su -s /bin/bash scraper -c 'cd /app && yarn scrape-tiktok'"
-            echo "  - Run Telegram manually: sudo docker exec wojat-js-scraper su -s /bin/bash scraper -c 'cd /app && yarn scrape-telegram'"
-            echo "  - Run Outlight manually: sudo docker exec wojat-js-scraper su -s /bin/bash scraper -c 'cd /app && yarn scrape-outlight'"
+            echo "  - View Bitquery logs: sudo docker logs belisasari-bitquery"
+            echo "  - Check Bitquery cron: sudo docker exec belisasari-bitquery crontab -l"
+            echo "  - View Bitquery cron logs: sudo docker exec belisasari-bitquery tail -f /var/log/bitquery-cron.log"
+            echo "  - Run Bitquery manually: sudo docker exec belisasari-bitquery su -s /bin/bash bitquery -c 'cd /app && node index.mjs'"
+            echo "  - View JS Scraper logs: sudo docker logs belisasari-js-scraper"
+            echo "  - Check JS Scraper cron: sudo docker exec belisasari-js-scraper crontab -l"
+            echo "  - View JS Scraper cron logs: sudo docker exec belisasari-js-scraper tail -f /var/log/scraper-cron.log"
+            echo "  - Run TikTok manually: sudo docker exec belisasari-js-scraper su -s /bin/bash scraper -c 'cd /app && yarn scrape-tiktok'"
+            echo "  - Run Telegram manually: sudo docker exec belisasari-js-scraper su -s /bin/bash scraper -c 'cd /app && yarn scrape-telegram'"
+            echo "  - Run Outlight manually: sudo docker exec belisasari-js-scraper su -s /bin/bash scraper -c 'cd /app && yarn scrape-outlight'"

@@ -86,4 +86,4 @@ The Docker build should now complete successfully without any ESLint errors. All
 3. **No unused code** - All dead code removed
 4. **ESLint compliant** - All warnings resolved
 
-The Wojat platform is now ready for successful Docker deployment! 🎉
+The Belisasari platform is now ready for successful Docker deployment! 🎉

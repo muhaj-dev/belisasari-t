@@ -1,4 +1,4 @@
-# AI Chat WebSocket Fix - Wojat Platform
+# AI Chat WebSocket Fix - Belisasari Platform
 
 ## 🚨 **Problem Identified**
 
@@ -13,7 +13,7 @@ realtime-service.ts:106 ❌ WebSocket disconnected
 
 The `realtime-service.ts` was trying to connect to a WebSocket server at `ws://localhost:8080/ws`, but:
 1. **No WebSocket Server**: There's no WebSocket server running on port 8080
-2. **Missing Infrastructure**: The Wojat platform doesn't have a WebSocket server implemented
+2. **Missing Infrastructure**: The Belisasari platform doesn't have a WebSocket server implemented
 3. **Hard Dependency**: The AI chat was completely dependent on this WebSocket connection
 
 ## ✅ **Solution Implemented**
@@ -153,7 +153,7 @@ open http://localhost:3000/ai-chat
 3. **Test the interface**: `http://localhost:3000/ai-chat-test`
 
 ### **Features Available**
-- ✅ **Conversational AI**: Chat with Wojat AI assistant
+- ✅ **Conversational AI**: Chat with Belisasari AI assistant
 - ✅ **Real-time Updates**: Simulated price and trending data
 - ✅ **Voice Commands**: Speech-to-text and text-to-speech
 - ✅ **Personalized Recommendations**: AI-powered suggestions

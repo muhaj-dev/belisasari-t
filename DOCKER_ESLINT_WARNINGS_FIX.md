@@ -104,4 +104,4 @@ docker-compose up -d
 
 ## 🎉 **Result**
 
-The Wojat platform should now build successfully without ESLint blocking the Docker build process! The application will deploy properly while maintaining code quality improvements. 🚀
+The Belisasari platform should now build successfully without ESLint blocking the Docker build process! The application will deploy properly while maintaining code quality improvements. 🚀

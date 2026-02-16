@@ -73,7 +73,7 @@ EXPOSE 3003
 RUN cat > /app/start-scheduled-scrapers.sh << 'EOF'
 #!/bin/bash
 
-echo "🚀 Starting Wojat JS Scraper Scheduled Service..."
+echo "🚀 Starting Belisasari JS Scraper Scheduled Service..."
 echo "📅 Cron jobs configured to run every 3 hours:"
 echo "   - TikTok scraper: Every 3 hours at :00 minutes"
 echo "   - Telegram scraper: Every 3 hours at :20 minutes"

@@ -1,7 +1,7 @@
-# AGENTS.md - Wojat Development Guide
+# AGENTS.md - Belisasari Development Guide
 
 ## Architecture
-Wojat is a memecoin hunting platform with multi-component architecture:
+Belisasari is a memecoin hunting platform with multi-component architecture:
 - `frontend/` - Next.js app with ShadCN/UI, TypeScript, TailwindCSS, Solana wallet integration
 - `scraper/` - Python web scraper using Selenium for TikTok data collection  
 - `js-scraper/` - Node.js Puppeteer scraper for alternative TikTok scraping

@@ -1,4 +1,4 @@
--- 🔧 URGENT: Fix Database Constraint Issues for Wojat Platform
+-- 🔧 URGENT: Fix Database Constraint Issues for Belisasari Platform
 -- This script fixes the constraint errors in the prices table
 
 -- Step 1: Drop existing problematic constraints if they exist

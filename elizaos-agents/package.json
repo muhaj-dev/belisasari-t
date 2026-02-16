@@ -1,7 +1,7 @@
 {
-  "name": "wojat-elizaos-agents",
+  "name": "belisasari-elizaos-agents",
   "version": "1.0.0",
-  "description": "ElizaOS agents for Wojat memecoin hunting platform",
+  "description": "ElizaOS agents for Belisasari memecoin hunting platform",
   "main": "index.js",
   "type": "module",
   "scripts": {

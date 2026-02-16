@@ -78,7 +78,7 @@ export default function DashboardClient() {
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Bimboh Dashboard</h1>
+        <h1 className="text-3xl font-bold">Belisasari Dashboard</h1>
         <p className="text-muted-foreground">
           Real-time memecoin analytics from Jupiter tokens & prices, TikTok and Telegram trends
         </p>

@@ -55,7 +55,7 @@ EXPOSE 3002
 RUN cat > /app/start-scheduled.sh << 'EOF'
 #!/bin/bash
 
-echo "🚀 Starting Wojat Bitquery Scheduled Service..."
+echo "🚀 Starting Belisasari Bitquery Scheduled Service..."
 echo "📅 Cron job configured to run every 12 hours:"
 echo "   - Bitquery: Every 12 hours at 2:00 AM and 2:00 PM UTC"
 echo "📝 Logs will be written to /var/log/bitquery-cron.log"

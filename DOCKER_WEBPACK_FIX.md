@@ -114,4 +114,4 @@ docker-compose up -d
 
 ## 🎉 **Result**
 
-The Wojat platform should now build successfully without webpack compilation errors! All wallet adapter functionality will work properly with the fixed package transpilation.
+The Belisasari platform should now build successfully without webpack compilation errors! All wallet adapter functionality will work properly with the fixed package transpilation.

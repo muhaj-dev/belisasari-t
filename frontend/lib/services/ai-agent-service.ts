@@ -158,7 +158,7 @@ export class AIAgentService {
 
     // Default response with more personality
     const responses = [
-      "Hey there! I'm Wojat, your memecoin trading assistant. I can help you discover trending tokens, analyze market data, and make smarter trading decisions. What would you like to explore today?",
+      "Hey there! I'm Belisasari, your memecoin trading assistant. I can help you discover trending tokens, analyze market data, and make smarter trading decisions. What would you like to explore today?",
       "I'm here to help you navigate the exciting world of memecoins! Whether you're looking for the next big trend or want to understand market dynamics, just ask me anything.",
       "Ready to dive into memecoin trading? I can help you find trending tokens, analyze market sentiment, and provide trading insights. What's on your mind?",
       "Let's talk memecoins! I can help you with market analysis, trending discoveries, and trading strategies. What interests you most?"
@@ -175,10 +175,10 @@ export class AIAgentService {
   // Handle greetings
   private handleGreeting(): { content: string; data?: any } {
     const greetings = [
-      "Hey there! 👋 I'm Wojat, your memecoin trading assistant. Ready to discover some amazing opportunities?",
-      "Hello! I'm Wojat, here to help you navigate the exciting world of memecoins. What can I help you with today?",
-      "Hi! Welcome to Wojat! I'm your AI assistant for memecoin trading. Let's find some trending gems together!",
-      "Hey! I'm Wojat, your personal memecoin analyst. Ready to explore the market and find some great opportunities?"
+      "Hey there! 👋 I'm Belisasari, your memecoin trading assistant. Ready to discover some amazing opportunities?",
+      "Hello! I'm Belisasari, here to help you navigate the exciting world of memecoins. What can I help you with today?",
+      "Hi! Welcome to Belisasari! I'm your AI assistant for memecoin trading. Let's find some trending gems together!",
+      "Hey! I'm Belisasari, your personal memecoin analyst. Ready to explore the market and find some great opportunities?"
     ];
 
     const randomGreeting = greetings[Math.floor(Math.random() * greetings.length)];
@@ -380,7 +380,7 @@ export class AIAgentService {
   // Handle help queries
   private handleHelpQuery(): { content: string; data?: any } {
     return {
-      content: 'I\'m Wojat, your AI memecoin hunting assistant! I can help you with:\n\n' +
+      content: 'I\'m Belisasari, your AI memecoin hunting assistant! I can help you with:\n\n' +
         '🔍 **Finding Trending Memecoins**\n' +
         '• "Show me trending memecoins"\n' +
         '• "What\'s hot on TikTok right now?"\n\n' +

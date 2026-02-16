@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Wojat Platform Master Startup Script for Ubuntu Server Deployment
+ * Belisasari Platform Master Startup Script for Ubuntu Server Deployment
  * Runs all services: Frontend, ElizaOS Agents, Bitquery, JS-Scraper services
  */
 
@@ -23,7 +23,7 @@ const colors = {
   white: '\x1b[37m'
 };
 
-class WojatServerOrchestrator {
+class BelisasariServerOrchestrator {
   constructor() {
     this.processes = new Map();
     this.isShuttingDown = false;
@@ -112,19 +112,19 @@ class WojatServerOrchestrator {
     let prefix = '';
     switch (type) {
       case 'error':
-        prefix = '❌';
+        prefix = 'Γ¥î';
         break;
       case 'warning':
-        prefix = '⚠️';
+        prefix = 'ΓÜá∩╕Å';
         break;
       case 'success':
-        prefix = '✅';
+        prefix = 'Γ£à';
         break;
       case 'info':
-        prefix = 'ℹ️';
+        prefix = 'Γä╣∩╕Å';
         break;
       default:
-        prefix = '📝';
+        prefix = '≡ƒô¥';
     }
     
     console.log(`${color}${prefix} ${serviceName} ${message}${colors.reset}`);
@@ -280,7 +280,7 @@ class WojatServerOrchestrator {
 
   // Start all services
   async startAll() {
-    this.log(null, '🚀 Starting Wojat Platform on Ubuntu Server...', 'info');
+    this.log(null, '≡ƒÜÇ Starting Belisasari Platform on Ubuntu Server...', 'info');
     
     // Check environment
     if (!this.checkEnvironment()) {
@@ -311,25 +311,25 @@ class WojatServerOrchestrator {
 
   // Display current status
   displayStatus() {
-    console.log(`\n${colors.bright}📊 Wojat Platform Status${colors.reset}`);
+    console.log(`\n${colors.bright}≡ƒôè Belisasari Platform Status${colors.reset}`);
     console.log(`${colors.bright}========================${colors.reset}`);
     
     for (const [serviceName, process] of this.processes) {
       const config = this.configs[serviceName];
-      const status = process && !process.killed ? '🟢 Running' : '🔴 Stopped';
+      const status = process && !process.killed ? '≡ƒƒó Running' : '≡ƒö┤ Stopped';
       const port = config.port ? `:${config.port}` : '';
       
       console.log(`${config.color}${status} ${config.name}${port}${colors.reset}`);
     }
     
-    console.log(`\n${colors.green}🌐 Frontend accessible at: http://YOUR_SERVER_IP:${this.configs.frontend.port}${colors.reset}`);
-    console.log(`${colors.yellow}📝 Logs are being displayed above. Press Ctrl+C to stop all services.${colors.reset}`);
+    console.log(`\n${colors.green}≡ƒîÉ Frontend accessible at: http://YOUR_SERVER_IP:${this.configs.frontend.port}${colors.reset}`);
+    console.log(`${colors.yellow}≡ƒô¥ Logs are being displayed above. Press Ctrl+C to stop all services.${colors.reset}`);
   }
 
   // Graceful shutdown
   async shutdown(signal) {
     this.isShuttingDown = true;
-    console.log(`\n${colors.yellow}🛑 Received ${signal}, shutting down gracefully...${colors.reset}`);
+    console.log(`\n${colors.yellow}≡ƒ¢æ Received ${signal}, shutting down gracefully...${colors.reset}`);
     
     const shutdownPromises = [];
     
@@ -359,7 +359,7 @@ class WojatServerOrchestrator {
     await Promise.all(shutdownPromises);
     
     const runtime = Math.round((Date.now() - this.startTime) / 1000);
-    console.log(`\n${colors.green}✅ Wojat Platform stopped successfully after ${runtime} seconds${colors.reset}`);
+    console.log(`\n${colors.green}Γ£à Belisasari Platform stopped successfully after ${runtime} seconds${colors.reset}`);
     process.exit(0);
   }
 
@@ -391,27 +391,27 @@ class WojatServerOrchestrator {
 
 // Main execution
 async function main() {
-  const orchestrator = new WojatServerOrchestrator();
+  const orchestrator = new BelisasariServerOrchestrator();
   
   try {
     orchestrator.setupGracefulShutdown();
     await orchestrator.startAll();
     orchestrator.startMonitoring();
   } catch (error) {
-    console.error(`${colors.red}❌ Failed to start Wojat Platform: ${error.message}${colors.reset}`);
+    console.error(`${colors.red}Γ¥î Failed to start Belisasari Platform: ${error.message}${colors.reset}`);
     process.exit(1);
   }
 }
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (error) => {
-  console.error(`${colors.red}❌ Uncaught Exception: ${error.message}${colors.reset}`);
+  console.error(`${colors.red}Γ¥î Uncaught Exception: ${error.message}${colors.reset}`);
   console.error(error.stack);
   process.exit(1);
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-  console.error(`${colors.red}❌ Unhandled Rejection at: ${promise}, reason: ${reason}${colors.reset}`);
+  console.error(`${colors.red}Γ¥î Unhandled Rejection at: ${promise}, reason: ${reason}${colors.reset}`);
   process.exit(1);
 });
 

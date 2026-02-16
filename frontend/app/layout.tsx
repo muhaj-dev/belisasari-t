@@ -10,7 +10,7 @@ const ClientLayout = dynamic(() => import("@/components/providers/ssr-safe-provi
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="text-center">
         <div className="w-16 h-16 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
-        <p className="text-muted-foreground">Loading Wojat...</p>
+        <p className="text-muted-foreground">Loading Belisasari...</p>
       </div>
     </div>
   )
@@ -28,22 +28,22 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://bimboh.vercel.app'),
-  title: "Wojat | World's Best Memecoin Hunter",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://belisasari.vercel.app'),
+  title: "Belisasari | World's Best Memecoin Hunter",
   description: "An autonomous AI agent that hunts for new memecoins in Tiktok.",
   icons: {
     icon: [
-      { url: "/wojat.png", sizes: "any" },
-      { url: "/wojat.png", type: "image/png" },
+      { url: "/belisasari.png", sizes: "any" },
+      { url: "/belisasari.png", type: "image/png" },
     ],
-    shortcut: "/wojat.png",
-    apple: "/wojat.png",
+    shortcut: "/belisasari.png",
+    apple: "/belisasari.png",
   },
   openGraph: {
-    title: "Wojat | World's Best Memecoin Hunter",
+    title: "Belisasari | World's Best Memecoin Hunter",
     description:
       "An autonomous AI agent that hunts for new memecoins in Tiktok.",
-    images: ["/wojat.png"],
+    images: ["/belisasari.png"],
   },
   other: {
     "twitter:player": "https://zorox-ai.vercel.app/embed",
@@ -53,9 +53,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "player",
-    site: "https://x.com/wojat118721",
-    title: "Wojat | World's Best Memecoin Hunter",
-    images: ["/wojat.png"],
+    site: "https://x.com/belisasari",
+    title: "Belisasari | World's Best Memecoin Hunter",
+    images: ["/belisasari.png"],
     description:
       "An autonomous AI agent that hunts for new memecoins in Tiktok.",
     players: [

@@ -79,9 +79,9 @@ export default function AIChatPage() {
   // Show notification
   const showNotification = (update: RealtimeUpdate) => {
     if ('Notification' in window && Notification.permission === 'granted') {
-      new Notification(`Wojat Alert: ${update.type}`, {
+      new Notification(`Belisasari Alert: ${update.type}`, {
         body: `New ${update.type} update available`,
-        icon: '/wojat.png'
+        icon: '/belisasari.png'
       });
     }
   };

@@ -254,7 +254,7 @@ export function VoiceIntegration({
 
   // Test voice functionality
   const testVoice = () => {
-    speak("Voice integration is working correctly. You can now use voice commands to interact with Wojat.");
+    speak("Voice integration is working correctly. You can now use voice commands to interact with Belisasari.");
   };
 
   if (!isEnabled) {

@@ -1,5 +1,5 @@
 {
-  "name": "wojat-memecoin-hunter",
+  "name": "belisasari-memecoin-hunter",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -9,10 +9,10 @@
     "install:frontend": "cd frontend && yarn install",
     "install:all": "yarn install && cd frontend && yarn install",
     "postinstall": "cd frontend && yarn install",
-    "wojat": "node start-wojat-server.js",
-    "start:all": "node start-wojat-server.js",
-    "start:phases": "node start-wojat-server.js",
-    "run:all": "node start-wojat-server.js",
+    "belisasari": "node start-belisasari-server.js",
+    "start:all": "node start-belisasari-server.js",
+    "start:phases": "node start-belisasari-server.js",
+    "run:all": "node start-belisasari-server.js",
     "twitter": "node start-twitter-only.js",
     "start:twitter": "node start-twitter-only.js",
     "deploy:ubuntu": "chmod +x deploy-ubuntu.sh && ./deploy-ubuntu.sh",

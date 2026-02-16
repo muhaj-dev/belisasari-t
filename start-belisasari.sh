@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Wojat Platform - Simple Ubuntu Startup Script
-# This script starts all Wojat services for Ubuntu server deployment
+# Belisasari Platform - Simple Ubuntu Startup Script
+# This script starts all Belisasari services for Ubuntu server deployment
 
 set -e
 
@@ -12,7 +12,7 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-echo -e "${BLUE}🚀 Starting Wojat Platform...${NC}"
+echo -e "${BLUE}🚀 Starting Belisasari Platform...${NC}"
 
 # Check if .env file exists
 if [ ! -f ".env" ]; then
@@ -68,7 +68,7 @@ fi
 
 # Start the platform
 echo -e "${GREEN}✅ All dependencies installed${NC}"
-echo -e "${BLUE}🚀 Starting Wojat Platform...${NC}"
+echo -e "${BLUE}🚀 Starting Belisasari Platform...${NC}"
 
 # Use the server startup script
-node start-wojat-server.js
+node start-belisasari-server.js

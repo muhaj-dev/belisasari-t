@@ -1,8 +1,8 @@
 @echo off
-REM Wojat Platform - Windows Startup Script
-REM This script starts all Wojat services for Windows development/testing
+REM Belisasari Platform - Windows Startup Script
+REM This script starts all Belisasari services for Windows development/testing
 
-echo 🚀 Starting Wojat Platform...
+echo 🚀 Starting Belisasari Platform...
 
 REM Check if .env file exists
 if not exist ".env" (
@@ -73,9 +73,9 @@ if not exist "js-scraper\node_modules" (
 
 REM Start the platform
 echo ✅ All dependencies installed
-echo 🚀 Starting Wojat Platform...
+echo 🚀 Starting Belisasari Platform...
 
 REM Use the server startup script
-node start-wojat-server.js
+node start-belisasari-server.js
 
 pause

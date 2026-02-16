@@ -1,4 +1,4 @@
-# TikTok Scraper Fixes - Wojat Platform
+# TikTok Scraper Fixes - Belisasari Platform
 
 ## 🚨 **Problem Identified**
 
@@ -136,13 +136,13 @@ The fixes are automatically included in:
 To monitor the scraper:
 ```bash
 # View logs
-docker logs wojat-js-scraper
+docker logs belisasari-js-scraper
 
 # Check cron logs
-docker exec wojat-js-scraper tail -f /var/log/scraper-cron.log
+docker exec belisasari-js-scraper tail -f /var/log/scraper-cron.log
 
 # Run manually for testing
-docker exec wojat-js-scraper su -s /bin/bash scraper -c 'cd /app && yarn scrape-tiktok'
+docker exec belisasari-js-scraper su -s /bin/bash scraper -c 'cd /app && yarn scrape-tiktok'
 ```
 
 ## 🔮 **Future Improvements**

@@ -1,15 +1,15 @@
-# Wojat JS Scraper Scheduled Service - Ubuntu Deployment Guide
+# Belisasari JS Scraper Scheduled Service - Ubuntu Deployment Guide
 
 ## 🎯 Overview
 
-This guide shows how to deploy the Wojat JS Scraper service on Ubuntu with automatic scheduling to run TikTok, Telegram, and Outlight scrapers every 3 hours using Docker.
+This guide shows how to deploy the Belisasari JS Scraper service on Ubuntu with automatic scheduling to run TikTok, Telegram, and Outlight scrapers every 3 hours using Docker.
 
 ## 📋 Prerequisites
 
 - Ubuntu 20.04+ server
 - Docker and Docker Compose installed
 - Root or sudo access
-- Wojat project deployed
+- Belisasari project deployed
 - Chrome/Chromium dependencies (handled by Dockerfile)
 
 ## 🚀 Quick Setup
@@ -300,22 +300,22 @@ docker-compose exec js-scraper grep "Outlight scraper" /var/log/scraper-cron.log
 **1. Log Rotation**
 ```bash
 # Create log rotation script
-cat > /opt/wojat/rotate-scraper-logs.sh << 'EOF'
+cat > /opt/belisasari/rotate-scraper-logs.sh << 'EOF'
 #!/bin/bash
 # Rotate logs older than 30 days
 docker-compose exec js-scraper find /var/log -name "*.log" -mtime +30 -delete
 EOF
 
-chmod +x /opt/wojat/rotate-scraper-logs.sh
+chmod +x /opt/belisasari/rotate-scraper-logs.sh
 
 # Add to crontab (run weekly)
-echo "0 0 * * 0 /opt/wojat/rotate-scraper-logs.sh" | crontab -
+echo "0 0 * * 0 /opt/belisasari/rotate-scraper-logs.sh" | crontab -
 ```
 
 **2. Health Checks**
 ```bash
 # Create health check script
-cat > /opt/wojat/scraper-health-check.sh << 'EOF'
+cat > /opt/belisasari/scraper-health-check.sh << 'EOF'
 #!/bin/bash
 if ! docker-compose ps js-scraper | grep -q "Up"; then
     echo "JS Scraper service is down, restarting..."
@@ -323,16 +323,16 @@ if ! docker-compose ps js-scraper | grep -q "Up"; then
 fi
 EOF
 
-chmod +x /opt/wojat/scraper-health-check.sh
+chmod +x /opt/belisasari/scraper-health-check.sh
 
 # Add to crontab (check every hour)
-echo "0 * * * * /opt/wojat/scraper-health-check.sh" | crontab -
+echo "0 * * * * /opt/belisasari/scraper-health-check.sh" | crontab -
 ```
 
 **3. Data Quality Checks**
 ```bash
 # Create data quality check script
-cat > /opt/wojat/scraper-data-check.sh << 'EOF'
+cat > /opt/belisasari/scraper-data-check.sh << 'EOF'
 #!/bin/bash
 # Check if scrapers are collecting data
 TIKTOK_COUNT=$(docker-compose exec js-scraper node -e "
@@ -351,7 +351,7 @@ echo "TikTok records: $TIKTOK_COUNT"
 echo "Telegram records: $TELEGRAM_COUNT"
 EOF
 
-chmod +x /opt/wojat/scraper-data-check.sh
+chmod +x /opt/belisasari/scraper-data-check.sh
 ```
 
 ## 🎉 Success Indicators

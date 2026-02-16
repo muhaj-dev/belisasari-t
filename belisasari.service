@@ -1,32 +1,32 @@
 [Unit]
-Description=Wojat Memecoin Hunting Platform
-Documentation=https://github.com/your-username/wojat
+Description=Belisasari Memecoin Hunting Platform
+Documentation=https://github.com/your-username/belisasari
 After=network.target
 Wants=network.target
 
 [Service]
 Type=simple
-User=wojat
-Group=wojat
-WorkingDirectory=/opt/wojat
-ExecStart=/usr/bin/node start-wojat-server.js
+User=belisasari
+Group=belisasari
+WorkingDirectory=/opt/belisasari
+ExecStart=/usr/bin/node start-belisasari-server.js
 Restart=always
 RestartSec=10
 StandardOutput=journal
 StandardError=journal
-SyslogIdentifier=wojat
+SyslogIdentifier=belisasari
 
 # Environment variables
 Environment=NODE_ENV=production
-EnvironmentFile=/opt/wojat/.env
+EnvironmentFile=/opt/belisasari/.env
 
 # Security settings
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=true
-ReadWritePaths=/opt/wojat/logs
-ReadWritePaths=/var/log/wojat
+ReadWritePaths=/opt/belisasari/logs
+ReadWritePaths=/var/log/belisasari
 
 # Resource limits
 LimitNOFILE=65536

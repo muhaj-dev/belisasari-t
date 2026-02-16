@@ -1,15 +1,15 @@
-# Wojat Bitquery Scheduled Service - Ubuntu Deployment Guide
+# Belisasari Bitquery Scheduled Service - Ubuntu Deployment Guide
 
 ## 🎯 Overview
 
-This guide shows how to deploy the Wojat Bitquery service on Ubuntu with automatic scheduling to run every 24 hours using Docker.
+This guide shows how to deploy the Belisasari Bitquery service on Ubuntu with automatic scheduling to run every 24 hours using Docker.
 
 ## 📋 Prerequisites
 
 - Ubuntu 20.04+ server
 - Docker and Docker Compose installed
 - Root or sudo access
-- Wojat project deployed
+- Belisasari project deployed
 
 ## 🚀 Quick Setup
 
@@ -251,22 +251,22 @@ docker-compose exec bitquery tail -50 /var/log/bitquery-cron.log
 **1. Log Rotation**
 ```bash
 # Create log rotation script
-cat > /opt/wojat/rotate-bitquery-logs.sh << 'EOF'
+cat > /opt/belisasari/rotate-bitquery-logs.sh << 'EOF'
 #!/bin/bash
 # Rotate logs older than 30 days
 docker-compose exec bitquery find /var/log -name "*.log" -mtime +30 -delete
 EOF
 
-chmod +x /opt/wojat/rotate-bitquery-logs.sh
+chmod +x /opt/belisasari/rotate-bitquery-logs.sh
 
 # Add to crontab (run weekly)
-echo "0 0 * * 0 /opt/wojat/rotate-bitquery-logs.sh" | crontab -
+echo "0 0 * * 0 /opt/belisasari/rotate-bitquery-logs.sh" | crontab -
 ```
 
 **2. Health Checks**
 ```bash
 # Create health check script
-cat > /opt/wojat/bitquery-health-check.sh << 'EOF'
+cat > /opt/belisasari/bitquery-health-check.sh << 'EOF'
 #!/bin/bash
 if ! docker-compose ps bitquery | grep -q "Up"; then
     echo "Bitquery service is down, restarting..."
@@ -274,10 +274,10 @@ if ! docker-compose ps bitquery | grep -q "Up"; then
 fi
 EOF
 
-chmod +x /opt/wojat/bitquery-health-check.sh
+chmod +x /opt/belisasari/bitquery-health-check.sh
 
 # Add to crontab (check every hour)
-echo "0 * * * * /opt/wojat/bitquery-health-check.sh" | crontab -
+echo "0 * * * * /opt/belisasari/bitquery-health-check.sh" | crontab -
 ```
 
 ## 🎉 Success Indicators

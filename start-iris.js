@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 /**
- * Wojat Platform Master Startup Script
- * Runs all phases of the Wojat memecoin hunting platform
+ * Belisasari Platform Master Startup Script
+ * Runs all phases of the Belisasari memecoin hunting platform
  */
 
 const { spawn, exec } = require('child_process');
@@ -22,7 +22,7 @@ const colors = {
   white: '\x1b[37m'
 };
 
-class WojatOrchestrator {
+class BelisasariOrchestrator {
   constructor() {
     this.processes = new Map();
     this.isShuttingDown = false;
@@ -343,7 +343,7 @@ class WojatOrchestrator {
       await Promise.all(shutdownPromises);
       
       const runtime = Math.round((Date.now() - this.startTime) / 1000);
-      console.log(`\n${colors.green}✅ Wojat Platform stopped successfully after ${runtime} seconds${colors.reset}`);
+      console.log(`\n${colors.green}✅ Belisasari Platform stopped successfully after ${runtime} seconds${colors.reset}`);
       process.exit(0);
     };
 
@@ -369,13 +369,13 @@ class WojatOrchestrator {
 
 // Main execution
 async function main() {
-  const orchestrator = new WojatOrchestrator();
+  const orchestrator = new BelisasariOrchestrator();
   
   try {
     await orchestrator.startAll();
     orchestrator.startMonitoring();
   } catch (error) {
-    console.error(`${colors.red}❌ Failed to start Wojat Platform: ${error.message}${colors.reset}`);
+    console.error(`${colors.red}❌ Failed to start Belisasari Platform: ${error.message}${colors.reset}`);
     process.exit(1);
   }
 }

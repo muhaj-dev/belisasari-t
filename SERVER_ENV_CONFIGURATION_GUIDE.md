@@ -1,4 +1,4 @@
-# Wojat Platform - Server Environment Configuration Guide
+# Belisasari Platform - Server Environment Configuration Guide
 
 ## 🔧 Updated GitHub Actions Workflow
 
@@ -31,8 +31,8 @@ SSH into your server and create the environment file:
 # SSH into your server
 ssh ubuntu@YOUR_SERVER_IP
 
-# Navigate to wojat directory
-cd ~/wojat
+# Navigate to belisasari directory
+cd ~/belisasari
 
 # Create .env file
 nano .env
@@ -41,7 +41,7 @@ nano .env
 ### **Complete .env File Template:**
 
 ```bash
-# Wojat Platform Environment Variables
+# Belisasari Platform Environment Variables
 NODE_ENV=production
 
 # Supabase Configuration
@@ -152,7 +152,7 @@ ssh ubuntu@YOUR_SERVER_IP
 sudo docker ps
 
 # Check environment file
-cat ~/wojat/.env
+cat ~/belisasari/.env
 
 # Test Supabase API connectivity
 curl -H "apikey: YOUR_ANON_KEY" \
@@ -160,10 +160,10 @@ curl -H "apikey: YOUR_ANON_KEY" \
      "YOUR_SUPABASE_URL/rest/v1/"
 
 # Check service logs
-sudo docker logs wojat-frontend
-sudo docker logs wojat-elizaos-agents
-sudo docker logs wojat-bitquery
-sudo docker logs wojat-js-scraper
+sudo docker logs belisasari-frontend
+sudo docker logs belisasari-elizaos-agents
+sudo docker logs belisasari-bitquery
+sudo docker logs belisasari-js-scraper
 ```
 
 ## 🌐 Service Access
@@ -197,17 +197,17 @@ After successful deployment:
 ### **Debug Commands:**
 ```bash
 # Check environment variables in container
-sudo docker exec wojat-frontend env | grep SUPABASE
+sudo docker exec belisasari-frontend env | grep SUPABASE
 
 # Test Supabase API from container
-sudo docker exec wojat-frontend curl -H "apikey: $SUPABASE_ANON_KEY" \
+sudo docker exec belisasari-frontend curl -H "apikey: $SUPABASE_ANON_KEY" \
   "$SUPABASE_URL/rest/v1/"
 
 # Check .env file format
-cat ~/wojat/.env | grep -v "^#" | grep -v "^$"
+cat ~/belisasari/.env | grep -v "^#" | grep -v "^$"
 
 # Test database connection
-sudo docker exec wojat-frontend node -e "
+sudo docker exec belisasari-frontend node -e "
 const { createClient } = require('@supabase/supabase-js');
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 supabase.from('tiktoks').select('count').then(console.log);
@@ -228,7 +228,7 @@ supabase.from('tiktoks').select('count').then(console.log);
 - **Backup Friendly** - .env file can be backed up separately
 - **Debug Friendly** - Easy to check and modify configuration
 
-### **Perfect for Wojat Platform:**
+### **Perfect for Belisasari Platform:**
 - **Supabase Integration** - Seamless cloud database connection
 - **API Management** - Easy Twitter and OpenAI API configuration
 - **Service Orchestration** - All services use same configuration

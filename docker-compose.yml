@@ -19,7 +19,7 @@ services:
       - elizaos-agents
     restart: unless-stopped
     networks:
-      - wojat-network
+      - belisasari-network
 
   # ElizaOS Agents Service
   elizaos-agents:
@@ -34,7 +34,7 @@ services:
       - bitquery
     restart: unless-stopped
     networks:
-      - wojat-network
+      - belisasari-network
 
   # Bitquery Service (Scheduled - runs every 24 hours)
   bitquery:
@@ -49,7 +49,7 @@ services:
       - bitquery_logs:/var/log
     restart: unless-stopped
     networks:
-      - wojat-network
+      - belisasari-network
 
   # Bitquery Manual Service (for immediate runs)
   bitquery-manual:
@@ -63,7 +63,7 @@ services:
     profiles:
       - manual
     networks:
-      - wojat-network
+      - belisasari-network
 
   # JS Scraper Service (Scheduled - runs TikTok, Telegram, Outlight every 3 hours)
   js-scraper:
@@ -78,7 +78,7 @@ services:
       - js_scraper_logs:/var/log
     restart: unless-stopped
     networks:
-      - wojat-network
+      - belisasari-network
 
   # JS Scraper Manual Service (for immediate runs)
   js-scraper-manual:
@@ -92,7 +92,7 @@ services:
     profiles:
       - manual
     networks:
-      - wojat-network
+      - belisasari-network
 
   # Redis (Optional - for caching)
   redis:
@@ -103,14 +103,14 @@ services:
       - redis_data:/data
     restart: unless-stopped
     networks:
-      - wojat-network
+      - belisasari-network
 
   # PostgreSQL (Optional - if not using Supabase)
   postgres:
     image: postgres:15-alpine
     environment:
-      - POSTGRES_DB=wojat_db
-      - POSTGRES_USER=wojat_user
+      - POSTGRES_DB=belisasari_db
+      - POSTGRES_USER=belisasari_user
       - POSTGRES_PASSWORD=${DB_PASSWORD}
     ports:
       - "5432:5432"
@@ -118,7 +118,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
     networks:
-      - wojat-network
+      - belisasari-network
 
 volumes:
   redis_data:
@@ -127,5 +127,5 @@ volumes:
   js_scraper_logs:
 
 networks:
-  wojat-network:
+  belisasari-network:
     driver: bridge

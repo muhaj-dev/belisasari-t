@@ -1,4 +1,4 @@
-# Wojat Platform - Supabase Configuration Guide
+# Belisasari Platform - Supabase Configuration Guide
 
 ## 🔧 GitHub Actions Workflow Updated for Supabase
 
@@ -47,7 +47,7 @@ OPENAI_API_KEY                 # OpenAI API key
 The workflow automatically creates a `.env` file on the server with all necessary Supabase configuration:
 
 ```bash
-# Wojat Platform Environment Variables - Supabase Configuration
+# Belisasari Platform Environment Variables - Supabase Configuration
 NODE_ENV=production
 
 # Supabase Configuration (Primary Database)
@@ -148,10 +148,10 @@ curl -H "apikey: YOUR_ANON_KEY" \
      "YOUR_SUPABASE_URL/rest/v1/"
 
 # Check service logs
-docker logs wojat-frontend
-docker logs wojat-elizaos-agents
-docker logs wojat-bitquery
-docker logs wojat-js-scraper
+docker logs belisasari-frontend
+docker logs belisasari-elizaos-agents
+docker logs belisasari-bitquery
+docker logs belisasari-js-scraper
 ```
 
 ## 🌐 Service Access
@@ -184,14 +184,14 @@ After successful deployment:
 ### **Debug Commands:**
 ```bash
 # Check environment variables
-docker exec wojat-frontend env | grep SUPABASE
+docker exec belisasari-frontend env | grep SUPABASE
 
 # Test Supabase API from container
-docker exec wojat-frontend curl -H "apikey: $SUPABASE_ANON_KEY" \
+docker exec belisasari-frontend curl -H "apikey: $SUPABASE_ANON_KEY" \
   "$SUPABASE_URL/rest/v1/"
 
 # Check database connection
-docker exec wojat-frontend node -e "
+docker exec belisasari-frontend node -e "
 const { createClient } = require('@supabase/supabase-js');
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 supabase.from('tiktoks').select('count').then(console.log);
@@ -209,7 +209,7 @@ supabase.from('tiktoks').select('count').then(console.log);
 - **Scalability** - Automatic scaling and backups
 - **Security** - Row Level Security (RLS) policies
 
-### **Perfect for Wojat Platform:**
+### **Perfect for Belisasari Platform:**
 - **TikTok data storage** - Efficient storage and retrieval
 - **Real-time updates** - Live social media monitoring
 - **User authentication** - Secure platform access

@@ -1,6 +1,6 @@
-# 🗄️ Supabase Database Setup Guide for Wojat Platform
+# 🗄️ Supabase Database Setup Guide for Belisasari Platform
 
-This guide will help you set up your Supabase database to store all TikTok, Telegram, Bitquery, and AI agent data for the Wojat memecoin hunting platform.
+This guide will help you set up your Supabase database to store all TikTok, Telegram, Bitquery, and AI agent data for the Belisasari memecoin hunting platform.
 
 ## 📋 Prerequisites
 
@@ -273,5 +273,5 @@ Once your database is set up:
 4. **Configure AI agents** to store conversations
 5. **Set up alerts** for important events
 
-Your Wojat platform database is now ready to store and analyze memecoin data from TikTok, Telegram, Bitquery, and AI agents! 🚀
+Your Belisasari platform database is now ready to store and analyze memecoin data from TikTok, Telegram, Bitquery, and AI agents! 🚀
 

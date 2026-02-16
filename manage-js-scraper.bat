@@ -1,5 +1,5 @@
 @echo off
-REM Wojat JS Scraper Service Management Script for Windows
+REM Belisasari JS Scraper Service Management Script for Windows
 REM This script helps manage the scheduled JS Scraper service (TikTok, Telegram, Outlight)
 
 setlocal enabledelayedexpansion
@@ -26,7 +26,7 @@ echo.
 goto :help
 
 :start
-echo [INFO] Starting Wojat JS Scraper scheduled service...
+echo [INFO] Starting Belisasari JS Scraper scheduled service...
 docker-compose ps js-scraper | findstr "Up" >nul
 if !errorlevel! equ 0 (
     echo [WARNING] JS Scraper service is already running
@@ -42,19 +42,19 @@ echo [INFO] Use 'manage-js-scraper.bat logs' to view logs
 goto :end
 
 :stop
-echo [INFO] Stopping Wojat JS Scraper scheduled service...
+echo [INFO] Stopping Belisasari JS Scraper scheduled service...
 docker-compose stop js-scraper
 echo [SUCCESS] JS Scraper scheduled service stopped
 goto :end
 
 :restart
-echo [INFO] Restarting Wojat JS Scraper scheduled service...
+echo [INFO] Restarting Belisasari JS Scraper scheduled service...
 docker-compose restart js-scraper
 echo [SUCCESS] JS Scraper scheduled service restarted
 goto :end
 
 :status
-echo [INFO] Wojat JS Scraper Service Status:
+echo [INFO] Belisasari JS Scraper Service Status:
 echo.
 docker-compose ps js-scraper | findstr "Up" >nul
 if !errorlevel! equ 0 (
@@ -156,7 +156,7 @@ echo [SUCCESS] JS Scraper Docker image built successfully
 goto :end
 
 :help
-echo Wojat JS Scraper Service Management
+echo Belisasari JS Scraper Service Management
 echo.
 echo Usage: %0 [COMMAND]
 echo.

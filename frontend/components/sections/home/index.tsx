@@ -16,7 +16,7 @@ export default function Home() {
       {/* Hero Section */}
       <div className="text-center mb-8 sm:mb-12 lg:mb-16">
         <p className="meme-title tracking-widest font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl text-iris-primary mt-4 sm:mt-6 md:mt-12 lg:mt-16">
-          The Ultimate TikTok & Telegram Memecoin Hunter
+          Belisasari — The Ultimate TikTok & Telegram Memecoin Hunter
         </p>
         <p className="meme-subtitle text-muted-foreground font-semibold mt-2 sm:mt-4 text-center text-xs sm:text-sm md:text-base lg:text-lg max-w-4xl mx-auto">
           Realtime tiktok & telegram analytics for memecoins. <br className="hidden sm:block" />
@@ -59,7 +59,7 @@ export default function Home() {
       
       {!paid && (
         <div className="mb-8 sm:mb-12 lg:mb-16">
-          <UnlockNow text="Unlock All Bimboh features now" />
+          <UnlockNow text="Unlock All Belisasari features now" />
         </div>
       )}
       

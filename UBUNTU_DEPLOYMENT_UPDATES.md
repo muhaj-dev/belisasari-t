@@ -1,8 +1,8 @@
-# Wojat Platform - Ubuntu Server Deployment Updates
+# Belisasari Platform - Ubuntu Server Deployment Updates
 
 ## 🚀 **Latest Updates for Production Deployment**
 
-This document outlines all the recent updates made to prepare the Wojat platform for Ubuntu server deployment, including fixes for dependency conflicts, TikTok scraper improvements, and enhanced Docker configurations.
+This document outlines all the recent updates made to prepare the Belisasari platform for Ubuntu server deployment, including fixes for dependency conflicts, TikTok scraper improvements, and enhanced Docker configurations.
 
 ---
 
@@ -54,7 +54,7 @@ Updated `docker-compose.yml` with:
 
 - ✅ **Service Profiles**: Manual and scheduled service profiles
 - ✅ **Volume Management**: Persistent logs for scheduled services
-- ✅ **Network Configuration**: Isolated wojat-network
+- ✅ **Network Configuration**: Isolated belisasari-network
 - ✅ **Environment Integration**: Proper `.env` file mounting
 - ✅ **Service Dependencies**: Correct startup order
 
@@ -212,38 +212,38 @@ TELEGRAM_GROUP_ID=your_telegram_group_id
 sudo docker ps
 
 # Check specific service logs
-sudo docker logs wojat-frontend
-sudo docker logs wojat-elizaos-agents
-sudo docker logs wojat-bitquery
-sudo docker logs wojat-js-scraper
+sudo docker logs belisasari-frontend
+sudo docker logs belisasari-elizaos-agents
+sudo docker logs belisasari-bitquery
+sudo docker logs belisasari-js-scraper
 ```
 
 ### **Check Scheduled Services**
 ```bash
 # Bitquery cron schedule
-sudo docker exec wojat-bitquery crontab -l
+sudo docker exec belisasari-bitquery crontab -l
 
 # JS Scraper cron schedule  
-sudo docker exec wojat-js-scraper crontab -l
+sudo docker exec belisasari-js-scraper crontab -l
 
 # View cron logs
-sudo docker exec wojat-bitquery tail -f /var/log/bitquery-cron.log
-sudo docker exec wojat-js-scraper tail -f /var/log/scraper-cron.log
+sudo docker exec belisasari-bitquery tail -f /var/log/bitquery-cron.log
+sudo docker exec belisasari-js-scraper tail -f /var/log/scraper-cron.log
 ```
 
 ### **Manual Service Execution**
 ```bash
 # Run Bitquery manually
-sudo docker exec wojat-bitquery su -s /bin/bash bitquery -c 'cd /app && node index.mjs'
+sudo docker exec belisasari-bitquery su -s /bin/bash bitquery -c 'cd /app && node index.mjs'
 
 # Run TikTok scraper manually
-sudo docker exec wojat-js-scraper su -s /bin/bash scraper -c 'cd /app && yarn scrape-tiktok'
+sudo docker exec belisasari-js-scraper su -s /bin/bash scraper -c 'cd /app && yarn scrape-tiktok'
 
 # Run Telegram scraper manually
-sudo docker exec wojat-js-scraper su -s /bin/bash scraper -c 'cd /app && yarn scrape-telegram'
+sudo docker exec belisasari-js-scraper su -s /bin/bash scraper -c 'cd /app && yarn scrape-telegram'
 
 # Run Outlight scraper manually
-sudo docker exec wojat-js-scraper su -s /bin/bash scraper -c 'cd /app && yarn scrape-outlight'
+sudo docker exec belisasari-js-scraper su -s /bin/bash scraper -c 'cd /app && yarn scrape-outlight'
 ```
 
 ---
@@ -306,10 +306,10 @@ After successful deployment:
 3. **TikTok Scraper Stuck**
    ```bash
    # Check scraper logs
-   docker exec wojat-js-scraper tail -f /var/log/scraper-cron.log
+   docker exec belisasari-js-scraper tail -f /var/log/scraper-cron.log
    
    # Run manually to test
-   docker exec wojat-js-scraper su -s /bin/bash scraper -c 'cd /app && yarn scrape-tiktok'
+   docker exec belisasari-js-scraper su -s /bin/bash scraper -c 'cd /app && yarn scrape-tiktok'
    ```
 
 4. **Database Connection Issues**
@@ -322,7 +322,7 @@ After successful deployment:
 
 ## 🎉 **Ready for Production**
 
-The Wojat platform is now fully prepared for Ubuntu server deployment with:
+The Belisasari platform is now fully prepared for Ubuntu server deployment with:
 
 - ✅ **Robust Dependency Management**: All conflicts resolved
 - ✅ **Enhanced TikTok Scraping**: Anti-bot measures and fallbacks

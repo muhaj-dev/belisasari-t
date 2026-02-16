@@ -157,15 +157,15 @@ export class ContentGeneratorAgent {
   generateAnnouncement(type, data, platform = 'twitter') {
     const announcements = {
       'new-feature': {
-        twitter: `🚀 NEW FEATURE ALERT! 🚀\n\n{feature}\n\n{description}\n\nTry it out and let us know what you think! 👇\n\n#NewFeature #Wojat #Memecoin`,
+        twitter: `🚀 NEW FEATURE ALERT! 🚀\n\n{feature}\n\n{description}\n\nTry it out and let us know what you think! 👇\n\n#NewFeature #Belisasari #Memecoin`,
         telegram: `🚀 <b>NEW FEATURE ALERT!</b> 🚀\n\n<b>{feature}</b>\n\n{description}\n\nTry it out and let us know what you think! 👇`
       },
       'partnership': {
-        twitter: `🤝 PARTNERSHIP ANNOUNCEMENT! 🤝\n\nWe\'re excited to partner with {partner}!\n\n{details}\n\n#Partnership #Wojat #Memecoin`,
+        twitter: `🤝 PARTNERSHIP ANNOUNCEMENT! 🤝\n\nWe\'re excited to partner with {partner}!\n\n{details}\n\n#Partnership #Belisasari #Memecoin`,
         telegram: `🤝 <b>PARTNERSHIP ANNOUNCEMENT!</b> 🤝\n\nWe\'re excited to partner with <b>{partner}</b>!\n\n{details}`
       },
       'milestone': {
-        twitter: `🎉 MILESTONE ACHIEVED! 🎉\n\n{milestone}\n\nThank you to our amazing community! 🙏\n\n#Milestone #Wojat #Community`,
+        twitter: `🎉 MILESTONE ACHIEVED! 🎉\n\n{milestone}\n\nThank you to our amazing community! 🙏\n\n#Milestone #Belisasari #Community`,
         telegram: `🎉 <b>MILESTONE ACHIEVED!</b> �🎉\n\n{milestone}\n\nThank you to our amazing community! 🙏`
       }
     };

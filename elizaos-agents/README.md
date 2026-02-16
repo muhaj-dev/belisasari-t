@@ -1,8 +1,8 @@
-# Wojat - Complete AI-Powered Memecoin Trading Platform
+# Belisasari - Complete AI-Powered Memecoin Trading Platform
 
 ## 🎉 Platform Complete!
 
-Wojat has been successfully transformed from a simple data collector into a comprehensive, AI-powered autonomous memecoin trading platform. The platform now provides end-to-end capabilities for memecoin discovery, analysis, trading, and portfolio management.
+Belisasari has been successfully transformed from a simple data collector into a comprehensive, AI-powered autonomous memecoin trading platform. The platform now provides end-to-end capabilities for memecoin discovery, analysis, trading, and portfolio management.
 
 ## 🏗️ Complete Architecture
 
@@ -141,7 +141,7 @@ TELEGRAM_BOT_TOKEN=your_telegram_bot_token
 TELEGRAM_CHANNEL_ID=your_telegram_channel_id
 
 # Discord Integration - REMOVED
-# Discord functionality has been removed from Wojat platform
+# Discord functionality has been removed from Belisasari platform
 ```
 
 ## 🚀 Usage Examples
@@ -269,7 +269,7 @@ cd elizaos-agents && node phase4-orchestrator.js
 ## 🎯 Complete User Journey
 
 ### 1. Discovery Phase
-- User visits Wojat platform
+- User visits Belisasari platform
 - AI chat interface greets and explains capabilities
 - Personalized dashboard shows relevant memecoins
 - Real-time trend alerts and market updates
@@ -348,7 +348,7 @@ For questions or issues:
 
 ## 🚀 Ready for Launch!
 
-Wojat is now a complete, production-ready autonomous memecoin trading platform that can:
+Belisasari is now a complete, production-ready autonomous memecoin trading platform that can:
 
 1. **Discover Trends**: Real-time TikTok and social media trend detection
 2. **Analyze Markets**: AI-powered market analysis and prediction

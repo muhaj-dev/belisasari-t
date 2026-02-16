@@ -1,4 +1,4 @@
-# Wojat Platform - Correct Environment Variables Guide
+# Belisasari Platform - Correct Environment Variables Guide
 
 ## 🔧 Updated GitHub Actions Workflow
 
@@ -65,11 +65,11 @@ DISCORD_VOICE_CHANNEL_ID=your_voice_channel_id_here
 
 ### **Database Configuration:**
 ```bash
-DATABASE_URL=postgresql://username:password@localhost:5432/wojat_db
+DATABASE_URL=postgresql://username:password@localhost:5432/belisasari_db
 DB_HOST=localhost
 DB_PORT=5432
-DB_NAME=wojat_db
-DB_USER=wojat_user
+DB_NAME=belisasari_db
+DB_USER=belisasari_user
 DB_PASSWORD=your_db_password_here
 ```
 
@@ -123,7 +123,7 @@ process.env.SUPABASE_ANON_SECRET
 Create this exact `.env` file on your server:
 
 ```bash
-# Wojat Platform Environment Variables
+# Belisasari Platform Environment Variables
 NODE_ENV=production
 PORT=3000
 HOST=0.0.0.0
@@ -165,11 +165,11 @@ DISCORD_TRADING_CHANNEL_ID=your_trading_channel_id_here
 DISCORD_VOICE_CHANNEL_ID=your_voice_channel_id_here
 
 # Database Configuration
-DATABASE_URL=postgresql://username:password@localhost:5432/wojat_db
+DATABASE_URL=postgresql://username:password@localhost:5432/belisasari_db
 DB_HOST=localhost
 DB_PORT=5432
-DB_NAME=wojat_db
-DB_USER=wojat_user
+DB_NAME=belisasari_db
+DB_USER=belisasari_user
 DB_PASSWORD=your_db_password_here
 
 # Server Information

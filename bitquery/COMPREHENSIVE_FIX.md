@@ -1,4 +1,4 @@
-# 🔧 Comprehensive Fix for Wojat Bitquery Issues
+# 🔧 Comprehensive Fix for Belisasari Bitquery Issues
 
 ## 🔍 **Issues Identified**
 

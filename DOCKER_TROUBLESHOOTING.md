@@ -132,16 +132,16 @@ docker system prune -a
 ### Method 1: Direct Docker Build
 ```bash
 # Build individual services
-docker build -t wojat-frontend ./frontend
-docker build -t wojat-elizaos ./elizaos-agents
-docker build -t wojat-bitquery ./bitquery
-docker build -t wojat-scraper ./js-scraper
+docker build -t belisasari-frontend ./frontend
+docker build -t belisasari-elizaos ./elizaos-agents
+docker build -t belisasari-bitquery ./bitquery
+docker build -t belisasari-scraper ./js-scraper
 
 # Run services individually
-docker run -d --name wojat-frontend -p 3000:3000 --env-file .env wojat-frontend
-docker run -d --name wojat-elizaos --env-file .env wojat-elizaos
-docker run -d --name wojat-bitquery --env-file .env wojat-bitquery
-docker run -d --name wojat-scraper --env-file .env wojat-scraper
+docker run -d --name belisasari-frontend -p 3000:3000 --env-file .env belisasari-frontend
+docker run -d --name belisasari-elizaos --env-file .env belisasari-elizaos
+docker run -d --name belisasari-bitquery --env-file .env belisasari-bitquery
+docker run -d --name belisasari-scraper --env-file .env belisasari-scraper
 ```
 
 ### Method 2: Ubuntu Server Deployment (Recommended)
@@ -174,7 +174,7 @@ docker-compose logs --tail=50
 ```json
 {
   "status": "healthy",
-  "message": "Wojat Platform is running",
+  "message": "Belisasari Platform is running",
   "timestamp": "2025-01-15T10:00:00.000Z",
   "services": {
     "frontend": "running",
@@ -207,7 +207,7 @@ docker-compose logs -f
 docker-compose logs -f frontend
 
 # Save logs to file
-docker-compose logs > wojat-logs.txt
+docker-compose logs > belisasari-logs.txt
 ```
 
 ## 🛠️ Development vs Production
@@ -270,7 +270,7 @@ docker system prune -a
 
 ## 🎉 Success Indicators
 
-Your Wojat Platform is successfully deployed when:
+Your Belisasari Platform is successfully deployed when:
 - ✅ All containers are running: `docker-compose ps`
 - ✅ Frontend is accessible: `http://localhost:3000`
 - ✅ Health check passes: `curl http://localhost:3000/api/health`

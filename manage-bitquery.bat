@@ -1,5 +1,5 @@
 @echo off
-REM Wojat Bitquery Service Management Script for Windows
+REM Belisasari Bitquery Service Management Script for Windows
 REM This script helps manage the scheduled Bitquery service
 
 setlocal enabledelayedexpansion
@@ -23,7 +23,7 @@ echo.
 goto :help
 
 :start
-echo [INFO] Starting Wojat Bitquery scheduled service...
+echo [INFO] Starting Belisasari Bitquery scheduled service...
 docker-compose ps bitquery | findstr "Up" >nul
 if !errorlevel! equ 0 (
     echo [WARNING] Bitquery service is already running
@@ -37,19 +37,19 @@ docker-compose up -d bitquery
 goto :end
 
 :stop
-echo [INFO] Stopping Wojat Bitquery scheduled service...
+echo [INFO] Stopping Belisasari Bitquery scheduled service...
 docker-compose stop bitquery
 echo [SUCCESS] Bitquery scheduled service stopped
 goto :end
 
 :restart
-echo [INFO] Restarting Wojat Bitquery scheduled service...
+echo [INFO] Restarting Belisasari Bitquery scheduled service...
 docker-compose restart bitquery
 echo [SUCCESS] Bitquery scheduled service restarted
 goto :end
 
 :status
-echo [INFO] Wojat Bitquery Service Status:
+echo [INFO] Belisasari Bitquery Service Status:
 echo.
 docker-compose ps bitquery | findstr "Up" >nul
 if !errorlevel! equ 0 (
@@ -113,7 +113,7 @@ echo [SUCCESS] Bitquery Docker image built successfully
 goto :end
 
 :help
-echo Wojat Bitquery Service Management
+echo Belisasari Bitquery Service Management
 echo.
 echo Usage: %0 [COMMAND]
 echo.

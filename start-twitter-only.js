@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Twitter-Only Wojat Platform Startup Script
+ * Twitter-Only Belisasari Platform Startup Script
  * Runs only the Twitter automation system
  */
 

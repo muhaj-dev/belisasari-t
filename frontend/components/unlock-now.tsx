@@ -65,7 +65,7 @@ export default function UnlockNow({ text }: { text: string }) {
               setPaid(true);
               toast({
                 title: "Payment Successful",
-                description: "You have unlocked Bimboh Paid Tier.",
+                description: "You have unlocked Belisasari Paid Tier.",
               });
             }
           } else setPaid(true);

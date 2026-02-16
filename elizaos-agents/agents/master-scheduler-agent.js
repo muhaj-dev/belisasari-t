@@ -1,4 +1,4 @@
-// Wojat Master Scheduler Agent - Coordinates Twitter social media agents
+// Belisasari Master Scheduler Agent - Coordinates Twitter social media agents
 import ContentGeneratorAgent from './content-generator-agent.js';
 import TwitterManagerAgent from './twitter-manager-agent.js';
 import dotenv from 'dotenv';
@@ -7,7 +7,7 @@ dotenv.config();
 
 export class MasterSchedulerAgent {
   constructor() {
-    this.name = 'Wojat Master Scheduler Agent';
+    this.name = 'Belisasari Master Scheduler Agent';
     this.personality = 'Strategic coordinator focused on maximizing Twitter impact and community engagement';
     this.goals = [
       'Coordinate Twitter platform for maximum impact',
@@ -44,7 +44,7 @@ export class MasterSchedulerAgent {
   // Initialize Twitter-only agents
   async initializeTwitterOnly() {
     try {
-      console.log('🎯 Initializing Wojat Master Scheduler Agent (Twitter Only)...');
+      console.log('🎯 Initializing Belisasari Master Scheduler Agent (Twitter Only)...');
       
       // Initialize Twitter agents only
       const initResults = await Promise.allSettled([
@@ -57,10 +57,10 @@ export class MasterSchedulerAgent {
       // Create initial schedule
       this.createTwitterSchedule();
       
-      console.log('✅ Wojat Master Scheduler Agent (Twitter Only) initialized successfully');
+      console.log('✅ Belisasari Master Scheduler Agent (Twitter Only) initialized successfully');
       return true;
     } catch (error) {
-      console.error('❌ Failed to initialize Wojat Master Scheduler Agent:', error);
+      console.error('❌ Failed to initialize Belisasari Master Scheduler Agent:', error);
       return false;
     }
   }

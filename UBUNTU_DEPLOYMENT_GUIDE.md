@@ -1,4 +1,4 @@
-# Wojat Platform - Ubuntu Server Deployment Guide
+# Belisasari Platform - Ubuntu Server Deployment Guide
 
 ## 🚀 Quick Start
 
@@ -12,8 +12,8 @@
 
 ```bash
 # Clone the repository
-git clone <your-repo-url> wojat
-cd wojat
+git clone <your-repo-url> belisasari
+cd belisasari
 
 # Make deployment script executable and run
 chmod +x deploy-ubuntu.sh
@@ -40,49 +40,49 @@ sudo apt install -y curl wget git build-essential
 
 #### Step 2: Setup User and Directories
 ```bash
-# Create wojat user
-sudo useradd -r -s /bin/bash -d /opt/wojat -m wojat
+# Create belisasari user
+sudo useradd -r -s /bin/bash -d /opt/belisasari -m belisasari
 
 # Create directories
-sudo mkdir -p /opt/wojat
-sudo mkdir -p /var/log/wojat
-sudo chown -R wojat:wojat /opt/wojat
-sudo chown -R wojat:wojat /var/log/wojat
+sudo mkdir -p /opt/belisasari
+sudo mkdir -p /var/log/belisasari
+sudo chown -R belisasari:belisasari /opt/belisasari
+sudo chown -R belisasari:belisasari /var/log/belisasari
 ```
 
 #### Step 3: Deploy Application
 ```bash
 # Copy application files
-sudo cp -r . /opt/wojat/
-sudo chown -R wojat:wojat /opt/wojat
+sudo cp -r . /opt/belisasari/
+sudo chown -R belisasari:belisasari /opt/belisasari
 
 # Install dependencies
-sudo -u wojat bash -c "cd /opt/wojat && yarn install"
-sudo -u wojat bash -c "cd /opt/wojat/frontend && yarn install && yarn build"
-sudo -u wojat bash -c "cd /opt/wojat/elizaos-agents && npm install"
-sudo -u wojat bash -c "cd /opt/wojat/bitquery && npm install"
-sudo -u wojat bash -c "cd /opt/wojat/js-scraper && npm install"
+sudo -u belisasari bash -c "cd /opt/belisasari && yarn install"
+sudo -u belisasari bash -c "cd /opt/belisasari/frontend && yarn install && yarn build"
+sudo -u belisasari bash -c "cd /opt/belisasari/elizaos-agents && npm install"
+sudo -u belisasari bash -c "cd /opt/belisasari/bitquery && npm install"
+sudo -u belisasari bash -c "cd /opt/belisasari/js-scraper && npm install"
 ```
 
 #### Step 4: Configure Environment
 ```bash
 # Copy environment template
-sudo cp /opt/wojat/env.example /opt/wojat/.env
-sudo chown wojat:wojat /opt/wojat/.env
+sudo cp /opt/belisasari/env.example /opt/belisasari/.env
+sudo chown belisasari:belisasari /opt/belisasari/.env
 
 # Edit environment file
-sudo nano /opt/wojat/.env
+sudo nano /opt/belisasari/.env
 ```
 
 #### Step 5: Install Systemd Service
 ```bash
 # Copy service file
-sudo cp /opt/wojat/wojat.service /etc/systemd/system/
+sudo cp /opt/belisasari/belisasari.service /etc/systemd/system/
 
 # Reload systemd and enable service
 sudo systemctl daemon-reload
-sudo systemctl enable wojat
-sudo systemctl start wojat
+sudo systemctl enable belisasari
+sudo systemctl start belisasari
 ```
 
 #### Step 6: Configure Firewall
@@ -96,7 +96,7 @@ sudo ufw --force enable
 
 ### Environment Variables
 
-Edit `/opt/wojat/.env` with your actual values:
+Edit `/opt/belisasari/.env` with your actual values:
 
 ```bash
 # Required Variables
@@ -118,19 +118,19 @@ ZORO_ACCESS_TOKEN_SECRET=your_twitter_access_token_secret
 
 ```bash
 # Start service
-sudo systemctl start wojat
+sudo systemctl start belisasari
 
 # Stop service
-sudo systemctl stop wojat
+sudo systemctl stop belisasari
 
 # Restart service
-sudo systemctl restart wojat
+sudo systemctl restart belisasari
 
 # Check status
-sudo systemctl status wojat
+sudo systemctl status belisasari
 
 # View logs
-sudo journalctl -u wojat -f
+sudo journalctl -u belisasari -f
 ```
 
 ## 🌐 Accessing the Application
@@ -174,13 +174,13 @@ yarn docker:down
 #### 1. Service Won't Start
 ```bash
 # Check service status
-sudo systemctl status wojat
+sudo systemctl status belisasari
 
 # View detailed logs
-sudo journalctl -u wojat -f
+sudo journalctl -u belisasari -f
 
 # Check environment file
-sudo cat /opt/wojat/.env
+sudo cat /opt/belisasari/.env
 ```
 
 #### 2. Port Already in Use
@@ -195,20 +195,20 @@ sudo kill -9 <PID>
 #### 3. Permission Issues
 ```bash
 # Fix ownership
-sudo chown -R wojat:wojat /opt/wojat
-sudo chown -R wojat:wojat /var/log/wojat
+sudo chown -R belisasari:belisasari /opt/belisasari
+sudo chown -R belisasari:belisasari /var/log/belisasari
 ```
 
 #### 4. Dependencies Issues
 ```bash
 # Reinstall dependencies
-sudo -u wojat bash -c "cd /opt/wojat && yarn install"
-sudo -u wojat bash -c "cd /opt/wojat/frontend && yarn install"
+sudo -u belisasari bash -c "cd /opt/belisasari && yarn install"
+sudo -u belisasari bash -c "cd /opt/belisasari/frontend && yarn install"
 ```
 
 ### Log Locations
-- **Systemd logs**: `sudo journalctl -u wojat -f`
-- **Application logs**: `/var/log/wojat/`
+- **Systemd logs**: `sudo journalctl -u belisasari -f`
+- **Application logs**: `/var/log/belisasari/`
 - **Service logs**: Available through systemd
 
 ## 🔒 Security Considerations
@@ -235,7 +235,7 @@ sudo apt install nginx
 ```
 
 ### User Permissions
-- Service runs as `wojat` user (non-root)
+- Service runs as `belisasari` user (non-root)
 - Limited file system access
 - No sudo privileges
 
@@ -247,11 +247,11 @@ sudo apt install nginx
 curl http://localhost:3000/api/health
 
 # Check service status
-sudo systemctl status wojat
+sudo systemctl status belisasari
 ```
 
 ### Log Rotation
-Log rotation is automatically configured via `/etc/logrotate.d/wojat`
+Log rotation is automatically configured via `/etc/logrotate.d/belisasari`
 
 ### Performance Monitoring
 ```bash
@@ -270,45 +270,45 @@ netstat -tulpn
 ### Updating the Application
 ```bash
 # Stop service
-sudo systemctl stop wojat
+sudo systemctl stop belisasari
 
 # Backup current version
-sudo cp -r /opt/wojat /opt/wojat.backup
+sudo cp -r /opt/belisasari /opt/belisasari.backup
 
 # Update code
-cd /opt/wojat
-sudo -u wojat git pull
+cd /opt/belisasari
+sudo -u belisasari git pull
 
 # Reinstall dependencies
-sudo -u wojat yarn install
-sudo -u wojat bash -c "cd frontend && yarn install && yarn build"
+sudo -u belisasari yarn install
+sudo -u belisasari bash -c "cd frontend && yarn install && yarn build"
 
 # Restart service
-sudo systemctl start wojat
+sudo systemctl start belisasari
 ```
 
 ## 📞 Support
 
 ### Getting Help
-1. Check logs: `sudo journalctl -u wojat -f`
-2. Verify configuration: `sudo cat /opt/wojat/.env`
-3. Check service status: `sudo systemctl status wojat`
+1. Check logs: `sudo journalctl -u belisasari -f`
+2. Verify configuration: `sudo cat /opt/belisasari/.env`
+3. Check service status: `sudo systemctl status belisasari`
 4. Review this documentation
 
 ### Useful Commands
 ```bash
 # Quick status check
-sudo systemctl status wojat && curl -s http://localhost:3000/api/health
+sudo systemctl status belisasari && curl -s http://localhost:3000/api/health
 
 # Restart all services
-sudo systemctl restart wojat
+sudo systemctl restart belisasari
 
 # View real-time logs
-sudo journalctl -u wojat -f --since "1 hour ago"
+sudo journalctl -u belisasari -f --since "1 hour ago"
 ```
 
 ---
 
 ## 🎉 Success!
 
-Once deployed, your Wojat Platform will be accessible at `http://YOUR_SERVER_IP:3000` with all services running automatically. The platform will continuously monitor TikTok trends, analyze Solana blockchain data, and provide AI-powered insights for memecoin trading.
+Once deployed, your Belisasari Platform will be accessible at `http://YOUR_SERVER_IP:3000` with all services running automatically. The platform will continuously monitor TikTok trends, analyze Solana blockchain data, and provide AI-powered insights for memecoin trading.

@@ -2,7 +2,7 @@
 
 ## 🎉 Implementation Summary
 
-Phase 2 has been successfully implemented, transforming Wojat from a simple data collector into a comprehensive social media ecosystem that actively builds and engages communities around memecoin trading.
+Phase 2 has been successfully implemented, transforming Belisasari from a simple data collector into a comprehensive social media ecosystem that actively builds and engages communities around memecoin trading.
 
 ## 🏗️ Architecture Implemented
 

@@ -1,8 +1,8 @@
-# 🚀 Wojat - AI-Powered Memecoin Hunting Platform
+# 🚀 Belisasari - AI-Powered Memecoin Hunting Platform
 
 <div align="center">
 
-![Wojat Logo](https://img.shields.io/badge/Wojat-Memecoin%20Hunter-blue?style=for-the-badge&logo=bitcoin)
+![Belisasari Logo](https://img.shields.io/badge/Belisasari-Memecoin%20Hunter-blue?style=for-the-badge&logo=bitcoin)
 ![Version](https://img.shields.io/badge/version-1.0.0-green?style=for-the-badge)
 ![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)
 
@@ -16,9 +16,9 @@
 
 ---
 
-## 🎯 **What is Wojat?**
+## 🎯 **What is Belisasari?**
 
-Wojat is a comprehensive, AI-powered memecoin hunting platform that combines **real-time data collection**, **social media analysis**, and **AI-driven insights** to help traders discover the next big memecoin opportunities. Built with modern web technologies and powered by advanced AI agents.
+Belisasari is a comprehensive, AI-powered memecoin hunting platform that combines **real-time data collection**, **social media analysis**, and **AI-driven insights** to help traders discover the next big memecoin opportunities. Built with modern web technologies and powered by advanced AI agents.
 
 ### 🌟 **Key Features**
 
@@ -81,8 +81,8 @@ graph TB
 ### **1. Clone the Repository**
 
 ```bash
-git clone https://github.com/your-username/wojat.git
-cd wojat
+git clone https://github.com/your-username/belisasari.git
+cd belisasari
 ```
 
 ### **2. Install Dependencies**
@@ -141,7 +141,7 @@ psql -h your-supabase-host -U postgres -d postgres -f complete_supabase_schema.s
 
 ```bash
 # Start all services
-yarn wojat
+yarn belisasari
 
 # Or start individual services
 yarn start:frontend    # Frontend only
@@ -160,7 +160,7 @@ yarn start:scrapers    # All scrapers
 ## 📁 **Project Structure**
 
 ```
-wojat/
+belisasari/
 ├── 📁 frontend/                 # Next.js frontend application
 │   ├── 📁 app/                 # App router pages
 │   ├── 📁 components/          # React components
@@ -178,7 +178,7 @@ wojat/
 │   └── 📄 package.json
 ├── 📁 .github/workflows/       # GitHub Actions CI/CD
 ├── 📄 docker-compose.yml       # Docker services configuration
-├── 📄 start-wojat-server.js    # Main orchestrator script
+├── 📄 start-belisasari-server.js    # Main orchestrator script
 └── 📄 README.md                # This file
 ```
 
@@ -343,7 +343,7 @@ docker-compose exec bitquery cat /var/log/bitquery-cron.log
 
 ```bash
 # Root level
-yarn wojat              # Start all services
+yarn belisasari              # Start all services
 yarn start:all          # Alternative start command
 yarn docker:build       # Build Docker images
 yarn docker:up          # Start Docker services
@@ -454,10 +454,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📊 **Project Status**
 
-![GitHub last commit](https://img.shields.io/github/last-commit/your-username/wojat?style=flat-square)
-![GitHub issues](https://img.shields.io/github/issues/your-username/wojat?style=flat-square)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/your-username/wojat?style=flat-square)
-![GitHub stars](https://img.shields.io/github/stars/your-username/wojat?style=flat-square)
+![GitHub last commit](https://img.shields.io/github/last-commit/your-username/belisasari?style=flat-square)
+![GitHub issues](https://img.shields.io/github/issues/your-username/belisasari?style=flat-square)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/your-username/belisasari?style=flat-square)
+![GitHub stars](https://img.shields.io/github/stars/your-username/belisasari?style=flat-square)
 
 ---
 
@@ -465,6 +465,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **🚀 Built with ❤️ for the memecoin community**
 
-[⭐ Star this repo](https://github.com/your-username/wojat) | [🐛 Report Bug](https://github.com/your-username/wojat/issues) | [💡 Request Feature](https://github.com/your-username/wojat/issues)
+[⭐ Star this repo](https://github.com/your-username/belisasari) | [🐛 Report Bug](https://github.com/your-username/belisasari/issues) | [💡 Request Feature](https://github.com/your-username/belisasari/issues)
 
 </div>

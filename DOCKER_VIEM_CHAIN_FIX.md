@@ -121,4 +121,4 @@ import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
 
 ## 🎉 **Result**
 
-The Wojat platform should now build successfully without module resolution errors! The core functionality remains intact while eliminating the problematic dependency chain. 🚀
+The Belisasari platform should now build successfully without module resolution errors! The core functionality remains intact while eliminating the problematic dependency chain. 🚀

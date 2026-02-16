@@ -26,7 +26,7 @@ export default function SSRSafeProvider({ children }: { children: React.ReactNod
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading Bimboh...</p>
+          <p className="text-muted-foreground">Loading Belisasari...</p>
         </div>
       </div>
     );

@@ -102,10 +102,10 @@ export default function Tweets({
       <div className="flex justify-between sen my-12 items-center">
         <div className="flex flex-col w-full">
           <p className="text-xl md:text-2xl text-center mx-auto md:mx-0 md:text-start font-bold nouns tracking-widest text-iris-primary">
-            Wojat Tweets
+            Belisasari Tweets
           </p>
           <p className="text-xs md:text-sm text-center mx-auto md:mx-0 md:text-start lg:text-md text-muted-foreground font-semibold">
-            View all tweets made by Wojat about ${symbol.toUpperCase()}
+            View all tweets made by Belisasari about ${symbol.toUpperCase()}
           </p>
         </div>
         <p className="hidden md:block font-semibold text-right">
@@ -131,7 +131,7 @@ export default function Tweets({
                 onClick={() => {
                   console.log("tweet", tweet);
                   window.open(
-                    "https://x.com/wojat118721/status/1867331863993627085",
+                    "https://x.com/belisasari/status/1867331863993627085",
                     "_blank"
                   );
                 }}
@@ -139,18 +139,18 @@ export default function Tweets({
                 <CardContent className="p-4 w-[300px] sen">
                   <div className="flex items-center space-x-2">
                     <Image
-                      src={"/wojat.png"}
+                      src={"/belisasari.png"}
                       width={28}
                       height={28}
-                      alt="Wojat Logo"
+                      alt="Belisasari Logo"
                       className="rounded-full"
                     />
                     <div className="flex flex-col justify-center">
                       <p className="text-md font-bold text-white leading-tight">
-                        Wojat
+                        Belisasari
                       </p>
                       <p className="text-xs font-medium text-muted-foreground">
-                        @wojat118721
+                        @belisasari
 
                       </p>
                     </div>

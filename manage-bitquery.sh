@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Wojat Bitquery Service Management Script
+# Belisasari Bitquery Service Management Script
 # This script helps manage the scheduled Bitquery service
 
 set -e
@@ -31,7 +31,7 @@ print_error() {
 
 # Function to show usage
 show_usage() {
-    echo "Wojat Bitquery Service Management"
+    echo "Belisasari Bitquery Service Management"
     echo ""
     echo "Usage: $0 [COMMAND]"
     echo ""
@@ -54,7 +54,7 @@ show_usage() {
 
 # Function to start the service
 start_service() {
-    print_status "Starting Wojat Bitquery scheduled service..."
+    print_status "Starting Belisasari Bitquery scheduled service..."
     
     if docker-compose ps bitquery | grep -q "Up"; then
         print_warning "Bitquery service is already running"
@@ -70,21 +70,21 @@ start_service() {
 
 # Function to stop the service
 stop_service() {
-    print_status "Stopping Wojat Bitquery scheduled service..."
+    print_status "Stopping Belisasari Bitquery scheduled service..."
     docker-compose stop bitquery
     print_success "Bitquery scheduled service stopped"
 }
 
 # Function to restart the service
 restart_service() {
-    print_status "Restarting Wojat Bitquery scheduled service..."
+    print_status "Restarting Belisasari Bitquery scheduled service..."
     docker-compose restart bitquery
     print_success "Bitquery scheduled service restarted"
 }
 
 # Function to show service status
 show_status() {
-    print_status "Wojat Bitquery Service Status:"
+    print_status "Belisasari Bitquery Service Status:"
     echo ""
     
     # Check if container is running

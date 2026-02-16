@@ -26,7 +26,7 @@ export async function GET() {
     // Basic health check
     return NextResponse.json({
       status: 'healthy',
-      message: 'Wojat Platform is running',
+      message: 'Belisasari Platform is running',
       timestamp: new Date().toISOString(),
       services: {
         frontend: 'running',

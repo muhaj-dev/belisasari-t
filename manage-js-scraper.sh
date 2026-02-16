@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Wojat JS Scraper Service Management Script
+# Belisasari JS Scraper Service Management Script
 # This script helps manage the scheduled JS Scraper service (TikTok, Telegram, Outlight)
 
 set -e
@@ -31,7 +31,7 @@ print_error() {
 
 # Function to show usage
 show_usage() {
-    echo "Wojat JS Scraper Service Management"
+    echo "Belisasari JS Scraper Service Management"
     echo ""
     echo "Usage: $0 [COMMAND]"
     echo ""
@@ -57,7 +57,7 @@ show_usage() {
 
 # Function to start the service
 start_service() {
-    print_status "Starting Wojat JS Scraper scheduled service..."
+    print_status "Starting Belisasari JS Scraper scheduled service..."
     
     if docker-compose ps js-scraper | grep -q "Up"; then
         print_warning "JS Scraper service is already running"
@@ -75,21 +75,21 @@ start_service() {
 
 # Function to stop the service
 stop_service() {
-    print_status "Stopping Wojat JS Scraper scheduled service..."
+    print_status "Stopping Belisasari JS Scraper scheduled service..."
     docker-compose stop js-scraper
     print_success "JS Scraper scheduled service stopped"
 }
 
 # Function to restart the service
 restart_service() {
-    print_status "Restarting Wojat JS Scraper scheduled service..."
+    print_status "Restarting Belisasari JS Scraper scheduled service..."
     docker-compose restart js-scraper
     print_success "JS Scraper scheduled service restarted"
 }
 
 # Function to show service status
 show_status() {
-    print_status "Wojat JS Scraper Service Status:"
+    print_status "Belisasari JS Scraper Service Status:"
     echo ""
     
     # Check if container is running
