@@ -1,0 +1,212 @@
+{
+  "data": {
+    "Solana": {
+      "DEXTrades": [
+        {
+          "Block": {
+            "Time": "2026-02-15T18:29:12Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "EVovaYEYaUXK6JophjMGkkG7cUZ9Gc9GufYteTtmpump",
+                "Name": "Unidentified Feline Object",
+                "Symbol": "UFO",
+                "Uri": "https://metadata.rapidlaunch.io/metadata/b3eeaecf-0129-4e5b-b5db-28e05141a67d.json"
+              },
+              "Price": 6.39384653724895e-8,
+              "PriceInUSD": 0.000005542723766579271
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2026-02-15T18:29:12Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "EQfJftVcd4BvHaHdChpVzzH2J993grtihiyAuFVeMux6",
+                "Name": "UFO",
+                "Symbol": "UFO",
+                "Uri": "https://cf-ipfs.com/ipfs/QmcbSvoT4qtHBibggPwt9hQqzTBeagw2XynxyrrwowsUvc"
+              },
+              "Price": 6.919003740184032e-8,
+              "PriceInUSD": 0.0000059979741847650964
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2026-02-15T18:29:12Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "56ebdsLDFsGk2ucrUqt8XtJnfyYonH1Ar7ABshGpump",
+                "Name": "Pumpfun Pills",
+                "Symbol": "PFP",
+                "Uri": "https://ipfs.io/ipfs/bafkreifxsnvm5erg3gbyaazhvmn5fwzmffvludptos74vol4yx6eeqxxty"
+              },
+              "Price": 1.5653116502787088e-7,
+              "PriceInUSD": 0.000013569437482677275
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2026-02-15T18:29:12Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "GDyWzT6v7bsKBoj5Cz6MBV4wH3nqAtLZvAJtVQZHpump",
+                "Name": "This is why RAM costs so much",
+                "Symbol": "RAM",
+                "Uri": "https://meta.uxento.io/data/49825cef-3ac1-4ccc-a907-9256c3b23c62"
+              },
+              "Price": 2.329537460710697e-7,
+              "PriceInUSD": 0.000020194389360764174
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2026-02-15T18:29:11Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "9hyvG24NWFRtiuTo1r6p3gaGKDmMi4LwJDTGE16bqSim",
+                "Name": "interlinked",
+                "Symbol": "interlinked",
+                "Uri": "https://metadata.j7tracker.com/metadata/c4e474ba57cb42eb.json"
+              },
+              "Price": 3.444052867137854e-8,
+              "PriceInUSD": 0.000002985594597685478
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2026-02-15T18:29:11Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "8eFfxjDGTEdbjirKMB4P5eNakfQwxsHMx1rhtuZYpump",
+                "Name": "interlinked",
+                "Symbol": "interlinke",
+                "Uri": "https://ipfs.io/ipfs/bafkreig5ynik4xbx23mfdi6j22b5weodvf3jrgtpgctdtgfrt6snnwh3ei"
+              },
+              "Price": 7.724305003610504e-8,
+              "PriceInUSD": 0.000006696077028811575
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2026-02-15T18:29:11Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "7GmbWZTA5ZKFTstCjdKkVZ1w8fWnH18xzDjCRVNUpump",
+                "Name": "Ai Constitution ",
+                "Symbol": "Parsley",
+                "Uri": "https://ipfs.io/ipfs/bafkreihns7ckbh6auewcn4djddoybycau7pwpgq2van3ertdogv3mtjmnu"
+              },
+              "Price": 3.516791857882339e-8,
+              "PriceInUSD": 0.0000030486508706829085
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2026-02-15T18:29:11Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "RfVfDgsGGacPjRxZQprpQ6CeFB5Xcj5MYfonHczpump",
+                "Name": "",
+                "Symbol": "",
+                "Uri": ""
+              },
+              "Price": 7.788577403328073e-8,
+              "PriceInUSD": 0.000006751793748844542
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2026-02-15T18:29:11Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "AkBhKH4tkHWf9u2uRj21pHosfdgdLXYHp7Rm7nXXpump",
+                "Name": "Some Kind of Wolf",
+                "Symbol": "WOLF",
+                "Uri": "https://ipfs.io/ipfs/bafkreia4vvhsevyqm44ew6eqgjwde4zm26w6u5cov73g5dlj43kxvzey5i"
+              },
+              "Price": 1.3206582088055536e-7,
+              "PriceInUSD": 0.000011448575749871081
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2026-02-15T18:29:11Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "BotEPjpFZMNpP8UEBKTCPFudLoXXKLH7QocmTsr3pump",
+                "Name": "BAKED",
+                "Symbol": "PI",
+                "Uri": "https://ipfs.io/ipfs/bafkreidtqdr5uu3p3hcsid6d5hlc7n7msv36vzmujwue5qzrpa5gm454qi"
+              },
+              "Price": 1.551129146745597e-7,
+              "PriceInUSD": 0.000013446491617548025
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2026-02-15T18:29:11Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "9PSoZRi6UkAwTcs3mqqxRLDnGYavL5p8JT4jX5Hvpump",
+                "Name": "SATURN",
+                "Symbol": "$SATURN",
+                "Uri": "https://ipfs.io/ipfs/bafkreih3r65rja53vwdrpcr6qu4rh5yzoisf3n66ohaonband36bwyf4pm"
+              },
+              "Price": 1.501458181708777e-8,
+              "PriceInUSD": 0.000001301590192976836
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2026-02-15T18:29:11Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "AQrdgepNVWdQmPe2L8eKT5PGyxgEvWFPGUUuf1capump",
+                "Name": "coomer",
+                "Symbol": "coomer",
+                "Uri": "https://api.vortexdeployer.com/metadata/4dd0e61e-91f7-43fb-bfc6-56f9e83b8cc8.json"
+              },
+              "Price": 2.8584052032131406e-7,
+              "PriceInUSD": 0.000024779059619376118
+            }
+          }
+        }
+      ]
+    }
+  }
+}

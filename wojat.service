@@ -1,0 +1,36 @@
+[Unit]
+Description=Wojat Memecoin Hunting Platform
+Documentation=https://github.com/your-username/wojat
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=wojat
+Group=wojat
+WorkingDirectory=/opt/wojat
+ExecStart=/usr/bin/node start-wojat-server.js
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=wojat
+
+# Environment variables
+Environment=NODE_ENV=production
+EnvironmentFile=/opt/wojat/.env
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/wojat/logs
+ReadWritePaths=/var/log/wojat
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=32768
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,77 @@
+# Bitquery Scheduled Service Dockerfile with Manual Run Support
+FROM node:22-alpine
+
+# Install build dependencies for native modules and cron
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    gcc \
+    libc-dev \
+    linux-headers \
+    pkgconfig \
+    libusb-dev \
+    eudev-dev \
+    dcron \
+    tzdata \
+    bash
+
+WORKDIR /app
+
+# Install dependencies
+COPY package*.json ./
+COPY yarn.lock* ./
+
+# Use yarn if yarn.lock exists, otherwise use npm
+RUN if [ -f yarn.lock ]; then \
+        yarn install --frozen-lockfile --production --legacy-peer-deps; \
+    else \
+        npm install --omit=dev --legacy-peer-deps; \
+    fi
+
+# Copy source code
+COPY . .
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S bitquery -u 1001
+
+# Change ownership
+RUN chown -R bitquery:nodejs /app
+
+# Create log directory and set permissions
+RUN mkdir -p /var/log && chown bitquery:nodejs /var/log
+
+# Create cron job to run bitquery every 12 hours (at 2 AM and 2 PM UTC)
+# Format: minute hour day month weekday command
+RUN echo "0 2,14 * * * cd /app && su -s /bin/bash bitquery -c 'echo \"[$(date)] Starting scheduled Bitquery run...\" >> /var/log/bitquery-cron.log && node index.mjs >> /var/log/bitquery-cron.log 2>&1 && echo \"[$(date)] Bitquery run completed\" >> /var/log/bitquery-cron.log'" | crontab -
+
+# Keep running as root for cron daemon, but bitquery runs as bitquery user
+
+# Expose port (if needed)
+EXPOSE 3002
+
+# Create startup script with multiple options
+RUN cat > /app/start-scheduled.sh << 'EOF'
+#!/bin/bash
+
+echo "🚀 Starting Wojat Bitquery Scheduled Service..."
+echo "📅 Cron job configured to run every 12 hours:"
+echo "   - Bitquery: Every 12 hours at 2:00 AM and 2:00 PM UTC"
+echo "📝 Logs will be written to /var/log/bitquery-cron.log"
+echo ""
+echo "Available commands:"
+echo "  - Run manually: docker exec <container> su -s /bin/bash bitquery -c 'cd /app && node index.mjs'"
+echo "  - View logs: docker exec <container> tail -f /var/log/bitquery-cron.log"
+echo "  - Check cron: docker exec <container> crontab -l"
+echo ""
+
+# Start cron daemon in foreground
+echo "⏰ Starting cron daemon..."
+crond -f -l 2
+EOF
+
+RUN chmod +x /app/start-scheduled.sh
+
+# Start the scheduled service
+CMD ["/app/start-scheduled.sh"]

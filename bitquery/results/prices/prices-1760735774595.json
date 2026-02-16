@@ -1,0 +1,943 @@
+{
+  "data": {
+    "Solana": {
+      "DEXTrades": [
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:55Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "9c1bL9Qn38NMifTvrTAddgE4r6wCRxgNCwBNALcPpump",
+                "Name": "BLUAI",
+                "Symbol": "BLUAI",
+                "Uri": "https://ipfs.io/ipfs/bafkreiad7uyig3zmweqbksvf5rwc3fur2m5iwnj3csndpg233u6dlr27he"
+              },
+              "Price": 1.100494295046169e-7,
+              "PriceInUSD": 0.000020272904703851736
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:55Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "7yU3mikLzQm8rMVHihpVZhhkZqeGFL1NkApQfSGdpump",
+                "Name": "peanutcoin",
+                "Symbol": "peanutcoin",
+                "Uri": "https://ipfs.io/ipfs/bafkreiekus333sajpxks3xct2uoekj2k7rqdat4up46xtlkgusgaowh5m4"
+              },
+              "Price": 8.457083229734166e-8,
+              "PriceInUSD": 0.000015579330411862842
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:55Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "oQADD9htgjV9d4ZBbVMGmXHnddnjzpN6g8pEfp5pump",
+                "Name": "Gold pandu pandas",
+                "Symbol": "GPANDU",
+                "Uri": "https://ipfs.io/ipfs/bafkreidtitbmcwmv37qmr5hyf4t5wm2c56rcxe65hzios4eonkz33ks5kq"
+              },
+              "Price": 4.4987252042581225e-8,
+              "PriceInUSD": 0.000008287387564413922
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:55Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "Dyih8NKqshVDMAMpVGgD94bURHv5rJxmueQaukpXpump",
+                "Name": "The NPC",
+                "Symbol": "NPC",
+                "Uri": "https://ipfs.io/ipfs/bafkreidky44wj3obua6flhnlsoqvmjfrmsf5zfg5ua6dbjfyurduy34v6i"
+              },
+              "Price": 3.0788165048860084e-8,
+              "PriceInUSD": 0.000005671683523046466
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:54Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "FN8ZMdtuUdxRJmTKwE8rijZLXFcD9N7jUhgfVDEbpump",
+                "Name": "Tony",
+                "Symbol": "Tony",
+                "Uri": "https://metadata.retlie.com/data/60a22cd2-3ba6-452f-a9ce-d6cf2ab82ed2"
+              },
+              "Price": 2.7968313140800672e-8,
+              "PriceInUSD": 0.000005152220684680142
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:54Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "ARN5P7ZpXiffoUuy25FX2KoR8rhsS9DEBe6AkXn5pump",
+                "Name": "Tony",
+                "Symbol": "Tony",
+                "Uri": "https://metadata.retlie.com/data/79cd27f1-e937-492d-beb5-c014389c077c"
+              },
+              "Price": 2.7968313140800672e-8,
+              "PriceInUSD": 0.000005152220684680142
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:54Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "DL12V6NWntHpeJngRTtpaontt8zDzLsfw8aincnUpump",
+                "Name": "Tony",
+                "Symbol": "Tony",
+                "Uri": "https://metadata.retlie.com/data/84103e2c-acc3-42b5-ac1f-4d65b3cfce09"
+              },
+              "Price": 2.7968313140800672e-8,
+              "PriceInUSD": 0.000005152220684680142
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:54Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "88Qaw3Zs3FxmWEC4isHm8Mg362kvYpBGzjKFxYZSpump",
+                "Name": "Baconator",
+                "Symbol": "Baconator",
+                "Uri": "https://metadata.rapidlaunch.io/metadata/821300e7-4514-4072-ab45-844d4b3eb53d.json"
+              },
+              "Price": 7.044062282797144e-8,
+              "PriceInUSD": 0.000012976314736929353
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:54Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "5XwT7Nsr5ZeTMui6XdSLviy2aK91Z4QPMAF7qDpypump",
+                "Name": "catcatclan",
+                "Symbol": "catcatclan",
+                "Uri": "https://ipfs.io/ipfs/bafkreifa2mpatrr5u6xqrgplnzv6hvqg3jbpwb72yxdstjla45azhai75m"
+              },
+              "Price": 5.745982342061995e-8,
+              "PriceInUSD": 0.000010585039193297284
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:54Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "AUh6wLx1HwNX3X2xCjATnkhFr33etuePV1npDs87XMoy",
+                "Name": "vankedisi LAMBO",
+                "Symbol": "LAMBO",
+                "Uri": "https://ipfs.io/ipfs/bafkreifhlzusiswaapfg2tlcrynmgw6drq3kd24tvkx5tm336q5ubbjk4m"
+              },
+              "Price": 1.60780200273e-7,
+              "PriceInUSD": 0.00002961834234918938
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:54Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "2ULoyyf5xZAU77tYZBA2BK1SyrHm65LquKiCXaVSGPYQ",
+                "Name": "Stormy wedding",
+                "Symbol": "SMWD",
+                "Uri": "https://ipfs.io/ipfs/QmZEa5CZeAuhDNenzKW4Pwqn1V4JqeW4aqKQbJeszZ1FYx"
+              },
+              "Price": 2.0034674936443013e-7,
+              "PriceInUSD": 0.00003690714777781891
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:54Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "GXGxEQawBhtyW4gDj2Fbt4xfk5RPtif8nRGAydbhpump",
+                "Name": "Tony",
+                "Symbol": "Tony",
+                "Uri": "https://metadata.retlie.com/data/14e616e0-678a-44fa-bb51-ea43d21f6e1d"
+              },
+              "Price": 2.7968313140800672e-8,
+              "PriceInUSD": 0.000005152220684680142
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:53Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "299knfFGcGVX4979iDdqCfyKz2ZhBK7gYVSn5Wj9pump",
+                "Name": "Tony",
+                "Symbol": "Tony",
+                "Uri": "https://metadata.retlie.com/data/7e5bc2e9-2754-4394-929c-24ecbbb19e8d"
+              },
+              "Price": 3.0754892823858515e-8,
+              "PriceInUSD": 0.000005665554235054894
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:53Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "CZiK3ekXqefUd6saM2hsYaaXUiqSWiSVchTzPQxXpump",
+                "Name": "salaryman",
+                "Symbol": "MAN",
+                "Uri": "https://ipfs.io/ipfs/bafkreiev2mbrb6h7vlwauwb5cvibb6iondbegbno6dnmveq3l7xwnoxgfe"
+              },
+              "Price": 2.2033587537382962e-7,
+              "PriceInUSD": 0.00004058947169831538
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:52Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "BSEPGKrc3V5jTV92zNSL1NVcpFm4vBV8wg1sC7eapump",
+                "Name": "DIRTY MONEY",
+                "Symbol": "DRTY",
+                "Uri": "https://ipfs.io/ipfs/QmYuXS9D6jet7nYGH1bmoCg6LWHPUQTkND6JqPtbnmUxbZ"
+              },
+              "Price": 1.1195019385757875e-7,
+              "PriceInUSD": 0.000020623056583471045
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:52Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "86SKunVPXXzXtnLNiZh4VxVbcUSMRdmSooPUPDGMpump",
+                "Name": "dog in golden hats",
+                "Symbol": "DGH",
+                "Uri": "https://ipfs.io/ipfs/bafkreievjwxijfuxuaoxiqwepzoxlcc77zhjla4xar3yzlevfpzikwwgme"
+              },
+              "Price": 1.1851631109914667e-7,
+              "PriceInUSD": 0.000021832642764079456
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:51Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "BWV1tjZRxGR3qTpnrCUP7YewpSAEESGjS9GUaK85Xwxr",
+                "Name": "Happy old ostrich",
+                "Symbol": "FNPET",
+                "Uri": "https://ipfs.io/ipfs/QmYFsD5GQHfWy6hWCwipS2n9a9hs2miWCrqov3taRPxYXu"
+              },
+              "Price": 1.196048085935139e-7,
+              "PriceInUSD": 0.000022033161804232794
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:51Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "7P4XBrFBL71Z5YkxHuMrz5MTwB1J3pjzRwNSCPZUpump",
+                "Name": "Lynx",
+                "Symbol": "Lynx",
+                "Uri": "https://ipfs.io/ipfs/bafkreibyzzo2podiobc5cvyil43g3tatroq3z3ulrot7boxk5hatlyvb6m"
+              },
+              "Price": 2.8081241359808458e-8,
+              "PriceInUSD": 0.000005173023909491266
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:50Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "Aw53JxVAPb7KHj25kod7qsrPZu5HRBrLR1bLsPh2pump",
+                "Name": "DAL806",
+                "Symbol": "DAL806",
+                "Uri": "https://ipfs.io/ipfs/QmVa26JG5rQLVBLyvY35b9nuH28bPtbmPyJEmRoYT1VYvB"
+              },
+              "Price": 3.2835956160058214e-8,
+              "PriceInUSD": 0.000006048920136062917
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:50Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "CCFusPFiycDKVcbWqFtou94s4y451rtjuAoPjQDtpump",
+                "Name": "Croc",
+                "Symbol": "CROC",
+                "Uri": "https://ipfs.io/ipfs/bafkreieeajmbqfhbtxw2i47zlilzzlujc7xk6qwq4sagu6glmo5qha7bra"
+              },
+              "Price": 2.0227620227056649e-7,
+              "PriceInUSD": 0.000037262584558116176
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:50Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "7nY1cY2zoAeXmtk3bsQgmy8eytkAkd5HrHAGP6zxpump",
+                "Name": "There's only one of me ",
+                "Symbol": "Tooom",
+                "Uri": "https://ipfs.io/ipfs/bafkreidc74lf22gnzg3io2ljmh7q57oamopu7qkc5qbgdzkojc5dcl2laq"
+              },
+              "Price": 1.1640044061442828e-7,
+              "PriceInUSD": 0.0000214428648170653
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:49Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "9qhqjGRNQjHCBE4wnXTCwPp1ZAM7NsLcKswzfBdqpump",
+                "Name": "Golden Solana",
+                "Symbol": "GOLDANA",
+                "Uri": "https://ipfs.io/ipfs/bafkreia4rnxp64rbmsnc422kjqbfppvxflsx4ydeanhsbivr3mahvdyy2m"
+              },
+              "Price": 2.456452832149475e-7,
+              "PriceInUSD": 0.000045251878542072564
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:49Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "CNTP6tTUurVkddAnqN9gh7MA5EwEzgdd38vSTfmqpump",
+                "Name": "The Inflatables",
+                "Symbol": "INFLATABLE",
+                "Uri": "https://ipfs.io/ipfs/bafkreiceff5bawlrtfpunw4vrqpmojg5me5enrcjc3jubwkpqdgjl5adjq"
+              },
+              "Price": 8.973497196037377e-8,
+              "PriceInUSD": 0.000016530649394044743
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:48Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "GHDGX24rPscWgBsp6f1ZMn7fJfSsWF8Knj2HEa9Bpump",
+                "Name": "Respawn",
+                "Symbol": "RSPWN",
+                "Uri": "https://gateway.irys.xyz/jPtQlfgxG4FUya7XgIimP_JuJeEnIFCFRQMuqd6CASc"
+              },
+              "Price": 3.5410583659779977e-7,
+              "PriceInUSD": 0.00006523208627922709
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:48Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "FoSDvQzJe8SQLEroounJJ5SQ4Ae8AxpD5yo7uWnBpump",
+                "Name": "The Bear Dog",
+                "Symbol": "Teddy",
+                "Uri": "https://ipfs.io/ipfs/bafkreibeeaeew36af3zduseb5t55nitoc7uukxi6ot37ayvjn7czazcucm"
+              },
+              "Price": 8.649773185952389e-8,
+              "PriceInUSD": 0.000015934296824445428
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:48Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "GeLbBRvpnz8mK9fFLGEoxAT1SoXHPGffn8PHPY88pump",
+                "Name": "FOR GOD COIN",
+                "Symbol": "ForGOD",
+                "Uri": "https://ipfs.io/ipfs/QmbZA9oMqb9JoupmS9vzYgekAxqtydAPz2kmDUo3SgRL41"
+              },
+              "Price": 4.5409819811174436e-8,
+              "PriceInUSD": 0.000008365231458218477
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:48Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "J1UQr5HK7yG5hsLChtxoycPC63ssuCWeL3n3WkKHpump",
+                "Name": "Peanut The Peanut",
+                "Symbol": "PNUT",
+                "Uri": "https://metadata.rapidlaunch.io/metadata/0ea620cf-1328-4020-a2cd-f0461dc64043.json"
+              },
+              "Price": 4.656558633825943e-8,
+              "PriceInUSD": 0.000008578142554341087
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:45Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "7xi6QL9GufrDTTC1PQwf6ZaZvVgf4VL1TfEpmvJ8pump",
+                "Name": "BROKETORICH",
+                "Symbol": "BTR",
+                "Uri": "https://ipfs.io/ipfs/QmT6X5jXg8tzjYyR3s1sTujjhk5aveWzqqUz6euefSZT7t"
+              },
+              "Price": 2.836628336772841e-8,
+              "PriceInUSD": 0.000005225533309032618
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:44Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "rnJUxK5LBzmmjo5apwUy45y2BFNxeGuhirQbYg8B8e7",
+                "Name": "pls algo",
+                "Symbol": "ALGO",
+                "Uri": "https://ipfs.io/ipfs/QmPUJxfBnq9fK9Xpg79StAbRQDQtepQ6XhVyDAVmFoKUYi"
+              },
+              "Price": 2.8350200781666634e-8,
+              "PriceInUSD": 0.000005222570633659474
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:43Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "FZny4CTgzGwy8wZTQ7ASFUMjJGD75ZftGBZmfgKKpump",
+                "Name": "BLUAI",
+                "Symbol": "BLUAI",
+                "Uri": "https://ipfs.io/ipfs/bafkreiad7uyig3zmweqbksvf5rwc3fur2m5iwnj3csndpg233u6dlr27he"
+              },
+              "Price": 3.0421068569496124e-8,
+              "PriceInUSD": 0.0000056040583479159315
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:42Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "G6EtzXRRGTY9w5guCakRQNwbd9bh12hp7QCDAoy7pump",
+                "Name": "Pumpfun Got Talent ",
+                "Symbol": "TalentShow",
+                "Uri": "https://ipfs.io/ipfs/bafkreievjuf7bwfd4xj3t32x7gytxwu6bzedlxd75wg4g57z4bp34aajze"
+              },
+              "Price": 7.745759028728013e-8,
+              "PriceInUSD": 0.000014268954901016943
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:42Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "C58j9cdd6VYPwjmquFJmhii8FWgwEQk9EGbgrHjVpump",
+                "Name": "DJ MuskCat",
+                "Symbol": "DJMSK",
+                "Uri": "https://ipfs.io/ipfs/bafkreidzg3oauwoxjs6wnmlidof3t72qi2arszcoi222mjvkhse4u4s6ya"
+              },
+              "Price": 7.076683117327861e-8,
+              "PriceInUSD": 0.000013036407649066948
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:37Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "12FWm6tBvx5pPiaSWfCAYt1vdrGJZmANpEuRNSTppump",
+                "Name": "Spidey D",
+                "Symbol": "Spidey ",
+                "Uri": "https://metadata.rapidlaunch.io/metadata/e33d9434-476f-4e0e-9887-660af875dd7a.json"
+              },
+              "Price": 2.8052501966915558e-8,
+              "PriceInUSD": 0.000005167729643305726
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:36Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "9VzJejdiwrgPDgvGiEb32VfFn1H18eZkqZyLt8rgpump",
+                "Name": "Tony",
+                "Symbol": "Tony",
+                "Uri": "https://metadata.rapidlaunch.io/metadata/deb5bc14-6c3a-4f66-9a1d-b249fe8914e1.json"
+              },
+              "Price": 3.957258735643752e-8,
+              "PriceInUSD": 0.000007289917775795914
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:32Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "GAuA9BDzLZTGzGT7VjifwsE2gW6s6NPh5CHfGZ4Gpump",
+                "Name": "GOLD6900",
+                "Symbol": "GOLD",
+                "Uri": "https://gateway.irys.xyz/bXgjD1ACRQJ9ZCuM7C4_BDhsqikBceGPs-hw5VsPDzM"
+              },
+              "Price": 6.88847901842864e-8,
+              "PriceInUSD": 0.000012689704919299673
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:31Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "2nCw8PhYL4hwECY9SS3RKaW83biCGaXrY4t7BVy6pump",
+                "Name": "Alon is dead ",
+                "Symbol": "RIPALON",
+                "Uri": "https://ipfs.io/ipfs/bafkreigtikr7sfmgddtczwcydqrzssuvk2a7mfttybwvmfsucsrce7vxcm"
+              },
+              "Price": 7.972163489546105e-8,
+              "PriceInUSD": 0.000014686028944867353
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:30Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "72kf2Fy7afCefoffTeGd4hABtz4cG6qCM4eiLngnpump",
+                "Name": "Toni",
+                "Symbol": "Toni",
+                "Uri": "https://auth.flipprtools.com/api/metadata/2cdf51f2-146a-442c-b850-4b75464679b8.json"
+              },
+              "Price": 3.378547524121473e-8,
+              "PriceInUSD": 0.000006223837079598433
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:28Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "Fegmm6AxiuXngwDsTDJ6tTNeuK5DELCscSf8EfhSpump",
+                "Name": "USD Governance",
+                "Symbol": "USDG",
+                "Uri": "https://ipfs.io/ipfs/bafkreiaupg5uzjgumf4tpu3z4mnoljmbbibjhflbosxuxwdaxiwnz2pequ"
+              },
+              "Price": 3.1810882826702934e-8,
+              "PriceInUSD": 0.000005860084863630183
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:28Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "AntzxU2NvkcZfQgRv9WkeGLEx87eS6G5gcKYiDXUpump",
+                "Name": "The Normie",
+                "Symbol": "Normie ",
+                "Uri": "https://ipfs.io/ipfs/bafkreic6m3pmvmw7plqbfz7d24uhmv5b5v4pdfhfv7d2rshqqtpkf3zlga"
+              },
+              "Price": 8.839710735426274e-8,
+              "PriceInUSD": 0.000016284192853666158
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:28Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "4ga8UxvhWYQkUHeDTptZkXhUb9FqWCQyUF8sr2unpump",
+                "Name": "FUCK MY LIFE",
+                "Symbol": "FML",
+                "Uri": "https://ipfs.io/ipfs/bafkreicxsfvfy76tmztrve7emllux3ljofegidu7mv6hyopcaaordydmuy"
+              },
+              "Price": 3.040678880779879e-8,
+              "PriceInUSD": 0.000005601427782274775
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:27Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "JACmBePBszsLoz7ss8sDuu3qRJBc2p7NEnqL4xTbpump",
+                "Name": "Peanut Hat Cult",
+                "Symbol": "PEANUT HAT",
+                "Uri": "https://ipfs.io/ipfs/bafkreibiw5izuctcifamfjv6yci7wz3yz2t53godelvsh3hd2spn6zbkqa"
+              },
+              "Price": 3.17717617291884e-8,
+              "PriceInUSD": 0.000005852878117667097
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:26Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "EWiGv3pqFvqkPSMGPSBMfKpjqTWuRWHH5oksdvKsifsT",
+                "Name": "The great fundraiser",
+                "Symbol": "FGOAT",
+                "Uri": "https://ipfs.io/ipfs/QmZSwXcnHFNh9WSH6ABtzsGc395aCgbgZbcUejzrfyJaQb"
+              },
+              "Price": 2.8107081640876848e-8,
+              "PriceInUSD": 0.000005177784111865584
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:25Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "BP9j31jRCKaDgKrfZttMWJ1ZYurRx6t88xq6LsiWpump",
+                "Name": "Tony",
+                "Symbol": "Tony",
+                "Uri": "https://metadata.retlie.com/data/6d69e816-d415-4d5e-bad8-d7e8d7dcbcea"
+              },
+              "Price": 3.3958981778662026e-8,
+              "PriceInUSD": 0.000006255799821386357
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:25Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "DHQ7NtcQV2VtKo4Lq9KMvZqaMYJoQaoEy8MYmtcjpump",
+                "Name": "Baconator",
+                "Symbol": "Baconator",
+                "Uri": "https://metadata.rapidlaunch.io/metadata/ae598812-8210-4790-87f2-ff7c60bda083.json"
+              },
+              "Price": 2.8052501966915558e-8,
+              "PriceInUSD": 0.000005167729643305726
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:24Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "FZkUX7zVDTJkPbjaBKs198uzVQ8KYVfJjEeMJMjBpump",
+                "Name": "Just a Chill 1g of gold",
+                "Symbol": "CHILLGRAM",
+                "Uri": "https://ipfs.io/ipfs/bafkreict7ttco7kw4n2krrcggk2o4qnn3d7thj6dkkap7sjkzwuhqnfnja"
+              },
+              "Price": 3.55762776114057e-8,
+              "PriceInUSD": 0.000006553732163632378
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:24Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "J4JLikTg6XyJnXi7r7dpTN4rR25EhzVpaiukiaLBpump",
+                "Name": "Pulsar g359",
+                "Symbol": "PG359",
+                "Uri": "https://ipfs.io/ipfs/bafkreia34pffux7jjff5ympp5ojplc6xarbc55h4igghlvnlqfhrzpda7u"
+              },
+              "Price": 2.8480566798973786e-8,
+              "PriceInUSD": 0.0000052465861861015495
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:21Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "3iaAnPZp1YmCeNMTn7C1ryUFvQHya4ChtrmiSsuapump",
+                "Name": "fartvision",
+                "Symbol": "fartvision",
+                "Uri": "https://ipfs.io/ipfs/bafkreih6v27ipszxumsdgo3nmqqao2b2pzxdw6rbjrwbj5fnxn7gh6fh64"
+              },
+              "Price": 6.778789074103525e-8,
+              "PriceInUSD": 0.000012487638102753336
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:20Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "cSiD1dE2o8ZmmFLfuTEkLVj4EpiDR5HW4nmUrmrtKcL",
+                "Name": "the boys",
+                "Symbol": "the boys",
+                "Uri": "https://ipfs.io/ipfs/QmTQZERVSEEFH3Lvt68r8ZQkWJMC11rA3SrXQBYfDfWekH"
+              },
+              "Price": 2.7966798696257992e-8,
+              "PriceInUSD": 0.000005151941699227594
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:19Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "2pYNovPquuKsEDtQeMJwznxkj18XgGm4k8ejrH6ypump",
+                "Name": "new teef",
+                "Symbol": "teef",
+                "Uri": "https://metadata.retlie.com/data/081ee8f6-598e-49b7-bbe8-464e84a4c20e"
+              },
+              "Price": 3.0824227723250383e-7,
+              "PriceInUSD": 0.00005678326857451483
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:17Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "6Yn2iGx5a4nJtc6np4jg2JkA4BUh4Bcooje9TFi5pump",
+                "Name": "The VC for every token",
+                "Symbol": "PumpVC",
+                "Uri": "https://ipfs.io/ipfs/bafkreifoeriwdl4f4ktgldkgjkpsv56ikxb6f5r3mwynbxpqwrx7kdlxv4"
+              },
+              "Price": 3.4027806538327194e-8,
+              "PriceInUSD": 0.000006268478467702273
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:16Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "f9iyceg9Qq5VTaaWqmHBP6hjtL2RkvZoAGQNyGcpump",
+                "Name": "Operation Inflation",
+                "Symbol": "INFLATION",
+                "Uri": "https://metadata.retlie.com/data/1ced042a-6541-4ebf-b028-802b32684cc2"
+              },
+              "Price": 2.8054022791175212e-8,
+              "PriceInUSD": 0.000005168009804006477
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:15Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "AamW2dzTcD6G3MWXL6b4TmuaapQ4h7CKY7YqmwiMpump",
+                "Name": "King of Gold",
+                "Symbol": "Croesus",
+                "Uri": "https://ipfs.io/ipfs/bafkreiaei35ym6x5xsvujdg44g5fsmvklnakjdqxfjrdclbnwex756ct6a"
+              },
+              "Price": 4.762088898521166e-8,
+              "PriceInUSD": 0.000008772546560719762
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:10Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "9GDQ8eDZf5guZxUtFJ4NcjDdVfW7uAfJzaUphXpXpump",
+                "Name": "NVIDIA MEME Token",
+                "Symbol": "NVIDIA",
+                "Uri": "https://ipfs.io/ipfs/bafkreifqczbwp7ah2ju5ff2ijg4x6jqkxjr3gpoopndyzodrsfp4gxp7cu"
+              },
+              "Price": 2.7760423396005123e-7,
+              "PriceInUSD": 0.000051139239937829716
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:09Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "2zTho5n9NZjRA7g4fcfN3n9KDfz2hDZh8rPgUio2pump",
+                "Name": "The Meme Gold Rush",
+                "Symbol": "GENZ",
+                "Uri": "https://ipfs.io/ipfs/bafkreidqomfnxfpskydbkrz7efjozwygylwamh6nuqc4pavlc2zxlc2miu"
+              },
+              "Price": 4.2140759113539584e-8,
+              "PriceInUSD": 0.000007763017014285553
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-17T21:12:04Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "8xpdiZ5GrnAdxpf7DSyZ1YXZxx6itvvoXPHZ4K2Epump",
+                "Name": "Miao",
+                "Symbol": "MIAO",
+                "Uri": "https://ipfs.io/ipfs/QmT4KvzvkXa92V5uf5c1io9nVcAXVUwBbt6sKDhkRFdPAr"
+              },
+              "Price": 3.7943045952604587e-7,
+              "PriceInUSD": 0.00006989729599086647
+            }
+          }
+        }
+      ]
+    }
+  }
+}

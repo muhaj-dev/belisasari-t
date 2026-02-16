@@ -1,0 +1,161 @@
+{
+  "data": {
+    "Solana": {
+      "DEXTrades": [
+        {
+          "Block": {
+            "Time": "2025-10-16T20:11:42Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "4N1RNuPof5codbQY5CXdYXXiwE7xZjUZc1VjjZ2Hpump",
+                "Name": "The 7 Figure Dog",
+                "Symbol": "Reggie",
+                "Uri": "https://metadata.rapidlaunch.io/metadata/f81886dc-fc16-4799-9505-49cd9911f064.json"
+              },
+              "Price": 6.833692862761532e-8,
+              "PriceInUSD": 0.0000126758485486857
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-16T20:11:42Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "9SheBJHYDYwJEzVCtwfkprn6dKcZThKftrea9zjzjrHR",
+                "Name": "SOLTOBER",
+                "Symbol": "SOLOBER",
+                "Uri": "https://ipfs.io/ipfs/bafkreib4noj7lmp4xomfluch3ddt6hk7n6me5frykwlf4wqtgkzcupgosq"
+              },
+              "Price": 3.4891525330221515e-8,
+              "PriceInUSD": 0.000006472045197240415
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-16T20:11:41Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "Dg4wp5HrpWj3KeezURCPfk3aDRwejYT5bx7xKmW5pump",
+                "Name": "Yin Yang Dog",
+                "Symbol": "YinYan",
+                "Uri": "https://metadata.retlie.com/data/20ab5bec-39c5-48a3-b792-ccf696dc8f71"
+              },
+              "Price": 2.889095992544306e-8,
+              "PriceInUSD": 0.000005358997540505115
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-16T20:11:41Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "7L5YYp9jmkUWwyWx1hireW5LDS9YrukGp8sCoVQCpump",
+                "Name": "Waiter",
+                "Symbol": "Waiter",
+                "Uri": "https://ipfs.io/ipfs/bafkreic6miculpjjxg5abr2o46kllpqyltaeglws5z4jxdlid2zm64y4wi"
+              },
+              "Price": 1.182416510153856e-7,
+              "PriceInUSD": 0.000021932698623097
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-16T20:11:41Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "E9SyLPzShKmBywSnFMBD8sTxR1SXv1CwVhwcS2rfpump",
+                "Name": "The 7 Figure Dog",
+                "Symbol": "Reggie",
+                "Uri": "https://ipfs.io/ipfs/bafkreiefvggvdrljc3yd7dkipktkgsnlnq2p75svxq5kc6ypetdzcwouru"
+              },
+              "Price": 2.887945416589071e-8,
+              "PriceInUSD": 0.000005356863331835628
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-16T20:11:41Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "Fw7d1jfpP9jhduvi4A8kdhLshUDLHez9HxZPgiB4pump",
+                "Name": "ROLLHUB",
+                "Symbol": "RHUB",
+                "Uri": "https://ipfs.io/ipfs/QmUC1exYXRRTsmFAttw9GyQimkWNWepXNA2yNi6CAZvxpA"
+              },
+              "Price": 2.0857247566942163e-7,
+              "PriceInUSD": 0.00003868820513454616
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-16T20:11:41Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "8M1uAxpJz1XmDUiULkQZCpsNkNerEWRZR6eBqjYKpump",
+                "Name": "4 Alon",
+                "Symbol": "4alon",
+                "Uri": "https://ipfs.io/ipfs/QmZn7CkxxW9vKKu3yonX3L4Rx7qascQRPSjgRqZU8pQmVu"
+              },
+              "Price": 9.378224893286928e-8,
+              "PriceInUSD": 0.00001739571279982583
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-16T20:11:40Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "EiNgUBEeBH19CmuxBu8zsMCWYzHwzMMk5UYGhjTDpump",
+                "Name": "Fool’s Gold",
+                "Symbol": "PYRITE",
+                "Uri": "https://ipfs.io/ipfs/QmVgwjeXFc5KXQv1cSd6V7cYWS191meFxbRnhvVNjHBajA"
+              },
+              "Price": 1.671734878483179e-7,
+              "PriceInUSD": 0.00003100908770524552
+            }
+          }
+        },
+        {
+          "Block": {
+            "Time": "2025-10-16T20:11:40Z"
+          },
+          "Trade": {
+            "Buy": {
+              "Currency": {
+                "MintAddress": "TyZEudyJ22VHrm92vjkpu7kk2NBGbZz2CcJVH7ppump",
+                "Name": "OpenTok",
+                "Symbol": "TOK",
+                "Uri": "https://ipfs.io/ipfs/bafkreihwjarpcyg26n4iph6n5ci3527p54pb3mlvgxx427recr53oww42q"
+              },
+              "Price": 9.245506725563667e-8,
+              "PriceInUSD": 0.00001714953325568997
+            }
+          }
+        }
+      ]
+    }
+  }
+}

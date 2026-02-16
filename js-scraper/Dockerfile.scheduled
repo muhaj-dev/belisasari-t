@@ -1,0 +1,99 @@
+# JS Scraper Scheduled Service Dockerfile
+FROM node:22-alpine
+
+# Install Chrome dependencies, build tools, and cron
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    freetype-dev \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont \
+    python3 \
+    make \
+    g++ \
+    gcc \
+    libc-dev \
+    linux-headers \
+    pkgconfig \
+    libusb-dev \
+    eudev-dev \
+    dcron \
+    tzdata \
+    bash
+
+# Tell Puppeteer to skip installing Chromium. We'll be using the installed package.
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+
+WORKDIR /app
+
+# Install dependencies
+COPY package*.json ./
+COPY yarn.lock* ./
+
+# Use yarn if yarn.lock exists, otherwise use npm
+RUN if [ -f yarn.lock ]; then \
+        yarn install --frozen-lockfile --production --legacy-peer-deps; \
+    else \
+        npm install --omit=dev --legacy-peer-deps; \
+    fi
+
+# Copy source code
+COPY . .
+
+# Create non-root user for running scrapers
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S scraper -u 1001
+
+# Change ownership
+RUN chown -R scraper:nodejs /app
+
+# Create log directory and set permissions
+RUN mkdir -p /var/log && chown scraper:nodejs /var/log
+
+# Create cron jobs to run all three scrapers every 3 hours as root
+# Format: minute hour day month weekday command
+# Run TikTok scraper every 3 hours starting at 0 minutes
+RUN echo "0 */3 * * * cd /app && su -s /bin/bash scraper -c 'echo \"[$(date)] Starting TikTok scraper...\" >> /var/log/scraper-cron.log && yarn scrape-tiktok >> /var/log/scraper-cron.log 2>&1 && echo \"[$(date)] TikTok scraper completed\" >> /var/log/scraper-cron.log'" | crontab -
+
+# Run Telegram scraper every 3 hours starting at 20 minutes
+RUN echo "20 */3 * * * cd /app && su -s /bin/bash scraper -c 'echo \"[$(date)] Starting Telegram scraper...\" >> /var/log/scraper-cron.log && yarn scrape-telegram >> /var/log/scraper-cron.log 2>&1 && echo \"[$(date)] Telegram scraper completed\" >> /var/log/scraper-cron.log'" | crontab -
+
+# Run Outlight scraper every 3 hours starting at 40 minutes
+RUN echo "40 */3 * * * cd /app && su -s /bin/bash scraper -c 'echo \"[$(date)] Starting Outlight scraper...\" >> /var/log/scraper-cron.log && yarn scrape-outlight >> /var/log/scraper-cron.log 2>&1 && echo \"[$(date)] Outlight scraper completed\" >> /var/log/scraper-cron.log'" | crontab -
+
+# Keep running as root for cron daemon, but scrapers run as scraper user
+
+# Expose port (if needed)
+EXPOSE 3003
+
+# Create startup script with multiple options
+RUN cat > /app/start-scheduled-scrapers.sh << 'EOF'
+#!/bin/bash
+
+echo "🚀 Starting Wojat JS Scraper Scheduled Service..."
+echo "📅 Cron jobs configured to run every 3 hours:"
+echo "   - TikTok scraper: Every 3 hours at :00 minutes"
+echo "   - Telegram scraper: Every 3 hours at :20 minutes"
+echo "   - Outlight scraper: Every 3 hours at :40 minutes"
+echo "📝 Logs will be written to /var/log/scraper-cron.log"
+echo ""
+echo "Available commands:"
+echo "  - Run TikTok manually: docker exec <container> su -s /bin/bash scraper -c 'cd /app && yarn scrape-tiktok'"
+echo "  - Run Telegram manually: docker exec <container> su -s /bin/bash scraper -c 'cd /app && yarn scrape-telegram'"
+echo "  - Run Outlight manually: docker exec <container> su -s /bin/bash scraper -c 'cd /app && yarn scrape-outlight'"
+echo "  - View logs: docker exec <container> tail -f /var/log/scraper-cron.log"
+echo "  - Check cron: docker exec <container> crontab -l"
+echo ""
+
+# Start cron daemon in foreground
+echo "⏰ Starting cron daemon..."
+crond -f -l 2
+EOF
+
+RUN chmod +x /app/start-scheduled-scrapers.sh
+
+# Start the scheduled scraper service
+CMD ["/app/start-scheduled-scrapers.sh"]
