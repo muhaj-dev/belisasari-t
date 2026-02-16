@@ -20,11 +20,24 @@ class TelegramChannelScraper {
       this.bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: false });
     }
 
-    // Initialize Supabase Client
-    this.supabase = createClient(
-      process.env.SUPABASE_URL, 
-      process.env.SUPABASE_KEY
+    // Initialize Supabase Client (prefer service role so RLS allows INSERT into telegram_channels / telegram_messages)
+    const supabaseUrl = (process.env.SUPABASE_URL || '').trim();
+    const supabaseKey = (
+      (process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim() ||
+      (process.env.SUPABASE_ANON_SECRET || '').trim() ||
+      (process.env.SUPABASE_KEY || '').trim()
     );
+    if (!supabaseUrl || !supabaseKey) {
+      throw new Error(
+        'Missing Supabase config. Set SUPABASE_URL and one of: SUPABASE_SERVICE_ROLE_KEY, SUPABASE_ANON_SECRET, or SUPABASE_KEY (in .env).'
+      );
+    }
+    if (!(process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim()) {
+      console.warn(
+        'Tip: Set SUPABASE_SERVICE_ROLE_KEY in .env so the Telegram scraper can write to telegram_channels/telegram_messages (RLS blocks anon key from INSERT).'
+      );
+    }
+    this.supabase = createClient(supabaseUrl, supabaseKey);
 
     // Media storage directory
     this.mediaDir = path.join(process.cwd(), 'telegram_media');
@@ -43,16 +56,16 @@ class TelegramChannelScraper {
   }
 
   validateEnv() {
-    const requiredEnvVars = [
-      'SUPABASE_URL', 
-      'SUPABASE_KEY'
-    ];
-
-    requiredEnvVars.forEach(varName => {
-      if (!process.env[varName]) {
-        throw new Error(`Missing required environment variable: ${varName}`);
-      }
-    });
+    const hasUrl = !!(process.env.SUPABASE_URL || '').trim();
+    const hasKey =
+      !!(process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim() ||
+      !!(process.env.SUPABASE_ANON_SECRET || '').trim() ||
+      !!(process.env.SUPABASE_KEY || '').trim();
+    if (!hasUrl || !hasKey) {
+      throw new Error(
+        'Missing Supabase config. Set SUPABASE_URL and one of: SUPABASE_SERVICE_ROLE_KEY, SUPABASE_ANON_SECRET, or SUPABASE_KEY (in .env).'
+      );
+    }
 
     // Bot token is optional for web scraping
     if (!process.env.TELEGRAM_BOT_TOKEN) {
