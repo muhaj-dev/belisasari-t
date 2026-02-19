@@ -54,6 +54,7 @@
     "react": "^18",
     "react-dom": "^18",
     "recharts": "^2.14.1",
+    "socialfi": "^0.1.14",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "zustand": "^5.0.2"
