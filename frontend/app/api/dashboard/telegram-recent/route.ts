@@ -151,10 +151,11 @@ async function fetchTelegramData(timeRange: string) {
   console.log(`🔍 Fetching Telegram data for time range: ${timeRange}`);
 
   try {
-    // Fetch recent messages
+    // Fetch recent messages (newest first: by message date, then scraped_at)
     let messagesQuery = supabase
       .from('telegram_messages')
       .select('*')
+      .order('date', { ascending: false, nullsFirst: false })
       .order('scraped_at', { ascending: false })
       .limit(100);
 

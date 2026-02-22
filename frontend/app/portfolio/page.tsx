@@ -25,9 +25,12 @@ import {
   BarChart3,
   Loader2,
   ExternalLink,
+  Sparkles,
 } from "lucide-react";
 import Image from "next/image";
 import { useMemo } from "react";
+import { useTwitterPost } from "@/hooks/use-twitter-post";
+import { useOpenAIInsight } from "@/hooks/use-openai-insight";
 import type { ZerionPortfolioAttributes, ZerionPosition, ZerionTransaction } from "@/lib/zerion";
 
 function formatUsd(value: number): string {
@@ -55,6 +58,8 @@ export default function PortfolioPage() {
   const { login } = useLogin();
   const { portfolio, chart, positions, transactions, loading, error, refetch } =
     useZerionPortfolio(walletAddress);
+  const { post: postTweet, posting: twitterPosting } = useTwitterPost();
+  const { insight: aiInsight, loading: aiLoading, error: aiError, fetchInsight } = useOpenAIInsight();
 
   const chartData = useMemo(() => {
     const attrs = chart?.data?.attributes;
@@ -125,10 +130,25 @@ export default function PortfolioPage() {
             Wallet performance, token balances, DeFi positions, and transaction history
           </p>
         </div>
-        <Button variant="outline" size="sm" onClick={() => refetch()} disabled={loading}>
-          {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <RefreshCw className="h-4 w-4 mr-2" />}
-          Refresh
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              postTweet(
+                "Just checked my Solana portfolio on Belisasari (Zerion). #Belisasari #Solana #Portfolio"
+              )
+            }
+            disabled={twitterPosting}
+          >
+            {twitterPosting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+            Share to Twitter
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => refetch()} disabled={loading}>
+            {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <RefreshCw className="h-4 w-4 mr-2" />}
+            Refresh
+          </Button>
+        </div>
       </div>
 
       {error && (
@@ -149,6 +169,36 @@ export default function PortfolioPage() {
           </CardContent>
         </Card>
       )}
+
+      {/* AI insight (OpenAI) */}
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-medium flex items-center gap-2">
+            <Sparkles className="h-4 w-4" />
+            AI insight
+          </CardTitle>
+          <CardDescription>Get a short AI summary of your portfolio (Zerion data + OpenAI).</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={aiLoading}
+            onClick={() => {
+              const context = `Portfolio total value: ${formatUsd(totalValue)}. 24h change: ${percent1d >= 0 ? "+" : ""}${percent1d.toFixed(2)}%. Positions: ${positionList.length}. Top symbols: ${walletPositions.slice(0, 8).map((p) => p.attributes?.fungible_info?.symbol ?? "?").join(", ")}.`;
+              fetchInsight(
+                context,
+                "Based on this portfolio snapshot, give 2-3 short sentences of insight or advice (diversification, risk, or what to watch). Be concise."
+              );
+            }}
+          >
+            {aiLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Sparkles className="h-4 w-4 mr-2" />}
+            Get AI insight
+          </Button>
+          {aiError && <p className="text-destructive text-xs">{aiError}</p>}
+          {aiInsight && <p className="text-sm text-muted-foreground whitespace-pre-wrap">{aiInsight}</p>}
+        </CardContent>
+      </Card>
 
       {/* Portfolio value + 24h change */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

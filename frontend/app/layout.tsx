@@ -9,7 +9,8 @@ const ClientLayout = dynamic(() => import("@/components/providers/ssr-safe-provi
   loading: () => (
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="text-center">
-        <div className="w-16 h-16 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
+        <img src="/belisasari.png" alt="Belisasari" className="w-16 h-16 mx-auto mb-4 rounded-full" />
+        <div className="w-8 h-8 border-2 border-iris-primary/20 border-t-iris-primary rounded-full animate-spin mx-auto mb-4" />
         <p className="text-muted-foreground">Loading Belisasari...</p>
       </div>
     </div>
@@ -33,8 +34,9 @@ export const metadata: Metadata = {
   description: "An autonomous AI agent that hunts for new memecoins in Tiktok.",
   icons: {
     icon: [
-      { url: "/belisasari.png", sizes: "any" },
-      { url: "/belisasari.png", type: "image/png" },
+      { url: "/belisasari.png", sizes: "any", type: "image/png" },
+      { url: "/belisasari.png", sizes: "32x32", type: "image/png" },
+      { url: "/belisasari.png", sizes: "16x16", type: "image/png" },
     ],
     shortcut: "/belisasari.png",
     apple: "/belisasari.png",

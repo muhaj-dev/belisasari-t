@@ -147,11 +147,12 @@ async function fetchTelegramChannels(enabled?: string | null) {
             .eq('channel_id', channel.username)
             .gte('scraped_at', yesterday.toISOString());
 
-          // Get last message info
+          // Get last message info (most recent by message date, then scraped_at)
           const { data: lastMessage } = await supabase
             .from('telegram_messages')
-            .select('scraped_at, text')
+            .select('date, scraped_at, text')
             .eq('channel_id', channel.username)
+            .order('date', { ascending: false, nullsFirst: false })
             .order('scraped_at', { ascending: false })
             .limit(1)
             .single();
@@ -182,16 +183,23 @@ async function fetchTelegramChannels(enabled?: string | null) {
       })
     );
 
+    // Sort channels by most recent activity first (lastMessageAt descending)
+    const sortedChannels = [...(channelsWithStats || [])].sort((a, b) => {
+      const aTime = a.stats?.lastMessageAt ? new Date(a.stats.lastMessageAt).getTime() : 0;
+      const bTime = b.stats?.lastMessageAt ? new Date(b.stats.lastMessageAt).getTime() : 0;
+      return bTime - aTime;
+    });
+
     // Calculate summary statistics
-    const totalChannels = channelsWithStats.length;
-    const enabledChannels = channelsWithStats.filter(c => c.enabled).length;
-    const totalMessages = channelsWithStats.reduce((sum, c) => sum + c.stats.totalMessages, 0);
-    const recentMessages = channelsWithStats.reduce((sum, c) => sum + c.stats.recentMessages, 0);
+    const totalChannels = sortedChannels.length;
+    const enabledChannels = sortedChannels.filter(c => c.enabled).length;
+    const totalMessages = sortedChannels.reduce((sum, c) => sum + c.stats.totalMessages, 0);
+    const recentMessages = sortedChannels.reduce((sum, c) => sum + c.stats.recentMessages, 0);
 
     console.log(`✅ Telegram channels: ${totalChannels} total, ${enabledChannels} enabled, ${totalMessages} total messages, ${recentMessages} recent messages`);
 
     return {
-      channels: channelsWithStats,
+      channels: sortedChannels,
       summary: {
         totalChannels,
         enabledChannels,

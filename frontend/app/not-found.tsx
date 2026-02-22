@@ -7,7 +7,7 @@ export default function Custom404() {
   const router = useRouter();
   return (
     <div className="w-screen mt-20 flex flex-col items-center justify-center">
-      <Image src={"/lost-2.png"} width={350} height={350} alt={"Zoro"} />
+      <Image src="/belisasari.png" width={120} height={120} alt="Belisasari" className="rounded-full mb-4" />
       <p className="sen mt-4">
         Since you found me, you should probably be lost.
       </p>

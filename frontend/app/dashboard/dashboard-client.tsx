@@ -2,12 +2,16 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import RealTimeData from '@/components/dashboard/real-time-data';
 import TrendingCoinsSummary from '@/components/dashboard/trending-coins-summary';
 import TrendingCoinsAnalytics from '@/components/dashboard/trending-coins-analytics';
 import { PatternRecognitionCard } from '@/components/dashboard/pattern-recognition-card';
 import { BackendServicesCard } from '@/components/dashboard/backend-services-card';
 import ErrorBoundary from '@/components/dashboard/error-boundary';
+import { useTwitterPost } from '@/hooks/use-twitter-post';
+import { Loader2 } from 'lucide-react';
+import Image from 'next/image';
 
 export default function DashboardClient() {
   const [scraperStatus, setScraperStatus] = useState({
@@ -75,14 +79,40 @@ export default function DashboardClient() {
 
 
 
+  const { post, posting, error: twitterError } = useTwitterPost();
+  const handlePostSummary = () => {
+    post(
+      '📊 Belisasari pipeline: Jupiter prices, TikTok & Telegram trends, pattern recognition. Track memecoins in one place. #Belisasari #Solana #Memecoin'
+    );
+  };
+
   return (
     <div className="container mx-auto p-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Belisasari Dashboard</h1>
-        <p className="text-muted-foreground">
-          Real-time memecoin analytics from Jupiter tokens & prices, TikTok and Telegram trends
-        </p>
+      <div className="flex flex-wrap justify-between items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-bold">Belisasari Dashboard</h1>
+          <p className="text-muted-foreground">
+            Real-time memecoin analytics from Jupiter tokens & prices, TikTok and Telegram trends
+          </p>
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handlePostSummary}
+          disabled={posting}
+          className="shrink-0"
+        >
+          {posting ? (
+            <Loader2 className="h-4 w-4 animate-spin mr-2" />
+          ) : (
+            <Image src="/x.png" width={16} height={16} alt="X" className="mr-2 rounded" />
+          )}
+          Post summary to Twitter
+        </Button>
       </div>
+      {twitterError && (
+        <p className="text-sm text-destructive">Twitter: {twitterError}</p>
+      )}
 
       {/* Real-time Data Overview */}
       <ErrorBoundary>

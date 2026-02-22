@@ -1,18 +1,20 @@
-// Supabase Integration for Iris Trading Agent
+// Supabase Integration for Iris Trading Agent (aligned with frontend/dashboard)
 import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
+const supabaseKey = process.env.SUPABASE_ANON_SECRET || process.env.SUPABASE_ANON_KEY;
+
 export class SupabaseIntegration {
   constructor() {
     this.supabase = createClient(
       process.env.SUPABASE_URL,
-      process.env.SUPABASE_ANON_KEY
+      supabaseKey
     );
   }
 
-  // Store agent analysis results
+  // Store agent analysis results (optional table - no-op if missing)
   async storeAnalysisResult(analysis) {
     try {
       const { data, error } = await this.supabase
@@ -24,72 +26,73 @@ export class SupabaseIntegration {
           confidence_score: analysis.confidence,
           recommendations: analysis.recommendations
         });
-
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error storing analysis result:', error);
-      throw error;
+      console.warn('Could not store analysis result (table may not exist):', error?.message || error);
+      return null;
     }
   }
 
-  // Get trending tokens from database
+  // Get trending tokens from database (aligned with tokens table: market_cap, created_at)
   async getTrendingTokens(limit = 10) {
     try {
       const { data, error } = await this.supabase
         .from('tokens')
-        .select('*')
-        .order('market_cap', { ascending: false })
+        .select('id, symbol, name, address, uri, market_cap, created_at')
+        .not('address', 'is', null)
+        .order('market_cap', { ascending: false, nullsFirst: false })
         .limit(limit);
-
       if (error) throw error;
-      return data;
+      return data || [];
     } catch (error) {
       console.error('Error fetching trending tokens:', error);
-      throw error;
+      return [];
     }
   }
 
-  // Get recent TikTok data
+  // Get recent TikTok data (table: tiktoks, newest first - aligned with frontend)
   async getRecentTikTokData(hours = 24) {
     try {
       const since = new Date(Date.now() - hours * 60 * 60 * 1000).toISOString();
-      
       const { data, error } = await this.supabase
-        .from('tiktok_videos')
+        .from('tiktoks')
         .select('*')
         .gte('created_at', since)
-        .order('view_count', { ascending: false });
+        .order('created_at', { ascending: false })
+        .order('fetched_at', { ascending: false })
+        .limit(100);
 
       if (error) throw error;
-      return data;
+      return data || [];
     } catch (error) {
       console.error('Error fetching TikTok data:', error);
-      throw error;
+      return [];
     }
   }
 
-  // Get price data for a specific token
-  async getTokenPriceData(mintAddress, hours = 24) {
+  // Get price data for a token (by token_uri or token_id - aligned with frontend prices schema)
+  async getTokenPriceData(tokenUriOrId, hours = 24) {
     try {
       const since = new Date(Date.now() - hours * 60 * 60 * 1000).toISOString();
-      
-      const { data, error } = await this.supabase
+      const isId = typeof tokenUriOrId === 'number' || /^\d+$/.test(String(tokenUriOrId));
+      const query = this.supabase
         .from('prices')
         .select('*')
-        .eq('token_mint_address', mintAddress)
-        .gte('timestamp', since)
-        .order('timestamp', { ascending: true });
-
+        .gte('trade_at', since)
+        .order('trade_at', { ascending: true });
+      if (isId) query.eq('token_id', parseInt(tokenUriOrId, 10));
+      else query.eq('token_uri', tokenUriOrId);
+      const { data, error } = await query;
       if (error) throw error;
-      return data;
+      return data || [];
     } catch (error) {
       console.error('Error fetching price data:', error);
-      throw error;
+      return [];
     }
   }
 
-  // Store trading recommendations
+  // Store trading recommendations (optional table - no-op if missing)
   async storeTradingRecommendation(recommendation) {
     try {
       const { data, error } = await this.supabase
@@ -102,37 +105,33 @@ export class SupabaseIntegration {
           risk_level: recommendation.riskLevel,
           created_at: new Date().toISOString()
         });
-
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error storing trading recommendation:', error);
-      throw error;
+      console.warn('Could not store trading recommendation (table may not exist):', error?.message || error);
+      return null;
     }
   }
 
-  // Get user portfolio data
+  // Get user portfolio data (optional table)
   async getUserPortfolio(userId) {
     try {
       const { data, error } = await this.supabase
         .from('user_portfolios')
-        .select(`
-          *,
-          tokens:token_address(*)
-        `)
+        .select('*')
         .eq('user_id', userId);
-
       if (error) throw error;
-      return data;
+      return data || [];
     } catch (error) {
-      console.error('Error fetching user portfolio:', error);
-      throw error;
+      console.warn('Could not fetch user portfolio:', error?.message || error);
+      return [];
     }
   }
 
-  // Update token sentiment analysis
-  async updateTokenSentiment(mintAddress, sentiment) {
+  // Update token sentiment (optional - columns may not exist)
+  async updateTokenSentiment(addressOrUri, sentiment) {
     try {
+      const col = typeof addressOrUri === 'string' && addressOrUri.startsWith('http') ? 'uri' : 'address';
       const { data, error } = await this.supabase
         .from('tokens')
         .update({
@@ -140,41 +139,35 @@ export class SupabaseIntegration {
           sentiment_analysis: sentiment.analysis,
           last_sentiment_update: new Date().toISOString()
         })
-        .eq('mint_address', mintAddress);
-
+        .eq(col, addressOrUri);
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error updating token sentiment:', error);
-      throw error;
+      console.warn('Could not update token sentiment:', error?.message || error);
+      return null;
     }
   }
 
-  // Get agent performance metrics
+  // Get agent performance metrics (optional table)
   async getAgentPerformanceMetrics(days = 7) {
     try {
       const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
-      
       const { data, error } = await this.supabase
         .from('agent_analysis')
         .select('*')
         .gte('timestamp', since)
         .order('timestamp', { ascending: false });
-
       if (error) throw error;
-      
-      // Calculate performance metrics
-      const metrics = {
-        totalAnalyses: data.length,
-        averageConfidence: data.reduce((sum, item) => sum + (item.confidence_score || 0), 0) / data.length,
-        successfulPredictions: data.filter(item => item.confidence_score > 0.7).length,
-        accuracy: 0 // This would be calculated based on actual vs predicted outcomes
+      const list = data || [];
+      return {
+        totalAnalyses: list.length,
+        averageConfidence: list.length ? list.reduce((sum, item) => sum + (item.confidence_score || 0), 0) / list.length : 0,
+        successfulPredictions: list.filter(item => item.confidence_score > 0.7).length,
+        accuracy: 0
       };
-
-      return metrics;
     } catch (error) {
-      console.error('Error fetching agent performance:', error);
-      throw error;
+      console.warn('Could not fetch agent performance:', error?.message || error);
+      return { totalAnalyses: 0, averageConfidence: 0, successfulPredictions: 0, accuracy: 0 };
     }
   }
 }

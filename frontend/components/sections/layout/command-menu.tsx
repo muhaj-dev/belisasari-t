@@ -25,12 +25,14 @@ import { IPFS_GATEWAY_URL, IPFS_GATEWAY_URL_4 } from "@/lib/constants";
 export default function CommandMenu({ ...props }: ButtonProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const { paid } = useEnvironmentStore((store) => store);
+  const paid = useEnvironmentStore((s) => s.paid);
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isClient, setIsClient] = useState(false);
-  const { searchBarValue, setSearchBarValue, leaderboard } =
-    useEnvironmentStore((store) => store);
+  const searchBarValue = useEnvironmentStore((s) => s.searchBarValue);
+  const setSearchBarValue = useEnvironmentStore((s) => s.setSearchBarValue);
+  const leaderboard = useEnvironmentStore((s) => s.leaderboard);
   const [searchState, setSearchState] = useState(0);
+  const [resultImages, setResultImages] = useState<Record<number, string>>({});
 
   React.useEffect(() => {
     // Mark that we're on the client side
@@ -92,14 +94,27 @@ export default function CommandMenu({ ...props }: ButtonProps) {
   );
 
   useEffect(() => {
-    searchResults.forEach((result) => {
-      fetch(IPFS_GATEWAY_URL_4 + result.uri.split("/").at(-1))
+    setResultImages({});
+    if (searchResults.length === 0) return;
+    let cancelled = false;
+    searchResults.forEach((result, index) => {
+      const uriPart = result.uri?.split("/").at(-1);
+      if (!uriPart) return;
+      fetch(IPFS_GATEWAY_URL_4 + uriPart)
         .then((res) => res.json())
         .then((data) => {
-          result.image = IPFS_GATEWAY_URL_4 + data.image.split("/").at(-1);
-        });
+          if (cancelled) return;
+          const imagePath = data?.image?.split("/").at(-1);
+          if (imagePath) {
+            setResultImages((prev) => ({ ...prev, [index]: IPFS_GATEWAY_URL_4 + imagePath }));
+          }
+        })
+        .catch(() => {});
     });
+    return () => { cancelled = true; };
   }, [searchResults]);
+
+  const getResultImage = (result: { image?: string }, id: number) => resultImages[id] ?? result?.image;
   return (
     <>
       <Button
@@ -153,9 +168,9 @@ export default function CommandMenu({ ...props }: ButtonProps) {
                         }}
                         className="data-[selected='true']:bg-secondary cursor-pointer"
                       >
-                        {navItem.image ? (
+                        {getResultImage(navItem, id) ? (
                           <img
-                            src={navItem.image}
+                            src={getResultImage(navItem, id)}
                             alt={navItem.symbol}
                             className="h-4 w-4 mr-1 rounded-full"
                             onError={(e: any) => {

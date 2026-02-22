@@ -137,6 +137,7 @@ async function fetchTikTokHashtags(timeRange: string) {
     let videosQuery = supabase
       .from('tiktoks')
       .select('*')
+      .order('created_at', { ascending: false })
       .order('fetched_at', { ascending: false })
       .limit(500);
 

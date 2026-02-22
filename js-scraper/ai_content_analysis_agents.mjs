@@ -14,10 +14,17 @@
 
 import { LlmAgent } from '@iqai/adk';
 import { createClient } from '@supabase/supabase-js';
+import OpenAI from 'openai';
 import dotenv from 'dotenv';
 
 // Load environment variables
 dotenv.config();
+
+function getOpenAIClient() {
+  const key = process.env.OPENAI_API_KEY;
+  if (!key?.trim()) return null;
+  return new OpenAI({ apiKey: key.trim() });
+}
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -67,18 +74,60 @@ class SentimentAnalysisTool {
   }
 
   async analyzeSentiment(content, contentType) {
-    // This would integrate with OpenAI's sentiment analysis
-    // For now, we'll simulate the analysis
+    const metadata = {
+      contentLength: content.length,
+      contentType,
+      analyzedAt: new Date().toISOString()
+    };
+    const openai = getOpenAIClient();
+    if (openai && content) {
+      try {
+        const text = String(content).slice(0, 2000);
+        const completion = await openai.chat.completions.create({
+          model: 'gpt-4o-mini',
+          messages: [
+            {
+              role: 'system',
+              content: 'You analyze sentiment of social/crypto content. Reply with exactly: SENTIMENT=<positive|negative|neutral> CONFIDENCE=<0-1> EMOTIONS=joy,anger,fear,surprise,sadness (one number 0-1 each, comma-separated) ANALYSIS=<one short sentence>'
+            },
+            { role: 'user', content: `Analyze sentiment:\n${text}` }
+          ],
+          max_tokens: 150,
+          temperature: 0.3
+        });
+        const raw = completion.choices[0]?.message?.content?.trim() || '';
+        const sentimentMatch = raw.match(/SENTIMENT=(\w+)/i);
+        const confMatch = raw.match(/CONFIDENCE=([\d.]+)/i);
+        const emotionsMatch = raw.match(/EMOTIONS=([\d.,]+)/i);
+        const analysisMatch = raw.match(/ANALYSIS=(.+?)(?:\n|$)/is);
+        const sentiment = sentimentMatch ? sentimentMatch[1].toLowerCase() : 'neutral';
+        const confidence = confMatch ? Math.min(1, Math.max(0, parseFloat(confMatch[1]))) : 0.6;
+        const emotionNums = emotionsMatch ? emotionsMatch[1].split(',').map((n) => parseFloat(n.trim()) || 0) : [0.5, 0.2, 0.2, 0.3, 0.2];
+        return {
+          sentiment: ['positive', 'negative', 'neutral'].includes(sentiment) ? sentiment : 'neutral',
+          confidence,
+          emotions: {
+            joy: emotionNums[0] ?? 0.5,
+            anger: emotionNums[1] ?? 0.2,
+            fear: emotionNums[2] ?? 0.2,
+            surprise: emotionNums[3] ?? 0.3,
+            sadness: emotionNums[4] ?? 0.2
+          },
+          analysis: analysisMatch ? analysisMatch[1].trim() : `Content shows ${sentiment} sentiment.`,
+          metadata
+        };
+      } catch (err) {
+        console.warn('OpenAI sentiment fallback:', err.message);
+      }
+    }
     const sentimentScores = {
       positive: Math.random() * 0.4 + 0.3,
       negative: Math.random() * 0.3,
       neutral: Math.random() * 0.3
     };
-
-    const dominantSentiment = Object.keys(sentimentScores).reduce((a, b) => 
+    const dominantSentiment = Object.keys(sentimentScores).reduce((a, b) =>
       sentimentScores[a] > sentimentScores[b] ? a : b
     );
-
     return {
       sentiment: dominantSentiment,
       confidence: Math.max(...Object.values(sentimentScores)),
@@ -90,11 +139,7 @@ class SentimentAnalysisTool {
         sadness: Math.random() * 0.3
       },
       analysis: `Content shows ${dominantSentiment} sentiment with ${Math.round(sentimentScores[dominantSentiment] * 100)}% confidence`,
-      metadata: {
-        contentLength: content.length,
-        contentType,
-        analyzedAt: new Date().toISOString()
-      }
+      metadata
     };
   }
 

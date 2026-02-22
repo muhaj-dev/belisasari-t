@@ -1,6 +1,7 @@
 // Iris ElizaOS Trading Agent - Main Entry Point
 import { createIrisTradingAgent, IrisTradingFunctions } from './iris-trading-agent.js';
 import SupabaseIntegration from './integrations/supabase-integration.js';
+import TwitterIntegration from './integrations/twitter-integration.js';
 import dotenv from 'dotenv';
 
 // Load environment variables
@@ -11,6 +12,7 @@ class IrisAgentOrchestrator {
     this.agent = null;
     this.tradingFunctions = null;
     this.supabase = new SupabaseIntegration();
+    this.twitter = new TwitterIntegration();
     this.isRunning = false;
   }
 
@@ -71,9 +73,9 @@ class IrisAgentOrchestrator {
       const tiktokData = await this.supabase.getRecentTikTokData(24);
       console.log(`   Retrieved ${tiktokData.length} TikTok videos`);
 
-      // 4. Generate trading recommendations
+      // 4. Generate trading recommendations from live memecoins + TikTok trends
       console.log('💡 Generating trading recommendations...');
-      const recommendations = await this.tradingFunctions.generateTradingRecommendations();
+      const recommendations = await this.tradingFunctions.generateTradingRecommendations(memecoins, tiktokTrends);
       console.log(`   Generated ${recommendations.length} recommendations`);
 
       // 5. Store analysis results
@@ -90,15 +92,36 @@ class IrisAgentOrchestrator {
         recommendations: recommendations.map(r => r.reason)
       });
 
-      // 6. Store trading recommendations
+      // 6. Store trading recommendations (token can be $SYMBOL or address)
       for (const rec of recommendations) {
+        const tokenAddress = (typeof rec.token === 'string' && rec.token.startsWith('$'))
+          ? (memecoins.find((m) => m.symbol === rec.token.slice(1))?.address || rec.token)
+          : rec.token;
         await this.supabase.storeTradingRecommendation({
-          tokenAddress: rec.token,
+          tokenAddress: tokenAddress || rec.token,
           action: rec.action,
           confidence: rec.confidence,
           reason: rec.reason,
           riskLevel: rec.riskLevel
         });
+      }
+
+      // 7. Post trending alert to Twitter (Jupiter + TikTok data)
+      if (memecoins.length > 0 || (tiktokTrends?.trendingHashtags?.length ?? 0) > 0) {
+        try {
+          await this.twitter.postTrendingAlert({ memecoins, tiktokTrends });
+          console.log('🐦 Trending alert posted to Twitter');
+        } catch (err) {
+          console.warn('Twitter post skipped:', err.message);
+        }
+      }
+      if (recommendations.length > 0 && this.twitter.isConfigured) {
+        try {
+          await this.twitter.postTradingRecommendation(recommendations[0]);
+          console.log('🐦 Top recommendation posted to Twitter');
+        } catch (err) {
+          console.warn('Twitter recommendation post skipped:', err.message);
+        }
       }
 
       console.log('✅ Analysis cycle completed successfully\n');

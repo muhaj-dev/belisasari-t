@@ -787,6 +787,31 @@ Format the response as a complete tweet ready to post.`;
   }
 }
 
+/**
+ * Post a single pipeline/summary tweet (for use by orchestrator).
+ * Uses TWITTER_API_KEY, TWITTER_API_SECRET, TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_SECRET.
+ * @param {string} message - Tweet text (max 280 chars)
+ * @returns {Promise<{ success: boolean, id?: string, error?: string }>}
+ */
+export async function postPipelineSummary(message) {
+  const key = process.env.TWITTER_API_KEY || process.env.TWITTER_CONSUMER_KEY;
+  const secret = process.env.TWITTER_API_SECRET || process.env.TWITTER_CONSUMER_SECRET;
+  const access = process.env.TWITTER_ACCESS_TOKEN || process.env.ZORO_ACCESS_TOKEN;
+  const accessSecret = process.env.TWITTER_ACCESS_TOKEN_SECRET || process.env.ZORO_ACCESS_TOKEN_SECRET;
+  if (!key || !secret || !access || !accessSecret) {
+    return { success: false, error: 'Twitter not configured' };
+  }
+  try {
+    const client = new TwitterApi({ appKey: key, appSecret: secret, accessToken: access, accessSecret });
+    const tweet = await client.v2.tweet(String(message).slice(0, 280));
+    console.log('🐦 Pipeline summary posted to Twitter');
+    return { success: true, id: tweet.data?.id };
+  } catch (err) {
+    console.warn('Twitter pipeline summary skipped:', err.message);
+    return { success: false, error: err.message };
+  }
+}
+
 // Export the class
 export { TwitterIntegration };
 

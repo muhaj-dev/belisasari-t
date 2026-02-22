@@ -63,8 +63,13 @@ export default function RealTimeTikTokFeed() {
       console.log('🔗 Mentions data received:', mentionsData);
       
       if (tiktokData.data && Array.isArray(tiktokData.data)) {
-        setTiktoks(tiktokData.data);
-        console.log(`✅ Set ${tiktokData.data.length} TikTok videos`);
+        const sorted = [...tiktokData.data].sort((a, b) => {
+          const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+          const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+          return dateB - dateA;
+        });
+        setTiktoks(sorted);
+        console.log(`✅ Set ${sorted.length} TikTok videos (newest first)`);
       } else {
         console.warn('⚠️ TikTok data is not an array:', tiktokData);
         setTiktoks([]);

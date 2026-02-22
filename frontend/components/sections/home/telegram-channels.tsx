@@ -147,7 +147,7 @@ export default function TelegramChannelsHome() {
     }
   };
 
-  const filteredChannels = data?.channels.filter(channel => {
+  const filteredChannels = (data?.channels.filter(channel => {
     const matchesSearch = channel.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          channel.display_name?.toLowerCase().includes(searchTerm.toLowerCase());
     
@@ -158,7 +158,12 @@ export default function TelegramChannelsHome() {
     const hasMessages = channel.stats.totalMessages > 0;
     
     return matchesSearch && matchesStatus && hasMessages;
-  }) || [];
+  }) || [])
+    .sort((a, b) => {
+      const aTime = a.stats?.lastMessageAt ? new Date(a.stats.lastMessageAt).getTime() : 0;
+      const bTime = b.stats?.lastMessageAt ? new Date(b.stats.lastMessageAt).getTime() : 0;
+      return bTime - aTime;
+    });
 
   // Debug logging
   console.log('Telegram Channels Debug:', {

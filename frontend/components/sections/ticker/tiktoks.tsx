@@ -26,18 +26,27 @@ export default function Tiktoks({
           </p>
           <div className="relative flex justify-center">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 ">
-              {tiktoks
-                .filter(video => (video.tiktoks.views > 0 || video.tiktoks.comments > 0))
-                .slice(0, paid ? tiktoks.length : 4)
+              {[...(tiktoks || [])]
+                .sort((a, b) => {
+                  const dateA = (a.tiktoks?.created_at ?? a.created_at) ? new Date(a.tiktoks?.created_at ?? a.created_at).getTime() : 0;
+                  const dateB = (b.tiktoks?.created_at ?? b.created_at) ? new Date(b.tiktoks?.created_at ?? b.created_at).getTime() : 0;
+                  return dateB - dateA;
+                })
+                .filter(video => {
+                  const v = video.tiktoks ?? video;
+                  return (v.views > 0 || v.comments > 0);
+                })
+                .slice(0, paid ? (tiktoks?.length ?? 0) : 4)
                 .map((video, i) => {
+                const v = video.tiktoks ?? video;
                 return (
                   <div
-                    onClick={() => window.open(video.tiktoks.url, "_blank")}
+                    onClick={() => window.open(v.url, "_blank")}
                     className="cursor-pointer relative w-[300px] h-[500px] rounded-xl border-[2px] border-secondary hover:border-muted-foreground transition duration-300 ease-in-out"
                     key={i}
                   >
                     <img
-                      src={video.tiktoks.thumbnail}
+                      src={v.thumbnail}
                       alt="tiktok"
                       className="w-[300px] h-[496px] rounded-xl"
                       onError={(e) => {
@@ -50,7 +59,7 @@ export default function Tiktoks({
                       <div className="flex items-center space-x-3">
                         <img
                           src={"https://picsum.photos/300/50" + i}
-                          alt={video.tiktoks.username}
+                          alt={v.username}
                           className="w-10 h-10 rounded-full border border-white"
                           onError={(e) => {
                             (e.target as HTMLImageElement).src = "/solana.png";
@@ -58,30 +67,23 @@ export default function Tiktoks({
                         />
                         <div>
                           <p className="font-semibold">
-                            {video.tiktoks.username == ""
+                            {v.username == ""
                               ? "the.chill.guy"
-                              : video.tiktoks.username}
+                              : v.username}
                           </p>
                           <p className="text-sm text-gray-300">
-                            {getTimeAgo(video.tiktoks.created_at)}
+                            {getTimeAgo(v.created_at)}
                           </p>
                         </div>
                       </div>
 
                       {/* Bottom Info (Description and Comments Count) */}
                       <div className="w-full flex">
-                        {/* <p className="text-sm line-clamp-2">
-                            {video.tiktoks.description}
-                          </p>
-                          <p className="mt-2 text-sm font-semibold">
-                            {video.tiktoks.comments.count} comments
-                          </p> */}
                         <div className="flex-1" />
                         <div className="flex space-x-1 items-center justify-end bg-secondary p-3 rounded-md">
                           <Play size={16} className="mr-1" />
-
                           <p className="text-sm font-semibold">
-                            {formatMarketcap(video.tiktoks.views)}
+                            {formatMarketcap(v.views)}
                           </p>
                         </div>
                       </div>

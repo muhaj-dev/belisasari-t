@@ -15,26 +15,28 @@ export class TwitterIntegration {
     }
   }
 
-  // Check if Twitter credentials are properly configured
+  // Check if Twitter credentials are properly configured (supports CONSUMER_* / ZORO_* or TWITTER_*)
   hasValidCredentials() {
-    const required = [
-      'CONSUMER_KEY',
-      'CONSUMER_SECRET', 
-      'ZORO_ACCESS_TOKEN',
-      'ZORO_ACCESS_TOKEN_SECRET'
-    ];
-    
-    return required.every(key => process.env[key] && process.env[key] !== `your_twitter_${key.toLowerCase()}`);
+    const appKey = process.env.CONSUMER_KEY || process.env.TWITTER_API_KEY;
+    const appSecret = process.env.CONSUMER_SECRET || process.env.TWITTER_API_SECRET;
+    const accessToken = process.env.ZORO_ACCESS_TOKEN || process.env.TWITTER_ACCESS_TOKEN;
+    const accessSecret = process.env.ZORO_ACCESS_TOKEN_SECRET || process.env.TWITTER_ACCESS_TOKEN_SECRET;
+    return !!(appKey && appSecret && accessToken && accessSecret) &&
+      [appKey, appSecret, accessToken, accessSecret].every((v) => !String(v).includes('your_twitter') && !String(v).includes('your_'));
   }
 
-  // Initialize Twitter API client
+  // Initialize Twitter API client (same env as frontend: TWITTER_* or CONSUMER_* / ZORO_*)
   initializeClient() {
     try {
+      const appKey = process.env.CONSUMER_KEY || process.env.TWITTER_API_KEY;
+      const appSecret = process.env.CONSUMER_SECRET || process.env.TWITTER_API_SECRET;
+      const accessToken = process.env.ZORO_ACCESS_TOKEN || process.env.TWITTER_ACCESS_TOKEN;
+      const accessSecret = process.env.ZORO_ACCESS_TOKEN_SECRET || process.env.TWITTER_ACCESS_TOKEN_SECRET;
       this.client = new TwitterApi({
-        appKey: process.env.CONSUMER_KEY,
-        appSecret: process.env.CONSUMER_SECRET,
-        accessToken: process.env.ZORO_ACCESS_TOKEN,
-        accessSecret: process.env.ZORO_ACCESS_TOKEN_SECRET,
+        appKey,
+        appSecret,
+        accessToken,
+        accessSecret,
       });
       
       this.isConfigured = true;
@@ -102,19 +104,36 @@ export class TwitterIntegration {
     }
   }
 
-  // Generate trending memecoin tweet
+  // Generate trending memecoin tweet (supports Jupiter-style memecoins: { symbol, name, address } or full price/volume)
   generateTrendingTweet(trendingData) {
-    const { memecoins, tiktokTrends } = trendingData;
+    const { memecoins = [], tiktokTrends = { trendingHashtags: [] } } = trendingData;
     const topToken = memecoins[0];
-    
+    const hashtags = (tiktokTrends.trendingHashtags || []).slice(0, 3).join(' ') || '#Memecoin';
+
     let tweet = `🔥 TRENDING ALERT! 🔥\n\n`;
-    tweet += `📈 Top Memecoin: ${topToken?.symbol || 'Unknown'}\n`;
-    tweet += `💰 Price: $${topToken?.price?.toFixed(6) || 'N/A'}\n`;
-    tweet += `📊 Volume: $${(topToken?.volume_24h / 1000).toFixed(0)}K\n\n`;
-    tweet += `🎬 TikTok Hashtags: ${tiktokTrends.trendingHashtags.slice(0, 3).join(' ')}\n\n`;
+    tweet += `📈 Top: ${topToken?.symbol || 'N/A'}\n`;
+    if (topToken?.price != null) tweet += `💰 Price: $${Number(topToken.price).toFixed(6)}\n`;
+    if (topToken?.volume_24h != null) tweet += `📊 Vol: $${(Number(topToken.volume_24h) / 1000).toFixed(0)}K\n`;
+    tweet += `🎬 ${hashtags}\n\n`;
     tweet += `#Solana #Memecoin #Pump #TikTok #Crypto`;
-    
     return tweet;
+  }
+
+  // Post a custom tweet (for pipeline summaries, shares, etc.)
+  async postCustomTweet(text) {
+    if (!this.isConfigured) {
+      console.log('⚠️ Twitter not configured, skipping tweet');
+      return null;
+    }
+    try {
+      const safe = String(text).slice(0, 280);
+      const response = await this.client.v2.tweet(safe);
+      console.log('🐦 Custom tweet posted');
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error posting custom tweet:', error);
+      throw error;
+    }
   }
 
   // Generate trading recommendation tweet

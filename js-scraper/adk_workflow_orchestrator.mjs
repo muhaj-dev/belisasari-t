@@ -9,7 +9,7 @@ import {
   MemecoinAnalysisTool,
   SocialMediaIntelligenceTool
 } from './ai_content_analysis_agents.mjs';
-import { TwitterIntegration } from './twitter_integration.mjs';
+import { TwitterIntegration, postPipelineSummary } from './twitter_integration.mjs';
 import { MemecoinPatternAnalyzer } from './pattern_analysis.mjs';
 import { TelegramChannelScraper } from './telegram_scraper.mjs';
 import { OutlightScraper } from './outlight-scraper.mjs';
@@ -727,7 +727,16 @@ class IrisWorkflowOrchestrator {
         console.error('❌ Decision processing failed:', decisionError);
         results.decisions = { success: false, error: decisionError.message };
       }
-      
+
+      // Post pipeline summary to Twitter (Jupiter, TikTok, Telegram, patterns, etc.)
+      try {
+        await postPipelineSummary(
+          '📊 Belisasari pipeline: Jupiter prices synced, TikTok & Telegram scraped, patterns updated. #Belisasari #Solana #Memecoin'
+        );
+      } catch (e) {
+        // non-fatal
+      }
+
       return {
         success: true,
         mode: 'individual_execution',

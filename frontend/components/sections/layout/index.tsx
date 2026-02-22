@@ -23,8 +23,10 @@ export default function Layout({
 }>) {
   const { setVisible } = useWalletModal();
   const { disconnect, connected, publicKey } = useWallet();
-  const { walletAddress, setAddress, setPaid, setBalances } =
-    useEnvironmentStore((store) => store);
+  const walletAddress = useEnvironmentStore((s) => s.walletAddress);
+  const setAddress = useEnvironmentStore((s) => s.setAddress);
+  const setPaid = useEnvironmentStore((s) => s.setPaid);
+  const setBalances = useEnvironmentStore((s) => s.setBalances);
   const router = useRouter();
   const { toast } = useToast();
   const [isClient, setIsClient] = useState(false);
@@ -134,6 +136,14 @@ export default function Layout({
             onClick={() => router.push("/portfolio")}
           >
             <p className="sen text-sm sm:text-md font-bold">Portfolio</p>
+          </Button>
+
+          <Button
+            variant="ghost"
+            className="hover:bg-transparent hover:border-[1px] hover:border-white transform transition hover:scale-105"
+            onClick={() => router.push("/nfts")}
+          >
+            <p className="sen text-sm sm:text-md font-bold">NFTs</p>
           </Button>
 
           <Button
@@ -249,6 +259,14 @@ export default function Layout({
           onClick={() => router.push("/portfolio")}
         >
           <p className="sen text-sm sm:text-md font-bold">Portfolio</p>
+        </Button>
+
+        <Button
+          variant="ghost"
+          className="hover:bg-transparent hover:border-[1px] hover:border-white transform transition hover:scale-105"
+          onClick={() => router.push("/nfts")}
+        >
+          <p className="sen text-sm sm:text-md font-bold">NFTs</p>
         </Button>
 
         <Button

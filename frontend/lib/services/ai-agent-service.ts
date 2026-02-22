@@ -99,6 +99,25 @@ export class AIAgentService {
     }
   }
 
+  /** Call OpenAI via our API with optional context (trending, portfolio, etc.). */
+  private async fetchOpenAICompletion(context: string, userMessage: string): Promise<string | null> {
+    try {
+      const res = await fetch('/api/openai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [{ role: 'user' as const, content: userMessage }],
+          context: context || undefined,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) return null;
+      return typeof data.content === 'string' ? data.content : null;
+    } catch {
+      return null;
+    }
+  }
+
   // Process user message and generate AI response
   private async processUserMessage(message: string, userId?: string): Promise<{ content: string; data?: any }> {
     const lowerMessage = message.toLowerCase();
@@ -205,66 +224,89 @@ export class AIAgentService {
     };
   }
 
-  // Handle trending memecoin queries
+  // Handle trending memecoin queries (wired to Jupiter + dashboard data)
   private async handleTrendingQuery(): Promise<{ content: string; data?: any }> {
     try {
-      // This would integrate with your existing trending data
-      const trendingData: TrendingData[] = [
-        {
-          token: 'BONK',
-          price: 0.000012,
-          change24h: 15.67,
-          volume24h: 1250000,
-          marketCap: 5000000,
-          tiktokMentions: 45,
-          socialSentiment: 0.8,
-          recommendation: 'buy',
-          confidence: 0.85
-        },
-        {
-          token: 'WIF',
-          price: 2.45,
-          change24h: 8.23,
-          volume24h: 850000,
-          marketCap: 2500000,
-          tiktokMentions: 32,
-          socialSentiment: 0.7,
-          recommendation: 'hold',
-          confidence: 0.75
-        },
-        {
-          token: 'PEPE',
-          price: 0.000001,
-          change24h: -3.45,
-          volume24h: 650000,
-          marketCap: 1500000,
-          tiktokMentions: 28,
-          socialSentiment: 0.6,
-          recommendation: 'watch',
-          confidence: 0.65
+      let context = '';
+      const trendingData: TrendingData[] = [];
+      try {
+        const [jupiterRes, dashboardRes] = await Promise.all([
+          fetch('/api/jupiter/tokens/list?list=trending'),
+          fetch('/api/dashboard/trending-coins?limit=10'),
+        ]);
+        if (jupiterRes.ok) {
+          const list = await jupiterRes.json();
+          const items = Array.isArray(list) ? list.slice(0, 10) : [];
+          context += `Jupiter trending tokens: ${items.map((t: { symbol?: string; name?: string }) => `${t.symbol ?? '?'} (${t.name ?? ''})`).join(', ')}. `;
+          items.forEach((t: { symbol?: string; name?: string; price?: number; market_cap?: number }) => {
+            trendingData.push({
+              token: t.symbol ?? '?',
+              price: typeof t.price === 'number' ? t.price : 0,
+              change24h: 0,
+              volume24h: 0,
+              marketCap: typeof t.market_cap === 'number' ? t.market_cap : 0,
+              tiktokMentions: 0,
+              socialSentiment: 0.5,
+              recommendation: 'watch',
+              confidence: 0.6,
+            });
+          });
         }
-      ];
-
+        if (dashboardRes.ok) {
+          const dash = await dashboardRes.json();
+          const coins = dash?.coins ?? [];
+          context += `Dashboard trending (volume/correlation): ${coins.map((c: { symbol?: string }) => c.symbol).join(', ')}. `;
+        }
+      } catch {
+        // keep context empty, use fallback
+      }
+      const aiContent = context
+        ? await this.fetchOpenAICompletion(
+            context,
+            'Summarize the current trending memecoins for the user in 2-3 short paragraphs. Mention specific tokens and what makes them interesting.'
+          )
+        : null;
+      if (aiContent) {
+        return {
+          content: aiContent,
+          data: { type: 'trending', tokens: trendingData, timestamp: new Date().toISOString() },
+        };
+      }
       return {
-        content: 'Here are the current trending memecoins based on TikTok data and social sentiment:',
-        data: {
-          type: 'trending',
-          tokens: trendingData,
-          timestamp: new Date().toISOString()
-        }
+        content: trendingData.length > 0
+          ? `Current trending tokens (Jupiter): ${trendingData.map((t) => t.token).join(', ')}. Check the dashboard for full analytics.`
+          : 'Here are the current trending memecoins based on TikTok data and social sentiment. Check the Trending Coins page for live data.',
+        data: { type: 'trending', tokens: trendingData, timestamp: new Date().toISOString() },
       };
     } catch (error) {
       console.error('Error handling trending query:', error);
       return {
         content: 'I\'m having trouble fetching trending data right now. Please try again in a moment.',
-        data: { type: 'error' }
+        data: { type: 'error' },
       };
     }
   }
 
-  // Handle market analysis queries
+  // Handle market analysis queries (wired to dashboard/trending + OpenAI)
   private async handleAnalysisQuery(): Promise<{ content: string; data?: any }> {
     try {
+      let context = '';
+      try {
+        const [trendRes, coinsRes] = await Promise.all([
+          fetch('/api/jupiter/tokens/list?list=trending'),
+          fetch('/api/dashboard/trending-coins?limit=15'),
+        ]);
+        if (trendRes.ok) {
+          const list = await trendRes.json();
+          context += `Trending tokens: ${JSON.stringify(Array.isArray(list) ? list.slice(0, 8) : []).slice(0, 500)}. `;
+        }
+        if (coinsRes.ok) {
+          const data = await coinsRes.json();
+          context += `Dashboard: ${JSON.stringify(data?.coins?.slice(0, 5) ?? []).slice(0, 400)}.`;
+        }
+      } catch {
+        // continue with empty context
+      }
       const analysis: MarketAnalysis = {
         summary: 'Strong bullish momentum detected across multiple memecoins with high TikTok engagement. Volume spikes indicate increased retail interest.',
         recommendation: 'Consider small positions in trending tokens with proper risk management. Focus on tokens with strong social sentiment and volume.',
@@ -278,9 +320,15 @@ export class AIAgentService {
         riskLevel: 'medium',
         timeHorizon: 'short'
       };
+      const aiContent = context
+        ? await this.fetchOpenAICompletion(
+            context,
+            'Give a short market analysis and trading recommendation for Solana memecoins based on the data. Be concise (2-3 paragraphs), mention risk.'
+          )
+        : null;
 
       return {
-        content: 'Based on current market data and social sentiment, here\'s my analysis:',
+        content: aiContent ?? 'Based on current market data and social sentiment, here\'s my analysis:',
         data: {
           type: 'analysis',
           analysis: analysis,
@@ -346,10 +394,14 @@ export class AIAgentService {
     }
   }
 
-  // Handle portfolio queries
+  // Handle portfolio queries (OpenAI can give general advice; Zerion data is on Portfolio page)
   private async handlePortfolioQuery(): Promise<{ content: string; data?: any }> {
     try {
-      // This would integrate with user's actual portfolio data
+      const context = 'User is asking about their portfolio. Belisasari has a Portfolio page (Zerion) for wallet value, token balances, and DeFi positions.';
+      const aiContent = await this.fetchOpenAICompletion(
+        context,
+        'The user asked about their portfolio. Give brief advice on tracking Solana portfolios: suggest checking the Portfolio page for Zerion data, diversifying, and risk management. Keep it to 2 short paragraphs.'
+      );
       const portfolioData = {
         totalValue: 1162.00,
         totalChange: 8.45,
@@ -359,14 +411,9 @@ export class AIAgentService {
           { symbol: 'SOL', amount: 10.5, value: 1050.00, change: 5.12 }
         ]
       };
-
       return {
-        content: 'Here\'s your current portfolio overview:',
-        data: {
-          type: 'portfolio',
-          portfolio: portfolioData,
-          timestamp: new Date().toISOString()
-        }
+        content: aiContent ?? 'Check the Portfolio page (Zerion) for your wallet value, token balances, and DeFi positions. I can give general diversification and risk management tips—just ask.',
+        data: { type: 'portfolio', portfolio: portfolioData, timestamp: new Date().toISOString() },
       };
     } catch (error) {
       console.error('Error handling portfolio query:', error);
