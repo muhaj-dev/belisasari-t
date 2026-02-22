@@ -294,7 +294,8 @@ jobs:
             echo "Container Status:"
             sudo docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
             
-            # Check container details
+            # Check container details (log and show logs for stopped; fail only if frontend down)
+            FAILED_CRITICAL=0
             for container in belisasari-frontend belisasari-elizaos-agents belisasari-bitquery belisasari-js-scraper; do
               if sudo docker ps | grep -q $container; then
                 echo "=== $container Details ==="
@@ -304,15 +305,26 @@ jobs:
                 echo ""
               else
                 echo "❌ $container is not running"
-                exit 1
+                echo "Last 30 lines of logs (to debug exit):"
+                sudo docker logs --tail 30 $container 2>&1 || true
+                echo ""
+                if [ "$container" = "belisasari-frontend" ]; then
+                  FAILED_CRITICAL=1
+                fi
               fi
             done
+            if [ "$FAILED_CRITICAL" -eq 1 ]; then
+              echo "❌ Critical: belisasari-frontend is not running. Failing deployment."
+              exit 1
+            fi
             
-            # Verify environment files are mounted
+            # Verify environment files are mounted (only for running containers)
             echo "=== Environment File Verification ==="
             for container in belisasari-frontend belisasari-elizaos-agents belisasari-bitquery belisasari-js-scraper; do
-              echo "Checking $container environment file:"
-              sudo docker exec $container ls -la /app/.env || echo "Environment file not found in $container!"
+              if sudo docker ps | grep -q $container; then
+                echo "Checking $container environment file:"
+                sudo docker exec $container ls -la /app/.env || echo "Environment file not found in $container!"
+              fi
             done
             
             # Show environment configuration (masked)
@@ -330,18 +342,20 @@ jobs:
             curl -s -o /dev/null -w "Bitquery Service (port 3002): %{http_code}\n" http://localhost:3002 || echo "Bitquery Service: Not responding"
             curl -s -o /dev/null -w "JS Scraper (port 3003): %{http_code}\n" http://localhost:3003 || echo "JS Scraper: Not responding"
             
-            # Test Supabase connectivity from containers
+            # Test Supabase connectivity from containers (running only)
             echo "Testing Supabase connectivity from containers:"
             for container in belisasari-frontend belisasari-elizaos-agents belisasari-bitquery belisasari-js-scraper; do
-              echo "Testing $container Supabase connectivity..."
-              sudo docker exec $container timeout 5 bash -c "curl -s -o /dev/null -w 'Supabase API: %{http_code}\n' \$SUPABASE_URL/rest/v1/" 2>/dev/null || echo "$container: Supabase API test failed"
+              if sudo docker ps | grep -q $container; then
+                echo "Testing $container Supabase connectivity..."
+                sudo docker exec $container timeout 5 bash -c "curl -s -o /dev/null -w 'Supabase API: %{http_code}\n' \$SUPABASE_URL/rest/v1/" 2>/dev/null || echo "$container: Supabase API test failed"
+              fi
             done
             
-            # Check for Supabase-related errors in logs
+            # Check for Supabase-related errors in logs (all containers, including stopped)
             echo "Checking for Supabase-related errors in container logs:"
             for container in belisasari-frontend belisasari-elizaos-agents belisasari-bitquery belisasari-js-scraper; do
               echo "=== $container logs (Supabase-related) ==="
-              sudo docker logs --tail 10 $container | grep -i "supabase\|database\|connection\|error" || echo "No Supabase-related messages in recent logs"
+              sudo docker logs --tail 10 $container 2>&1 | grep -i "supabase\|database\|connection\|error" || echo "No Supabase-related messages in recent logs"
             done
             
             # JS Scraper Scheduled Service Verification

@@ -29,16 +29,9 @@ RUN if [ -f yarn.lock ]; then \
 # Copy source code
 COPY . .
 
-# Create non-root user
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S elizaos -u 1001
-
-# Change ownership
-RUN chown -R elizaos:nodejs /app
-USER elizaos
-
+# Run as root so mounted /app/.env (often 600 on host) is readable; required for phase2-orchestrator
 # Expose port (if needed)
 EXPOSE 3001
 
-# Start the application
+# Start the application (keep process alive via startAutomation in phase2-orchestrator)
 CMD ["node", "phase2-orchestrator.js"]
