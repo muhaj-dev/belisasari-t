@@ -53,6 +53,17 @@ jobs:
           cache-from: type=registry,ref=${{ env.DOCKER_USERNAME }}/belisasari-elizaos-agents:buildcache
           cache-to: type=registry,ref=${{ env.DOCKER_USERNAME }}/belisasari-elizaos-agents:buildcache,mode=max
 
+      - name: Build and push Bitquery image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./bitquery
+          file: ./bitquery/Dockerfile
+          push: true
+          tags: |
+            ${{ env.DOCKER_USERNAME }}/belisasari-bitquery:latest
+          cache-from: type=registry,ref=${{ env.DOCKER_USERNAME }}/belisasari-bitquery:buildcache
+          cache-to: type=registry,ref=${{ env.DOCKER_USERNAME }}/belisasari-bitquery:buildcache,mode=max
+
       - name: Build and push JS Scraper Scheduled image
         uses: docker/build-push-action@v4
         with:
@@ -87,7 +98,8 @@ jobs:
             # Create belisasari directory if it doesn't exist
             mkdir -p ~/belisasari
             cd ~/belisasari
-            docker-compose down && docker-compose up -d
+            # Optional: tear down any existing compose stack (ignore if no compose file)
+            if [ -f docker-compose.yml ]; then docker-compose down || true; fi
             
             # Create env directory if it doesn't exist
             mkdir -p ~/belisasari/env
@@ -96,7 +108,7 @@ jobs:
             echo "Checking Belisasari platform environment configuration..."
             
             # Get EC2 public IP for reference
-            PUBLIC_IP=$(curl -s http://54.90.164.207/latest/meta-data/public-ipv4)
+            PUBLIC_IP=54.90.164.207
             echo "EC2 Public IP: $PUBLIC_IP"
             
             # Check if .env file exists on server
@@ -376,10 +388,11 @@ jobs:
             
             echo ""
             echo "=== Belisasari Platform Deployment Verification Complete ==="
-            echo "🌐 Frontend accessible at: http://$(curl -s http://54.90.164.207/latest/meta-data/public-ipv4):3000"
-            echo "🤖 ElizaOS Agents accessible at: http://$(curl -s http://54.90.164.207/latest/meta-data/public-ipv4):3001"
-            echo "📊 Bitquery Service accessible at: http://$(curl -s http://54.90.164.207/latest/meta-data/public-ipv4):3002"
-            echo "🔍 JS Scraper Scheduled Service accessible at: http://$(curl -s http://54.90.164.207169.254.169.254/latest/meta-data/public-ipv4):3003"
+            PUBLIC_IP=54.90.164.207
+            echo "🌐 Frontend accessible at: http://${PUBLIC_IP}:3000"
+            echo "🤖 ElizaOS Agents accessible at: http://${PUBLIC_IP}:3001"
+            echo "📊 Bitquery Service accessible at: http://${PUBLIC_IP}:3002"
+            echo "🔍 JS Scraper Scheduled Service accessible at: http://${PUBLIC_IP}:3003"
             echo ""
             echo "📅 Service Schedules:"
             echo "  - Bitquery: Every 12 hours at 2:00 AM and 2:00 PM UTC"
