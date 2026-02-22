@@ -3,8 +3,7 @@ name: Deploy Belisasari Platform
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+
 
 env:
   # Docker Hub Credentials (from GitHub Secrets)
@@ -97,7 +96,7 @@ jobs:
             echo "Checking Belisasari platform environment configuration..."
             
             # Get EC2 public IP for reference
-            PUBLIC_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
+            PUBLIC_IP=$(curl -s http://54.90.164.207/latest/meta-data/public-ipv4)
             echo "EC2 Public IP: $PUBLIC_IP"
             
             # Check if .env file exists on server
@@ -130,7 +129,7 @@ jobs:
               echo "# Solana Configuration"
               echo "SOLANA_PRIVATE_KEY=your_base58_private_key_here"
               echo "SOLANA_PUBLIC_KEY=your_public_key_here"
-              echo "SOLANA_RPC_URL=https://api.mainnet-beta.solana.com"
+              echo "SOLANA_RPC_URL=https://mainnet.helius-rpc.com/?api-key=c8af359f-fc82-4205-a337-b066aa17eb21"
               echo "SOLANA_CLUSTER=mainnet-beta"
               echo ""
               echo "# Twitter Configuration"
@@ -363,10 +362,10 @@ jobs:
             
             echo ""
             echo "=== Belisasari Platform Deployment Verification Complete ==="
-            echo "🌐 Frontend accessible at: http://$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4):3000"
-            echo "🤖 ElizaOS Agents accessible at: http://$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4):3001"
-            echo "📊 Bitquery Service accessible at: http://$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4):3002"
-            echo "🔍 JS Scraper Scheduled Service accessible at: http://$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4):3003"
+            echo "🌐 Frontend accessible at: http://$(curl -s http://54.90.164.207/latest/meta-data/public-ipv4):3000"
+            echo "🤖 ElizaOS Agents accessible at: http://$(curl -s http://54.90.164.207/latest/meta-data/public-ipv4):3001"
+            echo "📊 Bitquery Service accessible at: http://$(curl -s http://54.90.164.207/latest/meta-data/public-ipv4):3002"
+            echo "🔍 JS Scraper Scheduled Service accessible at: http://$(curl -s http://54.90.164.207169.254.169.254/latest/meta-data/public-ipv4):3003"
             echo ""
             echo "📅 Service Schedules:"
             echo "  - Bitquery: Every 12 hours at 2:00 AM and 2:00 PM UTC"
