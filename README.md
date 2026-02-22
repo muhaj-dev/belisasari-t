@@ -18,17 +18,18 @@
 
 ## 🎯 **What is Belisasari?**
 
-Belisasari is a comprehensive, AI-powered memecoin hunting platform that combines **real-time data collection**, **social media analysis**, and **AI-driven insights** to help traders discover the next big memecoin opportunities. Built with modern web technologies and powered by advanced AI agents.
+Belisasari is a comprehensive, AI-powered memecoin hunting platform that combines **real-time data collection**, **social media analysis**, and **AI-driven insights** to help traders discover the next big memecoin opportunities. Built with modern web technologies and powered by ElizaOS AI agents.
 
 ### 🌟 **Key Features**
 
-- 🔍 **Real-time Data Collection** - TikTok, Twitter, Telegram scraping
-- 🤖 **AI-Powered Analysis** - ElizaOS agents for market insights
-- 📊 **Live Dashboard** - Real-time market data and trends
-- 💬 **AI Chat Assistant** - Interactive trading recommendations
-- 🚨 **Smart Alerts** - Price and sentiment notifications
-- 📱 **Modern UI** - Built with Next.js and TailwindCSS
-- 🐳 **Docker Ready** - Easy deployment and scaling
+- 🔍 **Real-time Data Collection** – TikTok, Twitter, Telegram scraping
+- 🤖 **ElizaOS AI Agents** – Iris trading agent, Phase 2 Twitter automation, data-driven recommendations
+- 📊 **Live Dashboard** – Real-time market data, TikTok hashtags, Jupiter trending tokens
+- 💬 **AI Chat Assistant** – Interactive trading recommendations (OpenAI)
+- 🚨 **Smart Alerts** – Price and sentiment notifications
+- 📱 **Modern UI** – Next.js, TailwindCSS, ShadCN, Solana wallet integration
+- 🐳 **Docker Ready** – Single `.env` for all services; see [Docker env setup](./docs/DOCKER_ENV_SETUP.md)
+- 🔐 **Deployment** – GitHub Actions CI/CD; secrets and server env documented in [docs](./docs/GITHUB_DEPLOYMENT_SECRETS.md)
 
 ---
 
@@ -37,12 +38,12 @@ Belisasari is a comprehensive, AI-powered memecoin hunting platform that combine
 ```mermaid
 graph TB
     A[Frontend - Next.js] --> B[ElizaOS AI Agents]
-    A --> C[Real-time Dashboard]
+    A --> C[Live Dashboard]
     A --> D[AI Chat Interface]
     
     B --> E[Twitter Automation]
-    B --> F[Content Generation]
-    B --> G[Market Analysis]
+    B --> F[Iris Trading Agent]
+    B --> G[Phase 2 Scheduler]
     
     H[TikTok Scraper] --> I[Supabase Database]
     J[Telegram Scraper] --> I
@@ -60,12 +61,12 @@ graph TB
 
 | Component | Technology | Purpose |
 |-----------|------------|---------|
-| **Frontend** | Next.js 14, React, TypeScript, TailwindCSS | Modern web interface |
-| **AI Agents** | ElizaOS Framework | Intelligent market analysis |
-| **Data Collection** | Puppeteer, Selenium | Social media scraping |
-| **Database** | Supabase (PostgreSQL) | Real-time data storage |
-| **Deployment** | Docker, GitHub Actions | Automated deployment |
-| **Blockchain** | Solana Web3.js | Token data integration |
+| **Frontend** | Next.js 14, React, TypeScript, TailwindCSS, ShadCN | Web UI, dashboard, Jupiter/TikTok APIs |
+| **AI Agents** | ElizaOS (Iris, Phase 2, Twitter/Content agents) | Market analysis, tweets, recommendations |
+| **Data Collection** | Puppeteer (js-scraper), Selenium (scraper) | TikTok, Telegram, Outlight scraping |
+| **Database** | Supabase (PostgreSQL) | `tiktoks`, `prices`, tokens, dashboard data |
+| **Deployment** | Docker, GitHub Actions | Build images, deploy to server; env via root `.env` or server `.env` |
+| **Blockchain** | Solana, Jupiter, Helius | Token data, swap, portfolio |
 
 ---
 
@@ -74,86 +75,88 @@ graph TB
 ### **Prerequisites**
 
 - Node.js 22.x or higher
-- Docker and Docker Compose
+- Docker and Docker Compose (optional, for containerized run)
 - Supabase account
 - Git
 
 ### **1. Clone the Repository**
 
 ```bash
-git clone https://github.com/your-username/belisasari.git
+git clone https://github.com/Afoxcute/belisasari.git
 cd belisasari
 ```
 
 ### **2. Install Dependencies**
 
 ```bash
-# Install root dependencies
 yarn install
-
-# Install frontend dependencies
 cd frontend && yarn install && cd ..
-
-# Install ElizaOS agents dependencies
 cd elizaos-agents && yarn install && cd ..
-
-# Install Bitquery service dependencies
-cd bitquery && yarn install && cd ..
-
-# Install JS scraper dependencies
 cd js-scraper && yarn install && cd ..
+# Optional: bitquery, twitter, scraper (Python)
 ```
 
 ### **3. Environment Setup**
 
+**Important:** Never commit `.env` or `envvars` (they are in `.gitignore`). Use a single env source per environment.
+
+**Option A – Local run (all services via one script)**  
+Root `start-belisasari-server.js` loads root `.env` and, if present, `frontend/.env.local`, so Twitter and other keys in `frontend/.env.local` are available to ElizaOS and scrapers.
+
 ```bash
-# Copy environment template
-cp env.example .env
+# Root .env (required for startup check)
+cp .env.docker.example .env
+# Edit .env with at least: SUPABASE_URL, SUPABASE_ANON_KEY, OPENAI_API_KEY
 
-# Edit environment variables
-nano .env
+# Optional: frontend/.env.local for frontend + shared keys (Twitter, RPC, etc.)
+# See frontend/.env.example and docs/ENV_REFERENCE.md
 ```
 
-**Required Environment Variables:**
-```env
-# Supabase Configuration
-SUPABASE_URL=your_supabase_url
-SUPABASE_ANON_SECRET=your_supabase_anon_secret
+**Option B – Docker (single `.env` at repo root)**  
+All services use the same root `.env`. See [docs/DOCKER_ENV_SETUP.md](./docs/DOCKER_ENV_SETUP.md).
 
-# Twitter API
-TWITTER_API_KEY=your_twitter_api_key
-TWITTER_API_SECRET=your_twitter_api_secret
-TWITTER_ACCESS_TOKEN=your_twitter_access_token
-TWITTER_ACCESS_TOKEN_SECRET=your_twitter_access_token_secret
-
-# Bitquery API
-BITQUERY_API_KEY=your_bitquery_api_key
+```bash
+cp .env.docker.example .env
+# Edit .env with your values (required: SUPABASE_*, OPENAI_API_KEY; recommended: RPC_URL)
+docker-compose up -d
 ```
+
+**Required variables (minimum)**  
+| Variable | Description |
+|----------|-------------|
+| `SUPABASE_URL` | Supabase project URL |
+| `SUPABASE_ANON_KEY` or `SUPABASE_ANON_SECRET` | Supabase anon key |
+| `OPENAI_API_KEY` | OpenAI API key (chat, agents, scrapers) |
+
+**Recommended**  
+- `RPC_URL` or `NEXT_PUBLIC_RPC_URL` – for balance, swap, Jupiter  
+- Twitter: `TWITTER_API_KEY`, `TWITTER_API_SECRET`, `TWITTER_ACCESS_TOKEN`, `TWITTER_ACCESS_TOKEN_SECRET` (or `CONSUMER_*` / `ZORO_*`) for posting tweets  
+
+Full list and per-component usage: **[docs/ENV_REFERENCE.md](./docs/ENV_REFERENCE.md)**.
 
 ### **4. Database Setup**
 
-```bash
-# Run Supabase setup
-psql -h your-supabase-host -U postgres -d postgres -f complete_supabase_schema.sql
-```
+Use your Supabase project; ensure tables used by the app (e.g. `tiktoks`, `prices`, tokens) exist. See any Supabase schema docs in the repo (e.g. `complete_supabase_schema.sql` if present).
 
 ### **5. Start the Platform**
 
 ```bash
-# Start all services
+# Start all services (frontend, ElizaOS Phase 2, TikTok/Telegram/Outlight scrapers)
 yarn belisasari
 
-# Or start individual services
-yarn start:frontend    # Frontend only
-yarn start:agents      # ElizaOS agents only
-yarn start:scrapers    # All scrapers
+# Or run individually
+yarn dev                    # Frontend only (from repo root)
+cd frontend && yarn dev     # Frontend dev server
+cd elizaos-agents && node phase2-orchestrator.js   # ElizaOS Phase 2
+cd js-scraper && node index.mjs                    # TikTok scraper
 ```
 
 ### **6. Access the Platform**
 
-- **Frontend**: http://localhost:3000
-- **AI Chat**: http://localhost:3000/ai-chat
-- **Dashboard**: http://localhost:3000/dashboard
+- **Frontend:** http://localhost:3000  
+- **AI Chat:** http://localhost:3000/ai-chat  
+- **Dashboard:** http://localhost:3000/dashboard  
+- **Follow on X:** [https://x.com/wojat118721](https://x.com/wojat118721) (link in app header)
 
 ---
 
@@ -161,278 +164,122 @@ yarn start:scrapers    # All scrapers
 
 ```
 belisasari/
-├── 📁 frontend/                 # Next.js frontend application
-│   ├── 📁 app/                 # App router pages
-│   ├── 📁 components/          # React components
-│   ├── 📁 lib/                 # Utilities and services
-│   └── 📄 package.json
-├── 📁 elizaos-agents/          # AI agents (ElizaOS framework)
-│   ├── 📁 agents/              # Individual AI agents
-│   ├── 📁 integrations/        # External service integrations
-│   └── 📄 package.json
-├── 📁 bitquery/                # Blockchain data service
-│   ├── 📁 scripts/             # Data collection scripts
-│   └── 📄 package.json
-├── 📁 js-scraper/              # JavaScript scrapers
-│   ├── 📄 index.mjs            # TikTok scraper
-│   └── 📄 package.json
-├── 📁 .github/workflows/       # GitHub Actions CI/CD
-├── 📄 docker-compose.yml       # Docker services configuration
-├── 📄 start-belisasari-server.js    # Main orchestrator script
-└── 📄 README.md                # This file
+├── frontend/                 # Next.js app (dashboard, Jupiter, TikTok APIs, AI chat)
+├── elizaos-agents/           # ElizaOS: Iris agent, Phase 2 orchestrator, Twitter/DB integrations
+├── js-scraper/               # TikTok, Telegram, Outlight scrapers (Puppeteer)
+├── bitquery/                 # Solana/blockchain data service
+├── twitter/                  # Twitter bot utilities
+├── scraper/                  # Python TikTok scraper (Selenium)
+├── docs/                     # Deployment and env docs
+│   ├── DOCKER_ENV_SETUP.md   # Docker env setup (root .env, server .env)
+│   ├── GITHUB_DEPLOYMENT_SECRETS.md  # GitHub Actions secrets + server .env
+│   └── ENV_REFERENCE.md      # Full env variable reference
+├── .github/workflows/        # CI/CD (e.g. deploy.yml)
+├── docker-compose.yml        # Frontend, elizaos-agents, js-scraper, optional Redis/Postgres
+├── .env.docker.example       # Template for root .env (do not commit .env)
+├── start-belisasari-server.js # Orchestrator: loads root .env + frontend/.env.local, starts services
+└── README.md
 ```
 
 ---
 
-## 🤖 **AI Agents & Services**
+## 🤖 **AI Agents & ElizaOS Integration**
 
-### **Phase 1: Data Collection & Display**
-- **TikTok Scraper** - Collects trending memecoin content
-- **Telegram Scraper** - Monitors crypto channels
-- **Bitquery Service** - Fetches blockchain data
-- **Real-time Dashboard** - Displays live market data
+- **Iris Trading Agent** – Uses Jupiter trending list (`/api/jupiter/tokens/list`), dashboard TikTok hashtags (`/api/dashboard/tiktok-hashtags`), Supabase `tiktoks`/`prices`/trending tokens. Produces data-driven recommendations and can post to Twitter when configured.
+- **Phase 2 Orchestrator** – Twitter-only automation: trending alerts, content, market analysis. Uses same Supabase and Twitter env as the rest of the platform.
+- **Twitter integration** – Accepts `TWITTER_*` or `CONSUMER_*`/`ZORO_*`; same keys work for frontend post API and ElizaOS. Credentials must be in the env (e.g. root `.env` or `frontend/.env.local` when using `yarn belisasari`).
+- **FRONTEND_URL** – Set in production (e.g. `https://your-domain.com`) so agents can call dashboard and Jupiter APIs.
 
-### **Phase 2: Social Media Automation**
-- **Twitter Manager Agent** - Automated posting and engagement
-- **Content Generator Agent** - Creates memecoin content
-- **Master Scheduler Agent** - Coordinates posting schedules
-
-### **Phase 3: AI-Powered Frontend**
-- **AI Chat Assistant** - Interactive trading recommendations
-- **Personalization Service** - User preference learning
-- **Real-time Service** - Live updates and notifications
-
-### **Phase 4: AI Trading & Portfolio Management**
-- **Decision Agent** - Automated trading decisions
-- **Portfolio Manager** - Risk management and optimization
-- **Pattern Recognition** - Market trend analysis
+See `elizaos-agents/` and `AGENTS.md` for commands and structure.
 
 ---
 
 ## 🐳 **Docker Deployment**
 
-### **Local Development**
-
-```bash
-# Build all services
-docker-compose build
-
-# Start all services
-docker-compose up -d
-
-# View logs
-docker-compose logs -f
-
-# Stop services
-docker-compose down
-```
-
-### **Production Deployment**
-
-```bash
-# Deploy to Ubuntu server
-chmod +x deploy-ubuntu.sh
-./deploy-ubuntu.sh
-
-# Or use GitHub Actions for automated deployment
-# Push to main branch triggers deployment
-```
+- **One `.env`** at the **repo root** is used by all services (frontend, elizaos-agents, js-scraper). Create it from the template: `cp .env.docker.example .env`.
+- **Local:** `docker-compose up -d` (uses root `.env`).
+- **Server:** Put `.env` on the server (e.g. `/home/ubuntu/belisasari/.env`). The GitHub deploy workflow mounts it into each container as `/app/.env`.
+- Full steps and variable list: **[docs/DOCKER_ENV_SETUP.md](./docs/DOCKER_ENV_SETUP.md)**.
 
 ---
 
-## 📊 **API Endpoints**
+## 🔐 **GitHub Deployment (CI/CD)**
 
-### **Dashboard APIs**
-- `GET /api/dashboard/trending-coins` - Trending memecoins
-- `GET /api/dashboard/analysis-results` - Market analysis
-- `GET /api/dashboard/telegram-recent` - Recent Telegram data
-- `GET /api/dashboard/tiktok-hashtags` - TikTok hashtag trends
-
-### **Supabase APIs**
-- `GET /api/supabase/get-tiktoks` - TikTok data
-- `GET /api/supabase/get-prices` - Price data
-- `GET /api/supabase/get-mentions` - Social mentions
-- `POST /api/supabase/add-sub` - Add subscription
-
-### **AI Agent APIs**
-- `POST /api/decision-agent` - Trading decisions
-- `POST /api/pattern-recognition` - Pattern analysis
-- `GET /api/real-time/events` - Real-time events
+- **Secrets** (Settings → Secrets and variables → Actions): `DOCKER_USERNAME`, `DOCKER_HUB_ACCESS_TOKEN`, `SSH_HOST`, `SSH_USERNAME`, `SSH_PRIVATE_KEY`. Used to push images and SSH to the server.
+- **Application env** is **not** in GitHub; it lives in the server `.env` file. Create/edit it on the server (e.g. `/home/ubuntu/belisasari/.env`) with the same variables as local/Docker.
+- Full checklist and optional vars: **[docs/GITHUB_DEPLOYMENT_SECRETS.md](./docs/GITHUB_DEPLOYMENT_SECRETS.md)**.
 
 ---
 
-## 🔧 **Configuration**
+## 📊 **API Endpoints (examples)**
 
-### **Environment Variables**
+- **Dashboard:** `GET /api/dashboard/tiktok-hashtags`, `GET /api/dashboard/trending-coins`, `GET /api/dashboard/telegram-recent`, etc.
+- **Jupiter:** `GET /api/jupiter/tokens/list?list=trending`, swap/order/execute endpoints (when configured).
+- **Supabase-backed:** `GET /api/supabase/get-tiktoks`, `GET /api/supabase/get-prices`, and others.
+- **AI/Agents:** Decision agent, pattern recognition, real-time events as implemented in the app.
+
+---
+
+## 🔧 **Configuration & Env**
 
 | Variable | Description | Required |
 |----------|-------------|----------|
 | `SUPABASE_URL` | Supabase project URL | ✅ |
-| `SUPABASE_ANON_SECRET` | Supabase anonymous key | ✅ |
-| `TWITTER_API_KEY` | Twitter API key | ✅ |
-| `TWITTER_API_SECRET` | Twitter API secret | ✅ |
-| `BITQUERY_API_KEY` | Bitquery API key | ✅ |
-| `DISCORD_BOT_TOKEN` | Discord bot token | ❌ |
-| `TELEGRAM_BOT_TOKEN` | Telegram bot token | ❌ |
+| `SUPABASE_ANON_KEY` or `SUPABASE_ANON_SECRET` | Supabase anon key | ✅ |
+| `OPENAI_API_KEY` | OpenAI API key | ✅ |
+| `RPC_URL` or `NEXT_PUBLIC_RPC_URL` | Solana RPC (balance, swap, Jupiter) | Recommended |
+| `TWITTER_*` or `CONSUMER_*`/`ZORO_*` | Twitter posting (ElizaOS + frontend) | Optional |
+| `FRONTEND_URL` | App URL for ElizaOS (e.g. production) | Optional (set in prod) |
+| `TELEGRAM_BOT_TOKEN` | Telegram scraper | Optional |
+| `JUPITER_ULTRA_API_KEY` / `JUPITER_API_KEY` | Jupiter APIs | Optional |
 
-### **Service Configuration**
-
-- **Frontend**: Configured via `frontend/next.config.mjs`
-- **ElizaOS Agents**: Configured via `elizaos-agents/config/`
-- **Docker**: Configured via `docker-compose.yml`
-- **CI/CD**: Configured via `.github/workflows/deploy.yml`
-
----
-
-## 🚀 **Deployment Options**
-
-### **1. Ubuntu Server Deployment**
-```bash
-# Automated deployment script
-./deploy-ubuntu.sh
-
-# Manual deployment
-./UBUNTU_DEPLOYMENT_GUIDE.md
-```
-
-### **2. Docker Deployment**
-```bash
-# Local development
-docker-compose up -d
-
-# Production
-docker-compose -f docker-compose.prod.yml up -d
-```
-
-### **3. GitHub Actions CI/CD**
-- Automatic deployment on push to main branch
-- Environment variables via GitHub Secrets
-- Docker image building and deployment
-
----
-
-## 📈 **Monitoring & Analytics**
-
-### **Service Health Checks**
-- **Frontend**: `http://localhost:3000/api/health`
-- **ElizaOS Agents**: Built-in health monitoring
-- **Scrapers**: Log-based monitoring
-- **Database**: Supabase dashboard
-
-### **Logs & Debugging**
-```bash
-# View all service logs
-docker-compose logs -f
-
-# View specific service logs
-docker-compose logs -f frontend
-docker-compose logs -f elizaos-agents
-docker-compose logs -f bitquery
-docker-compose logs -f js-scraper
-
-# View scraper logs
-docker-compose exec js-scraper cat /var/log/scraper-cron.log
-docker-compose exec bitquery cat /var/log/bitquery-cron.log
-```
-
----
-
-## 🛠️ **Development**
-
-### **Available Scripts**
-
-```bash
-# Root level
-yarn belisasari              # Start all services
-yarn start:all          # Alternative start command
-yarn docker:build       # Build Docker images
-yarn docker:up          # Start Docker services
-yarn docker:down        # Stop Docker services
-
-# Frontend
-cd frontend
-yarn dev                # Development server
-yarn build              # Production build
-yarn start              # Production server
-yarn lint               # ESLint
-
-# ElizaOS Agents
-cd elizaos-agents
-yarn start              # Start agents
-yarn test               # Run tests
-
-# Bitquery Service
-cd bitquery
-yarn start              # Start service
-node index.mjs          # Run data collection
-
-# JS Scraper
-cd js-scraper
-yarn scrape-tiktok      # TikTok scraper
-yarn scrape-telegram    # Telegram scraper
-yarn scrape-outlight    # Outlight scraper
-```
-
-### **Code Style**
-- **TypeScript** - Strict mode enabled
-- **ESLint** - Next.js configuration
-- **Prettier** - Code formatting
-- **TailwindCSS** - Utility-first CSS
-
----
-
-## 🤝 **Contributing**
-
-1. **Fork the repository**
-2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
-3. **Commit changes**: `git commit -m 'Add amazing feature'`
-4. **Push to branch**: `git push origin feature/amazing-feature`
-5. **Open a Pull Request**
-
-### **Development Guidelines**
-- Follow TypeScript best practices
-- Write comprehensive tests
-- Update documentation
-- Follow the existing code style
+Full reference: **[docs/ENV_REFERENCE.md](./docs/ENV_REFERENCE.md)**.  
+**Security:** Do not commit `.env` or `envvars`; rotate any keys if they were ever committed.
 
 ---
 
 ## 📚 **Documentation**
 
-- **[Quick Start Guide](./QUICK_START.md)** - Get up and running quickly
-- **[Ubuntu Deployment Guide](./UBUNTU_DEPLOYMENT_GUIDE.md)** - Server deployment
-- **[Supabase Setup Guide](./SUPABASE_SETUP_GUIDE.md)** - Database configuration
-- **[Docker Troubleshooting](./DOCKER_TROUBLESHOOTING.md)** - Common issues
-- **[ElizaOS Agents Guide](./elizaos-agents/README.md)** - AI agents documentation
+| Doc | Description |
+|-----|-------------|
+| [docs/DOCKER_ENV_SETUP.md](./docs/DOCKER_ENV_SETUP.md) | Docker env: root `.env`, `.env.docker.example`, server deploy |
+| [docs/GITHUB_DEPLOYMENT_SECRETS.md](./docs/GITHUB_DEPLOYMENT_SECRETS.md) | GitHub Actions secrets and server `.env` checklist |
+| [docs/ENV_REFERENCE.md](./docs/ENV_REFERENCE.md) | Full list of env vars by component |
+| [AGENTS.md](./AGENTS.md) | Architecture and commands (frontend, scrapers, agents) |
+| [QUICK_START.md](./QUICK_START.md) | Quick start (if present) |
+| [UBUNTU_DEPLOYMENT_GUIDE.md](./UBUNTU_DEPLOYMENT_GUIDE.md) | Ubuntu server deployment (if present) |
+| [SUPABASE_SETUP_GUIDE.md](./SUPABASE_SETUP_GUIDE.md) | Supabase setup (if present) |
+
+---
+
+## 🛠️ **Development**
+
+### **Scripts (root)**
+
+```bash
+yarn belisasari      # Start all services (loads root .env + frontend/.env.local)
+yarn dev             # Frontend dev
+yarn build           # Install all + frontend build
+yarn docker:build   # Build Docker images
+yarn docker:up       # docker-compose up -d
+yarn docker:down     # docker-compose down
+yarn deploy:ubuntu   # Run deploy script (if present)
+```
+
+### **Code style**
+
+- TypeScript strict mode, ESLint (Next.js), ShadCN, TailwindCSS  
+- Path alias `@/*` → frontend root  
+- Env for all secrets; no `.env` or `envvars` in version control  
 
 ---
 
 ## 🐛 **Troubleshooting**
 
-### **Common Issues**
-
-1. **WebSocket Connection Errors**
-   - Solution: AI chat uses simulated data by default
-   - See: [AI Chat WebSocket Fix](./AI_CHAT_WEBSOCKET_FIX.md)
-
-2. **Docker Build Failures**
-   - Solution: Use `--legacy-peer-deps` flag
-   - See: [Docker Build Fix](./DOCKER_BUILD_COMPLETE_FIX.md)
-
-3. **TypeScript Errors**
-   - Solution: Ensure Node.js 22.x is installed
-   - See: [Node Version Fix](./NODE_VERSION_FIX.md)
-
-4. **Supabase Connection Issues**
-   - Solution: Verify environment variables
-   - See: [Supabase Setup Guide](./SUPABASE_SETUP_GUIDE.md)
-
-### **Getting Help**
-
-- 📖 **Documentation**: Check the guides in the root directory
-- 🐛 **Issues**: Open a GitHub issue
-- 💬 **Discussions**: Use GitHub Discussions
-- 📧 **Contact**: [Your Contact Information]
+- **Twitter not posting** – Ensure Twitter env vars are in the env seen by the process (root `.env` or `frontend/.env.local` when using `yarn belisasari`). See [earlier fix summary](./elizaos-agents/TWITTER_INTEGRATION_FIX.md) if present.
+- **Push blocked (secrets)** – Do not commit `.env` or `envvars`. If a secret was pushed, remove it from history and rotate the key. See GitHub’s [push protection](https://docs.github.com/code-security/secret-scanning/working-with-secret-scanning-and-push-protection/working-with-push-protection-from-the-command-line#resolving-a-blocked-push).
+- **Docker/build** – Use root `.env` from `.env.docker.example`; see [docs/DOCKER_ENV_SETUP.md](./docs/DOCKER_ENV_SETUP.md).
+- **Supabase** – Verify `SUPABASE_URL` and `SUPABASE_ANON_KEY` (or `SUPABASE_ANON_SECRET`).
 
 ---
 
@@ -444,27 +291,17 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 **Acknowledgments**
 
-- **ElizaOS Framework** - AI agent infrastructure
-- **Next.js Team** - Modern React framework
-- **Supabase** - Backend-as-a-Service
-- **TailwindCSS** - Utility-first CSS framework
-- **Solana** - Blockchain infrastructure
-
----
-
-## 📊 **Project Status**
-
-![GitHub last commit](https://img.shields.io/github/last-commit/your-username/belisasari?style=flat-square)
-![GitHub issues](https://img.shields.io/github/issues/your-username/belisasari?style=flat-square)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/your-username/belisasari?style=flat-square)
-![GitHub stars](https://img.shields.io/github/stars/your-username/belisasari?style=flat-square)
+- ElizaOS – AI agent infrastructure  
+- Next.js, Supabase, TailwindCSS, ShadCN  
+- Solana, Jupiter, Helius  
+- twitter-api-v2, Puppeteer  
 
 ---
 
 <div align="center">
 
-**🚀 Built with ❤️ for the memecoin community**
+**Built for the memecoin community**
 
-[⭐ Star this repo](https://github.com/your-username/belisasari) | [🐛 Report Bug](https://github.com/your-username/belisasari/issues) | [💡 Request Feature](https://github.com/your-username/belisasari/issues)
+[Follow on X](https://x.com/wojat118721) · [⭐ Star this repo](https://github.com/Afoxcute/belisasari) · [🐛 Report Bug](https://github.com/Afoxcute/belisasari/issues) · [💡 Request Feature](https://github.com/Afoxcute/belisasari/issues)
 
 </div>
