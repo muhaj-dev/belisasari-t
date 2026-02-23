@@ -319,11 +319,12 @@ export async function main() {
     console.log(`   Agents: ${Object.keys(status.agents).length} active`);
     
     console.log('\n🎉 Belisasari Phase 2 implementation complete!');
-    console.log('\nNext steps:');
+    console.log('\n🔄 Starting continuous automation (5 min intervals)...');
+    await orchestrator.startAutomation(300000); // keep container running
+    console.log('Next steps:');
     console.log('1. Configure platform credentials in .env file');
-    console.log('2. Start continuous automation with: orchestrator.startAutomation()');
-    console.log('3. Monitor performance with: orchestrator.getSystemStatus()');
-    console.log('4. Run custom campaigns with: orchestrator.runSocialMediaCampaign(data)');
+    console.log('2. Monitor performance with: orchestrator.getSystemStatus()');
+    console.log('3. Run custom campaigns with: orchestrator.runSocialMediaCampaign(data)');
     
   } catch (error) {
     console.error('❌ Fatal error in Belisasari Phase 2:', error);

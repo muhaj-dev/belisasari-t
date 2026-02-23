@@ -253,13 +253,13 @@ jobs:
             echo "Container Status:"
             sudo docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
             
-            # Test database connection from within containers
+            # Test database connection from within containers (read SUPABASE_URL from mounted .env)
             echo "Testing Supabase database connections from containers..."
             for container in belisasari-frontend belisasari-elizaos-agents belisasari-bitquery belisasari-js-scraper; do
-              if sudo docker exec $container timeout 10 bash -c "curl -s -o /dev/null -w '%{http_code}' \$SUPABASE_URL/rest/v1/" 2>/dev/null | grep -q "200\|401"; then
+              if sudo docker exec $container timeout 10 sh -c 'SUPABASE_URL=$(grep "^SUPABASE_URL=" /app/.env 2>/dev/null | cut -d= -f2-); [ -n "$SUPABASE_URL" ] && curl -s -o /dev/null -w "%{http_code}" "${SUPABASE_URL}/rest/v1/"' 2>/dev/null | grep -q "200\|401"; then
                 echo "✅ $container can reach Supabase API"
               else
-                echo "⚠️ $container cannot reach Supabase API"
+                echo "⚠️ $container cannot reach Supabase API (check .env SUPABASE_URL and anon/service_role key)"
               fi
             done
             
@@ -363,7 +363,7 @@ jobs:
             for container in belisasari-frontend belisasari-elizaos-agents belisasari-bitquery belisasari-js-scraper; do
               if sudo docker ps | grep -q $container; then
                 echo "Testing $container Supabase connectivity..."
-                sudo docker exec $container timeout 5 bash -c "curl -s -o /dev/null -w 'Supabase API: %{http_code}\n' \$SUPABASE_URL/rest/v1/" 2>/dev/null || echo "$container: Supabase API test failed"
+                sudo docker exec $container timeout 5 sh -c 'SUPABASE_URL=$(grep "^SUPABASE_URL=" /app/.env 2>/dev/null | cut -d= -f2-); [ -n "$SUPABASE_URL" ] && curl -s -o /dev/null -w "Supabase API: %{http_code}\n" "${SUPABASE_URL}/rest/v1/"' 2>/dev/null || echo "$container: Supabase API test failed"
               fi
             done
             
@@ -373,6 +373,7 @@ jobs:
               echo "=== $container logs (Supabase-related) ==="
               sudo docker logs --tail 10 $container 2>&1 | grep -i "supabase\|database\|connection\|error" || echo "No Supabase-related messages in recent logs"
             done
+            echo "If belisasari-bitquery shows 'Invalid API key': set SUPABASE_URL and SUPABASE_ANON_KEY (or SUPABASE_SERVICE_ROLE_KEY) in server .env from Supabase Dashboard → Settings → API (same project)."
             
             # JS Scraper Scheduled Service Verification
             echo "=== JS Scraper Scheduled Service Verification ==="
