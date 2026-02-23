@@ -6,8 +6,9 @@ export type AppAuthValue = {
   ready: boolean;
   authenticated: boolean;
   user: { wallet?: { address: string }; username?: string } | null;
-  login: (opts?: { loginMethods?: string[]; walletChainType?: string }) => Promise<void>;
-  logout: () => Promise<void>;
+  /** Accepts e.g. { loginMethods: ['wallet'], walletChainType: 'solana-only' }; implementation may be Privy or stub. */
+  login: (opts?: unknown) => void | Promise<void>;
+  logout: () => void | Promise<void>;
 };
 
 const stubAuth: AppAuthValue = {
