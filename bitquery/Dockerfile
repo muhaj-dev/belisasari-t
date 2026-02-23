@@ -29,14 +29,7 @@ RUN if [ -f yarn.lock ]; then \
 # Copy source code
 COPY . .
 
-# Create non-root user
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S bitquery -u 1001
-
-# Change ownership
-RUN chown -R bitquery:nodejs /app
-USER bitquery
-
+# Run as root so mounted /app/.env (often 600 on host) is readable; required for Supabase auth
 # Expose port (if needed)
 EXPOSE 3002
 

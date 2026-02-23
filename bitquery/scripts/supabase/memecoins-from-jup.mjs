@@ -74,18 +74,18 @@ function jupToTokenRow(jupToken) {
 function getSupabaseClient() {
   const supabaseUrl = process.env.SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  const anonKey = process.env.SUPABASE_ANON_SECRET;
+  const anonKey = process.env.SUPABASE_ANON_SECRET || process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_KEY;
   if (!supabaseUrl) {
     console.error("Missing SUPABASE_URL");
     process.exit(1);
   }
   const key = serviceKey || anonKey;
   if (!key) {
-    console.error("Missing SUPABASE_SERVICE_ROLE_KEY or SUPABASE_ANON_SECRET. For writes (tokens/prices), set SUPABASE_SERVICE_ROLE_KEY (bypasses RLS).");
+    console.error("Missing SUPABASE_SERVICE_ROLE_KEY or SUPABASE_ANON_SECRET/SUPABASE_ANON_KEY. For writes (tokens/prices), set SUPABASE_SERVICE_ROLE_KEY (bypasses RLS).");
     process.exit(1);
   }
   if (!serviceKey) {
-    console.warn("Using SUPABASE_ANON_SECRET; if you get RLS errors, set SUPABASE_SERVICE_ROLE_KEY for this script.");
+    console.warn("Using anon key; if you get RLS errors, set SUPABASE_SERVICE_ROLE_KEY for this script.");
   }
   return createClient(supabaseUrl, key);
 }

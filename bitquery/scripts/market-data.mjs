@@ -193,10 +193,10 @@ export async function fetchMarketData(tokenMintAddress) {
 // Function to update token market data in Supabase
 export async function updateTokenMarketData(marketData) {
   const supabaseUrl = process.env.SUPABASE_URL;
-  const supabaseKey = process.env.SUPABASE_ANON_SECRET;
+  const supabaseKey = process.env.SUPABASE_ANON_SECRET || process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_KEY;
 
   if (!supabaseUrl || !supabaseKey) {
-    console.error("Missing SUPABASE_URL or SUPABASE_ANON_SECRET in environment variables");
+    console.error("Missing SUPABASE_URL or SUPABASE_ANON_SECRET/SUPABASE_ANON_KEY in environment variables");
     return;
   }
 
