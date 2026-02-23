@@ -72,7 +72,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased select-none`}
         suppressHydrationWarning
       >
-        <SSRSafeProvider>{children}</SSRSafeProvider>
+        {/* Single root div so portals (Privy/Radix) never target document and trigger "Only one element on document" */}
+        <div id="__belisasari_root">
+          <SSRSafeProvider>{children}</SSRSafeProvider>
+        </div>
       </body>
     </html>
   );

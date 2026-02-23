@@ -18,16 +18,22 @@ const PrivyClientProvider = dynamic(
 
 export default function SSRSafeProvider({ children }: { children: React.ReactNode }) {
   const [isClient, setIsClient] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
-    const timer = setTimeout(() => setIsMounted(true), 100);
-    return () => clearTimeout(timer);
   }, []);
 
-  // Wait for client and a tick so document.body exists before Privy/portals mount (avoids HierarchyRequestError)
-  if (!isClient || !isMounted) {
+  // Delay Privy/portals until after DOM is committed (avoids HierarchyRequestError: Only one element on document)
+  useEffect(() => {
+    if (!isClient) return;
+    const id = requestAnimationFrame(() => {
+      requestAnimationFrame(() => setReady(true));
+    });
+    return () => cancelAnimationFrame(id);
+  }, [isClient]);
+
+  if (!isClient || !ready) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
