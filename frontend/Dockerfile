@@ -32,6 +32,10 @@ ENV SUPABASE_URL=https://placeholder.supabase.co
 ENV SUPABASE_ANON_SECRET=placeholder
 ENV SUPABASE_ANON_KEY=placeholder
 
+# Build-time public env (from workflow build-args or leave empty)
+ARG NEXT_PUBLIC_PRIVY_APP_ID
+ENV NEXT_PUBLIC_PRIVY_APP_ID=${NEXT_PUBLIC_PRIVY_APP_ID}
+
 RUN yarn build
 
 # Production image, copy all the files and run next

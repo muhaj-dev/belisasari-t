@@ -15,6 +15,9 @@ env:
   HOST_USERNAME: ${{ secrets.SSH_USERNAME }}
   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
+  # Frontend build-time (NEXT_PUBLIC_*); set in Settings → Secrets or Variables → Actions
+  NEXT_PUBLIC_PRIVY_APP_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_APP_ID || vars.NEXT_PUBLIC_PRIVY_APP_ID }}
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -41,6 +44,8 @@ jobs:
             ${{ env.DOCKER_USERNAME }}/belisasari-frontend:latest
           cache-from: type=registry,ref=${{ env.DOCKER_USERNAME }}/belisasari-frontend:buildcache
           cache-to: type=registry,ref=${{ env.DOCKER_USERNAME }}/belisasari-frontend:buildcache,mode=max
+          build-args: |
+            NEXT_PUBLIC_PRIVY_APP_ID=${{ env.NEXT_PUBLIC_PRIVY_APP_ID }}
 
       - name: Build and push ElizaOS Agents image
         uses: docker/build-push-action@v4
