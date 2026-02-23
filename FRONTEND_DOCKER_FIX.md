@@ -1,5 +1,15 @@
 # Frontend Docker Build Fix - Yarn Lockfile Issue
 
+## 🖥️ DOM errors (removeChild / appendChild)
+
+If you see **NotFoundError: removeChild** or **HierarchyRequestError: Only one element on document allowed** in the browser (often with Privy or wallet modals):
+
+- **Root layout** uses a single stable root: `<div id="__next" translate="no">` so portals (Privy, wallet adapter) don’t conflict with React’s tree.
+- **React Strict Mode** is disabled in `next.config.mjs` to avoid double-mount cleanup causing removeChild on already-removed nodes.
+- Loading UI has `translate="no"` to reduce DOM changes from browser translation.
+
+---
+
 ## 🔧 Issue Fixed
 
 ### **Prem:**
