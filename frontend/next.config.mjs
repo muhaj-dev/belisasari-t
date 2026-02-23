@@ -5,6 +5,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: false, // Avoid double-mount so Privy/wallet portal does not trigger "Only one element on document"
   transpilePackages: ["@noble/curves", "@noble/hashes"],
   webpack: (config, { isServer }) => {
     // Fix @noble/curves re-exports: ensure resolution uses correct utils (esm/utils.js not abstract/utils.js)

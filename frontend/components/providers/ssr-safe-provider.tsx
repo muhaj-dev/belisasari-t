@@ -26,8 +26,8 @@ export default function SSRSafeProvider({ children }: { children: React.ReactNod
     return () => clearTimeout(timer);
   }, []);
 
-  // Wait for client and a tick so document.body exists and we avoid "Only one element on document" (Privy/portal)
-  if (!isClient || !isMounted || (typeof document !== 'undefined' && !document.body)) {
+  // Wait for client and a tick so document.body exists before Privy/portals mount (avoids HierarchyRequestError)
+  if (!isClient || !isMounted) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">

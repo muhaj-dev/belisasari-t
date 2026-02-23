@@ -2,20 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "@solana/wallet-adapter-react-ui/styles.css";
 import "./globals.css";
-import dynamic from 'next/dynamic';
-
-const ClientLayout = dynamic(() => import("@/components/providers/ssr-safe-provider"), {
-  ssr: false,
-  loading: () => (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <img src="/belisasari.png" alt="Belisasari" className="w-16 h-16 mx-auto mb-4 rounded-full" />
-        <div className="w-8 h-8 border-2 border-iris-primary/20 border-t-iris-primary rounded-full animate-spin mx-auto mb-4" />
-        <p className="text-muted-foreground">Loading Belisasari...</p>
-      </div>
-    </div>
-  )
-});
+import SSRSafeProvider from "@/components/providers/ssr-safe-provider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -82,9 +69,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased select-none`}
         suppressHydrationWarning
       >
-        <div id="__belisasari_root">
-          <ClientLayout>{children}</ClientLayout>
-        </div>
+        <SSRSafeProvider>{children}</SSRSafeProvider>
       </body>
     </html>
   );
