@@ -1,13 +1,23 @@
 'use client';
 
-import React, { Component, type ErrorInfo, type ReactNode, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { EnvironmentStoreProvider } from '@/components/context';
 import SolanaWalletProvider from './wallet-provider';
 import { ThemeProvider } from './theme-provider';
 import { PrivyClientProvider } from '@/components/provider/PrivyClientProvider';
-import { AppAuthStubProvider } from '@/components/provider/PrivyAppAuthContext';
 import Layout from '@/components/sections/layout';
 import { Toaster } from '@/components/ui/toaster';
+
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="text-center">
+        <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto mb-4" />
+        <p className="text-muted-foreground">Loading Belisasari...</p>
+      </div>
+    </div>
+  );
+}
 
 export default function SSRSafeProvider({ children }: { children: React.ReactNode }) {
   const [isClient, setIsClient] = useState(false);
@@ -31,15 +41,20 @@ export default function SSRSafeProvider({ children }: { children: React.ReactNod
   }
 
   return (
-    <RootErrorBoundary>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="dark"
-        enableSystem={false}
-        disableTransitionOnChange
-      >
-        <AppTree>{children}</AppTree>
-      </ThemeProvider>
-    </RootErrorBoundary>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="dark"
+      enableSystem={false}
+      disableTransitionOnChange
+    >
+      <PrivyClientProvider>
+        <EnvironmentStoreProvider>
+          <SolanaWalletProvider>
+            <Layout>{children}</Layout>
+            <Toaster />
+          </SolanaWalletProvider>
+        </EnvironmentStoreProvider>
+      </PrivyClientProvider>
+    </ThemeProvider>
   );
 }
