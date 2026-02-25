@@ -53,6 +53,53 @@ export default function DashboardClient() {
     }));
   }, []);
 
+  // Fetch real TikTok/Telegram (and pattern) counts from API so "Today" and totals reflect Supabase
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      try {
+        const res = await fetch('/api/dashboard/scraper-status');
+        if (!res.ok || cancelled) return;
+        const raw = await res.json();
+        const parseLastRun = (v: string | null | undefined): Date | null => {
+          if (!v || v === 'Never') return null;
+          const d = new Date(v);
+          return isNaN(d.getTime()) ? null : d;
+        };
+        const mapStatus = (s: string) => (s === 'error' ? 'error' : 'active');
+        setScraperStatus(prev => ({
+          ...prev,
+          tiktok: {
+            status: mapStatus(raw.tiktok?.status),
+            lastRun: parseLastRun(raw.tiktok?.lastRun) ?? prev.tiktok.lastRun,
+            totalVideos: typeof raw.tiktok?.totalVideos === 'number' ? raw.tiktok.totalVideos : prev.tiktok.totalVideos,
+            videosToday: typeof raw.tiktok?.videosToday === 'number' ? raw.tiktok.videosToday : prev.tiktok.videosToday
+          },
+          telegram: {
+            status: mapStatus(raw.telegram?.status),
+            lastRun: parseLastRun(raw.telegram?.lastRun) ?? prev.telegram.lastRun,
+            totalMessages: typeof raw.telegram?.totalMessages === 'number' ? raw.telegram.totalMessages : prev.telegram.totalMessages,
+            messagesToday: typeof raw.telegram?.messagesToday === 'number' ? raw.telegram.messagesToday : prev.telegram.messagesToday
+          },
+          patternAnalysis: {
+            status: mapStatus(raw.patternAnalysis?.status),
+            lastRun: parseLastRun(raw.patternAnalysis?.lastRun) ?? prev.patternAnalysis.lastRun,
+            totalAnalyses: typeof raw.patternAnalysis?.totalAnalyses === 'number' ? raw.patternAnalysis.totalAnalyses : prev.patternAnalysis.totalAnalyses,
+            analysesToday: typeof raw.patternAnalysis?.analysesToday === 'number' ? raw.patternAnalysis.analysesToday : prev.patternAnalysis.analysesToday
+          }
+        }));
+      } catch (e) {
+        if (!cancelled) console.error('Failed to load scraper status:', e);
+      }
+    };
+    load();
+    const interval = setInterval(load, 60_000); // refresh every 60s
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, []);
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active': return 'bg-green-500';
