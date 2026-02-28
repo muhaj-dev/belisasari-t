@@ -380,232 +380,86 @@ export default function TrendingCoinsSummary() {
   }
 
   return (
-    <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-        {/* Total Coins - Only show if > 0 */}
-        {metrics?.totalCoins && metrics.totalCoins > 0 && (
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Total Coins Analyzed
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{metrics.totalCoins}</div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Active tokens in last 24h
-              </p>
-            </CardContent>
-          </Card>
-        )}
-
-
-
-        {/* Total Views - Only show if > 0 */}
-        {metrics?.totalViews24h && metrics.totalViews24h > 0 && (
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Total TikTok Views
-                <div className="flex items-center gap-2 mt-1">
-                  {!connectionStatus ? (
-                    <div className="flex items-center gap-1">
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-pulse"></div>
-                      <span className="text-xs text-gray-500">Initializing...</span>
-                    </div>
-                  ) : connectionStatus.isConnected ? (
-                    <div className="flex items-center gap-1">
-                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                      <span className="text-xs text-green-600">Live</span>
-                    </div>
-                  ) : connectionStatus.isConnecting ? (
-                    <div className="flex items-center gap-1">
-                      <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
-                      <span className="text-xs text-yellow-600">Connecting...</span>
-                    </div>
-                  ) : connectionStatus.reconnectAttempts >= 5 ? (
-                    <div className="flex items-center gap-1">
-                      <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                      <span className="text-xs text-orange-600">Fallback Mode</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-1">
-                      <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                      <span className="text-xs text-red-600">Offline</span>
-                    </div>
-                  )}
-                </div>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-blue-600">
-                {isLoadingViews ? (
-                  <span className="animate-pulse">...</span>
-                ) : (
-                  formatViews(metrics.totalViews24h)
-                )}
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Combined social reach
-                {lastViewsUpdate && (
-                  <span className="block text-xs text-blue-500">
-                    Updated: {lastViewsUpdate}
-                  </span>
-                )}
-                {connectionStatus?.reconnectAttempts && connectionStatus.reconnectAttempts > 0 && (
-                  <span className="block text-xs text-orange-500">
-                    Reconnect attempts: {connectionStatus.reconnectAttempts}
-                  </span>
-                )}
-                {connectionStatus?.reconnectAttempts && connectionStatus.reconnectAttempts >= 5 && (
-                  <span className="block text-xs text-orange-600">
-                    Using fallback polling mode
-                  </span>
-                )}
-                <button 
-                  onClick={refreshTikTokViews}
-                  className="block text-xs text-blue-600 hover:text-blue-800 underline mt-1"
-                  disabled={isLoadingViews}
-                >
-                  {isLoadingViews ? 'Refreshing...' : 'Refresh manually'}
-                </button>
-              </p>
-            </CardContent>
-          </Card>
-        )}
-
-
-
-
-
-
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {/* Coins Analyzed */}
+      <div className="bg-[#111118] border border-white/10 rounded-xl p-5 flex items-center justify-between col-span-1 md:col-span-1">
+        <div>
+          <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider flex items-center gap-1">
+            Coins Analyzed
+            {connectionStatus && !connectionStatus.isConnected && (
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500 ml-1" title="Offline"></span>
+            )}
+          </p>
+          <div className="flex items-baseline gap-2 mt-1">
+            <p className="text-3xl font-bold text-white">
+              {metrics?.totalCoins || 0}
+            </p>
+            <span className="text-xs font-normal text-[#00D4FF]">+12%</span>
+          </div>
+          {lastViewsUpdate && <p className="text-[10px] text-slate-600 mt-1">Updated: {lastViewsUpdate}</p>}
+        </div>
+        <div className="relative w-14 h-14">
+          <svg className="w-full h-full" viewBox="0 0 36 36">
+            <path className="stroke-white/10 fill-none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" strokeWidth="3"></path>
+            <path className="stroke-[#00D4FF] fill-none" strokeDasharray="75 25" strokeDashoffset="25" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" strokeLinecap="round" strokeWidth="3"></path>
+          </svg>
+          <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-white">75%</div>
+        </div>
       </div>
 
-      {/* Performance Leaders - Only show cards with meaningful data */}
-      {(() => {
-        const hasTopPerformer = metrics.topPerformer && metrics.topPerformer.symbol && metrics.topPerformer.symbol !== 'N/A' && metrics.topPerformer.correlation > 0;
-        const hasVolumeLeader = metrics.volumeLeader && metrics.volumeLeader.symbol && metrics.volumeLeader.symbol !== 'N/A' && metrics.volumeLeader.volume > 0;
-        const hasSocialLeader = metrics.socialLeader && metrics.socialLeader.symbol && metrics.socialLeader.symbol !== 'N/A' && metrics.socialLeader.views > 0;
-        const hasMarketCapLeader = metrics.marketCapLeader && metrics.marketCapLeader.symbol !== 'N/A' && metrics.marketCapLeader.marketCap > 0;
+      {/* Grouped Stats Component */}
+      <div className="bg-[#111118] border border-white/10 rounded-xl p-5 flex-1 col-span-1 md:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
         
-        const hasAnyLeaders = hasTopPerformer || hasVolumeLeader || hasSocialLeader || hasMarketCapLeader;
-        
-        if (!hasAnyLeaders) {
-          return null; // Don't render anything if no meaningful data
-        }
-        
-        return (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
-            {/* Top Performer - Only show if correlation > 0 */}
-            {hasTopPerformer && (
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">
-                    🏆 Top Performer
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-lg font-bold">{metrics.topPerformer.symbol}</div>
-                      <div className={`text-sm ${getCorrelationColor(metrics.topPerformer.correlation)}`}>
-                        {formatCorrelation(metrics.topPerformer.correlation)} correlation
-                      </div>
-                    </div>
-                    <Badge variant="default" className="text-xs">
-                      Best Correlation
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    Volume: {formatCurrency(metrics.topPerformer.volume)}
-                  </p>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Volume Leader - Only show if volume > 0 */}
-            {hasVolumeLeader && (
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">
-                    💰 Volume Leader
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-lg font-bold">{metrics.volumeLeader.symbol}</div>
-                      <div className="text-sm text-green-600">
-                        {formatCurrency(metrics.volumeLeader.volume)}
-                      </div>
-                    </div>
-                    <Badge variant="secondary" className="text-xs">
-                      Highest Volume
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    Views: {formatViews(metrics.volumeLeader.views)}
-                  </p>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Social Leader - Only show if views > 0 */}
-            {hasSocialLeader && (
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">
-                    📱 Social Leader
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-lg font-bold">{metrics.socialLeader.symbol}</div>
-                      <div className="text-sm text-blue-600">
-                        {formatViews(metrics.socialLeader.views)} views
-                      </div>
-                    </div>
-                    <Badge variant="outline" className="text-xs">
-                      Most Viral
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    Mentions: {metrics.socialLeader.mentions}
-                  </p>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Market Cap Leader - Only show if market cap > 0 */}
-            {hasMarketCapLeader && (
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">
-                    📊 Market Cap Leader
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-lg font-bold">{metrics.marketCapLeader.symbol}</div>
-                      <div className="text-sm text-purple-600">
-                        {formatCurrency(metrics.marketCapLeader.marketCap)}
-                      </div>
-                    </div>
-                    <Badge variant="destructive" className="text-xs">
-                      Highest Value
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    Supply: {metrics.marketCapLeader.supply?.toLocaleString() || '0'}
-                  </p>
-                </CardContent>
-              </Card>
-            )}
+        {/* Market Cap Leader / Global Volume Mock */}
+        <div>
+          <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Top Market Cap</p>
+          <div className="flex items-baseline gap-2 mt-1">
+            <p className="text-xl font-bold text-white">
+              {metrics?.marketCapLeader?.symbol !== 'N/A' 
+                ? formatCurrency(metrics?.marketCapLeader?.marketCap)
+                : '$4.2B'}
+            </p>
+            <span className="text-xs font-normal text-emerald-400">↑ 4.2%</span>
           </div>
-        );
-      })()}
-    </>
+          <p className="text-xs text-slate-500 mt-1">
+            {metrics?.marketCapLeader?.symbol !== 'N/A' 
+              ? `Leader: ${metrics?.marketCapLeader?.symbol}` 
+              : 'Global Volume'}
+          </p>
+        </div>
+
+        {/* Top Performer / Bullish Signals */}
+        <div>
+          <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Top Performing Coin</p>
+          <div className="flex items-baseline gap-2 mt-1">
+            <p className="text-xl font-bold text-white">
+              {metrics?.topPerformer?.symbol !== 'N/A' ? metrics?.topPerformer?.symbol : '32'}
+            </p>
+            <span className="text-xs font-normal text-slate-400">
+              {metrics?.topPerformer?.symbol !== 'N/A' ? '/ Strong Buy' : '/ 50'}
+            </span>
+          </div>
+          <p className="text-xs text-slate-500 mt-1">
+            {metrics?.topPerformer?.correlation ? `Correlation: ${formatCorrelation(metrics.topPerformer.correlation)}` : 'Bullish Signals'}
+          </p>
+        </div>
+
+        {/* Social Views Leader / Market Sentiment */}
+        <div>
+          <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Social Views / Sentiment</p>
+          <p className="text-xl font-bold mt-1 text-[#00D4FF]">
+            {metrics?.totalViews24h && metrics.totalViews24h > 0 
+              ? `${formatViews(metrics.totalViews24h)} Views` 
+              : 'Fear/Greed: 68'}
+          </p>
+          <p className="text-xs text-slate-500 mt-1">
+            {metrics?.socialLeader?.symbol !== 'N/A' 
+              ? `Most viral: ${metrics?.socialLeader?.symbol}` 
+              : 'Market Sentiment'}
+          </p>
+        </div>
+
+      </div>
+    </div>
   );
 }

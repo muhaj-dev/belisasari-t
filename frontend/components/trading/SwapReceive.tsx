@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
@@ -26,36 +25,42 @@ export function SwapReceive(props: SwapReceiveProps) {
     onFocus,
   } = props;
   return (
-    <div className="space-y-2">
-      <div className="flex justify-between items-center text-sm">
-        <span className="text-muted-foreground">You receive</span>
+    <div className="bg-white/[0.03] border border-white/5 rounded-[20px] p-4 hover:border-white/10 transition-colors">
+      <div className="flex justify-between items-center mb-3">
+        <span className="text-[13px] font-medium text-[#6B7280]">You receive</span>
       </div>
-      <div className="flex items-center justify-between gap-2">
-        <Input
-          placeholder="0.00"
-          className="text-xl border-0 bg-transparent px-0 focus-visible:ring-0"
-          value={displayOutAmount}
-          onChange={onAmountChange}
-          onFocus={onFocus}
-        />
-        <span className="text-sm text-muted-foreground">{displayOutAmountUsd}</span>
-      </div>
-      <Button
-        type="button"
-        variant="outline"
-        className="w-full justify-between h-12"
-        onClick={onTokenClick}
-      >
-        <div className="flex items-center gap-2">
-          {outputTokenImageUri ? (
-            <Image src={outputTokenImageUri} alt="" width={24} height={24} className="rounded-full" />
-          ) : (
-            <div className="w-6 h-6 rounded-full bg-muted" />
-          )}
-          <span>{outputTokenSymbol}</span>
+      
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex-1 min-w-0">
+          <Input
+            placeholder="0"
+            className="w-full text-[32px] sm:text-[40px] font-semibold text-white bg-transparent border-0 p-0 h-auto focus-visible:ring-0 placeholder:text-white/20 select-all"
+            value={displayOutAmount}
+            onChange={onAmountChange}
+            onFocus={onFocus}
+            style={{ boxShadow: 'none' }}
+          />
+          <div className="text-[13px] font-medium text-[#6B7280] mt-1 ml-1">{displayOutAmountUsd !== "$0.00" ? displayOutAmountUsd : ""}</div>
         </div>
-        <ChevronDown className="h-4 w-4" />
-      </Button>
+
+        <button
+          type="button"
+          className="flex items-center gap-2 bg-[#1A1A24] hover:bg-[#252532] border border-white/10 rounded-full pl-2 pr-3 py-1.5 transition-colors shrink-0"
+          onClick={onTokenClick}
+        >
+          {outputTokenImageUri ? (
+            <img src={(outputTokenImageUri)} width={26} height={26} alt={outputTokenSymbol} className="rounded-full" />
+          ) : (
+            <div className="w-[26px] h-[26px] rounded-full bg-white/10 flex items-center justify-center text-[10px] text-white">
+              {outputTokenSymbol.slice(0,2)}
+            </div>
+          )}
+          <span className="font-bold text-[15px] text-white tracking-tight">{outputTokenSymbol}</span>
+          <ChevronDown className="h-4 w-4 text-[#6B7280] ml-1" />
+        </button>
+      </div>
+
+      <div className="h-[26px]"></div> {/* Spacer for symmetry with SwapPay max buttons */}
     </div>
   );
 }

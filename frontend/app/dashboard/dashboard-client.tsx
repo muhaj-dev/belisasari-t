@@ -10,7 +10,7 @@ import { PatternRecognitionCard } from '@/components/dashboard/pattern-recogniti
 import { BackendServicesCard } from '@/components/dashboard/backend-services-card';
 import ErrorBoundary from '@/components/dashboard/error-boundary';
 import { useTwitterPost } from '@/hooks/use-twitter-post';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Clock } from 'lucide-react';
 import Image from 'next/image';
 
 export default function DashboardClient() {
@@ -124,7 +124,14 @@ export default function DashboardClient() {
     return `${diffDays}d ago`;
   };
 
-
+  const formatLastRunEST = (date: Date | null) => {
+    if (!date) return 'Loading...';
+    try {
+      return date.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: '2-digit', minute: '2-digit' }) + ' EST';
+    } catch {
+      return formatTimeAgo(date);
+    }
+  };
 
   const { post, posting, error: twitterError } = useTwitterPost();
   const handlePostSummary = () => {
@@ -133,198 +140,149 @@ export default function DashboardClient() {
     );
   };
 
+  const systemCards = [
+    {
+      name: 'TikTok Integration',
+      key: 'tiktok' as const,
+      totalLabel: 'Total Videos',
+      totalValue: scraperStatus.tiktok.totalVideos,
+      todayValue: scraperStatus.tiktok.videosToday,
+      lastRun: scraperStatus.tiktok.lastRun,
+      status: scraperStatus.tiktok.status,
+    },
+    {
+      name: 'Telegram Integration',
+      key: 'telegram' as const,
+      totalLabel: 'Total Messages',
+      totalValue: scraperStatus.telegram.totalMessages,
+      todayValue: scraperStatus.telegram.messagesToday,
+      lastRun: scraperStatus.telegram.lastRun,
+      status: scraperStatus.telegram.status,
+    },
+    {
+      name: 'Pattern Analysis',
+      key: 'patternAnalysis' as const,
+      totalLabel: 'Total Analyses',
+      totalValue: scraperStatus.patternAnalysis.totalAnalyses,
+      todayValue: scraperStatus.patternAnalysis.analysesToday,
+      lastRun: scraperStatus.patternAnalysis.lastRun,
+      status: scraperStatus.patternAnalysis.status,
+    },
+    {
+      name: 'Twitter Integration',
+      key: 'twitter' as const,
+      totalLabel: 'Total Alerts',
+      totalValue: scraperStatus.twitter.totalAlerts,
+      todayValue: scraperStatus.twitter.alertsToday,
+      lastRun: scraperStatus.twitter.lastRun,
+      status: scraperStatus.twitter.status,
+    },
+  ];
+
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex flex-wrap justify-between items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold">Belisasari Dashboard</h1>
-          <p className="text-muted-foreground">
-            Real-time memecoin analytics from Jupiter tokens & prices, TikTok and Telegram trends
-          </p>
+    <div className="dashboard-theme">
+      <div className="max-w-[1400px] mx-auto px-6 py-6 space-y-8">
+        {/* Page Header */}
+        <div className="flex flex-wrap justify-between items-start gap-4">
+          <div>
+            <h1 style={{ fontSize: 24, fontWeight: 700, color: 'var(--dash-white)' }}>
+              Belisasari Dashboard
+            </h1>
+            <p style={{ fontSize: 13, color: 'var(--dash-muted)', marginTop: 4 }}>
+              Real-time memecoin analytics from TikTok, Telegram, and AI analysis.
+            </p>
+          </div>
+          <button
+            className="dash-btn-cyan"
+            onClick={handlePostSummary}
+            disabled={posting}
+          >
+            {posting ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Image src="/x.png" width={16} height={16} alt="X" className="rounded" />
+            )}
+            Post summary to Twitter
+          </button>
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handlePostSummary}
-          disabled={posting}
-          className="shrink-0"
-        >
-          {posting ? (
-            <Loader2 className="h-4 w-4 animate-spin mr-2" />
-          ) : (
-            <Image src="/x.png" width={16} height={16} alt="X" className="mr-2 rounded" />
-          )}
-          Post summary to Twitter
-        </Button>
-      </div>
-      {twitterError && (
-        <p className="text-sm text-destructive">Twitter: {twitterError}</p>
-      )}
+        {twitterError && (
+          <p style={{ fontSize: 13, color: 'var(--dash-red)' }}>Twitter: {twitterError}</p>
+        )}
 
-      {/* Real-time Data Overview */}
-      <ErrorBoundary>
-        <RealTimeData />
-      </ErrorBoundary>
+        {/* Gradient divider */}
+        <div className="dash-gradient-divider" />
 
-      {/* AI-Powered Features */}
-      <div className="space-y-6">
-        <div>
-          <h2 className="text-2xl font-bold mb-4">🤖 AI-Powered Features</h2>
-          <p className="text-muted-foreground">
-            Advanced pattern recognition, decision making, and backend service management
-          </p>
+        {/* Real-time Data Overview */}
+        <ErrorBoundary>
+          <RealTimeData />
+        </ErrorBoundary>
+
+        {/* AI-Powered Features */}
+        <div className="space-y-5">
+          <h2 className="dash-section-title">AI-Powered Features</h2>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <ErrorBoundary>
+              <PatternRecognitionCard />
+            </ErrorBoundary>
+            
+            <ErrorBoundary>
+              <BackendServicesCard />
+            </ErrorBoundary>
+          </div>
         </div>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        {/* Trending Coins Analytics */}
+        <div className="space-y-5">
           <ErrorBoundary>
-            <PatternRecognitionCard />
+            <TrendingCoinsSummary />
           </ErrorBoundary>
           
           <ErrorBoundary>
-            <BackendServicesCard />
+            <TrendingCoinsAnalytics />
           </ErrorBoundary>
         </div>
-      </div>
 
-      {/* Trending Coins Analytics */}
-      <div className="space-y-6">
-        <div>
-          <h2 className="text-2xl font-bold mb-4">🚀 Trending Coins Analytics</h2>
-          <p className="text-muted-foreground">
-            Monitor top trending coins with 24-hour trading volume, TikTok view counts, and volume/social correlation metrics
-          </p>
-        </div>
-        
-        {/* Summary Metrics */}
-        <ErrorBoundary>
-          <TrendingCoinsSummary />
-        </ErrorBoundary>
-        
-        {/* Detailed Analytics */}
-        <ErrorBoundary>
-          <TrendingCoinsAnalytics />
-        </ErrorBoundary>
-      </div>
-
-      {/* System Status Overview */}
-      <div className="space-y-6">
-        <h2 className="text-2xl font-bold">System Status</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* TikTok Status */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                📱 TikTok Integration
-                <div className={`w-3 h-3 rounded-full ${getStatusColor(scraperStatus.tiktok.status)}`}></div>
-              </CardTitle>
-              <CardDescription>
-                TikTok data collection and analysis
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <p className="text-muted-foreground">Total Videos</p>
-                  <p className="text-2xl font-bold">{scraperStatus.tiktok.totalVideos.toLocaleString()}</p>
+        {/* System Status */}
+        <div className="space-y-5">
+          <h2 className="dash-section-title">System Status</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {systemCards.map((card) => (
+              <div key={card.key} className="dash-status-card">
+                {/* Card header */}
+                <div className="flex items-center justify-between mb-4">
+                  <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--dash-white)' }}>
+                    {card.name}
+                  </span>
+                  <div className={`dash-pulse-dot ${card.status === 'active' ? 'dash-pulse-dot--green' : 'dash-pulse-dot--red'}`} />
                 </div>
-                <div>
-                  <p className="text-muted-foreground">Today</p>
-                  <p className="text-2xl font-bold">{scraperStatus.tiktok.videosToday.toLocaleString()}</p>
+
+                {/* Metric rows */}
+                <div className="space-y-3 mb-4">
+                  <div className="flex items-center justify-between">
+                    <span style={{ fontSize: 13, color: 'var(--dash-muted)' }}>{card.totalLabel}</span>
+                    <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--dash-cyan)' }}>
+                      {card.totalValue.toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span style={{ fontSize: 13, color: 'var(--dash-muted)' }}>Today</span>
+                    <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--dash-cyan)' }}>
+                      {card.todayValue.toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Last run */}
+                <div className="flex items-center gap-1.5" style={{ fontSize: 11, color: 'var(--dash-muted)' }}>
+                  <Clock className="w-3 h-3" />
+                  <span>Last Run {formatLastRunEST(card.lastRun)}</span>
                 </div>
               </div>
-              <p className="text-sm text-muted-foreground">
-                Last Run: {formatTimeAgo(scraperStatus.tiktok.lastRun)}
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Telegram Status */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                💬 Telegram Integration
-                <div className={`w-3 h-3 rounded-full ${getStatusColor(scraperStatus.telegram.status)}`}></div>
-              </CardTitle>
-              <CardDescription>
-                Telegram channel monitoring and message analysis
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <p className="text-muted-foreground">Total Messages</p>
-                  <p className="text-2xl font-bold">{scraperStatus.telegram.totalMessages.toLocaleString()}</p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">Today</p>
-                  <p className="text-2xl font-bold">{scraperStatus.telegram.messagesToday.toLocaleString()}</p>
-                </div>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Last Run: {formatTimeAgo(scraperStatus.telegram.lastRun)}
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Pattern Analysis Status */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                🧠 Pattern Analysis
-                <div className={`w-3 h-3 rounded-full ${getStatusColor(scraperStatus.patternAnalysis.status)}`}></div>
-              </CardTitle>
-              <CardDescription>
-                AI-powered trend analysis and correlation detection
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <p className="text-muted-foreground">Total Analyses</p>
-                  <p className="text-2xl font-bold">{scraperStatus.patternAnalysis.totalAnalyses.toLocaleString()}</p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">Today</p>
-                  <p className="text-2xl font-bold">{scraperStatus.patternAnalysis.analysesToday.toLocaleString()}</p>
-                </div>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Last Run: {formatTimeAgo(scraperStatus.patternAnalysis.lastRun)}
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Twitter Integration Status */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                🐦 Twitter Integration
-                <div className={`w-3 h-3 rounded-full ${getStatusColor(scraperStatus.twitter.status)}`}></div>
-              </CardTitle>
-              <CardDescription>
-                Market alerts and automated posting
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <p className="text-muted-foreground">Total Alerts</p>
-                  <p className="text-2xl font-bold">{scraperStatus.twitter.totalAlerts.toLocaleString()}</p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">Today</p>
-                  <p className="text-2xl font-bold">{scraperStatus.twitter.alertsToday.toLocaleString()}</p>
-                </div>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Last Run: {formatTimeAgo(scraperStatus.twitter.lastRun)}
-              </p>
-            </CardContent>
-          </Card>
+            ))}
+          </div>
         </div>
       </div>
-
-
     </div>
   );
 }

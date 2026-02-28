@@ -10,7 +10,7 @@ import { useSuggestedProfiles } from "@/hooks/use-suggested-profiles";
 import { useSuggestedGlobal } from "@/hooks/use-suggested-global";
 import { useCreatePost } from "@/hooks/use-create-post";
 import { useToast } from "@/hooks/use-toast";
-import { User } from "lucide-react";
+import { User, Loader2, ArrowLeft, Send } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { EditProfileDialog } from "@/components/profile/EditProfileDialog";
@@ -28,10 +28,10 @@ export default function ProfilePageClient() {
 
   if (!ready) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center">
+      <div className="min-h-screen bg-[#0A0A0F] flex items-center justify-center">
         <div className="text-center">
-          <div className="w-10 h-10 border-2 border-iris-primary/30 border-t-iris-primary rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground">Loading...</p>
+          <Loader2 className="w-10 h-10 text-[#00D4FF] animate-spin mx-auto mb-4" />
+          <p className="text-[#6B7280]">Loading...</p>
         </div>
       </div>
     );
@@ -39,24 +39,27 @@ export default function ProfilePageClient() {
 
   if (!authenticated) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center px-4">
-        <div className="text-center max-w-md">
-          <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
-            <User className="h-8 w-8 text-muted-foreground" />
+      <div className="min-h-screen bg-[#0A0A0F] flex items-center justify-center px-4">
+        <div className="text-center max-w-md bg-[#111118] border border-white/10 rounded-2xl p-8 shadow-xl">
+          <div className="w-16 h-16 rounded-full bg-[#00D4FF]/10 flex items-center justify-center mx-auto mb-6">
+            <User className="h-8 w-8 text-[#00D4FF]" />
           </div>
-          <h1 className="text-xl font-bold mb-2">Your profile</h1>
-          <p className="text-muted-foreground mb-6">
-            Log in with your wallet to view and manage your profile.
+          <h1 className="text-2xl font-bold text-white mb-3">Your Profile</h1>
+          <p className="text-[#6B7280] mb-8 leading-relaxed">
+            Log in with your wallet to view and manage your profile securely on the network.
           </p>
           <Button
-            className="bg-iris-primary hover:bg-iris-primary/80"
+            className="w-full bg-[#00D4FF] hover:bg-[#00D4FF]/80 text-[#0A0A0F] font-bold h-12 text-[15px]"
             onClick={() => login({ loginMethods: ["wallet"], walletChainType: "solana-only" })}
           >
-            Log in
+            Connect Wallet
           </Button>
-          <p className="mt-4 text-sm text-muted-foreground">
-            <Link href="/" className="underline hover:text-foreground">Back to home</Link>
-          </p>
+          <div className="mt-6 pt-6 border-t border-white/10">
+            <Link href="/" className="text-[#6B7280] hover:text-white text-sm flex items-center justify-center gap-2 transition-colors">
+              <ArrowLeft className="w-4 h-4" />
+              Back to home
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -81,168 +84,244 @@ export default function ProfilePageClient() {
     try {
       await createPost({ profileId, text: commentText.trim() });
       setCommentText("");
-      toast({ title: "Comment posted" });
+      toast({ 
+        title: "Success", 
+        description: "Your comment has been posted to your profile.",
+      });
     } catch {
       toast({ title: "Failed to post comment", variant: "destructive" });
     }
   };
 
   return (
-    <div className="container max-w-2xl mx-auto py-8 px-4">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold tracking-tight text-iris-primary">
-          My profile
-        </h1>
-        {hasProfile && (
-          <Button asChild variant="outline" size="sm">
-            <Link href="/feed">Feed</Link>
-          </Button>
-        )}
-      </div>
-
-      {loadingProfile ? (
-        <div className="flex items-center justify-center py-12">
-          <div className="w-10 h-10 border-2 border-iris-primary/30 border-t-iris-primary rounded-full animate-spin" />
+    <div className="min-h-screen bg-[#0A0A0F] py-8 px-4 text-white">
+      <div className="container max-w-[800px] mx-auto space-y-6">
+        
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-[2px] h-6 bg-[#00D4FF]"></div>
+            <h1 className="text-2xl font-bold tracking-tight text-white">
+              My Profile
+            </h1>
+          </div>
+          {hasProfile && (
+            <Button asChild variant="outline" size="sm" className="bg-white/5 border-white/10 text-white hover:bg-white/10 h-9">
+              <Link href="/feed">View Feed</Link>
+            </Button>
+          )}
         </div>
-      ) : hasProfile ? (
-        <>
-          <div className="rounded-xl border bg-card overflow-hidden">
-            <div className="p-6 sm:p-8">
-              <div className="flex flex-col sm:flex-row items-start gap-6">
-                <div className="shrink-0">
-                  {primaryProfile.profile.image ? (
-                    <Image
-                      src={primaryProfile.profile.image}
-                      alt={primaryProfile.profile.username}
-                      width={96}
-                      height={96}
-                      className="rounded-full object-cover border-2 border-iris-primary/20"
-                    />
-                  ) : (
-                    <div className="w-24 h-24 rounded-full bg-muted flex items-center justify-center border-2 border-iris-primary/20">
-                      <User className="h-12 w-12 text-muted-foreground" />
+
+        {loadingProfile ? (
+          <div className="flex items-center justify-center py-20 bg-[#111118] border border-white/10 rounded-2xl">
+            <Loader2 className="w-8 h-8 text-[#00D4FF] animate-spin" />
+          </div>
+        ) : hasProfile ? (
+          <div className="space-y-6">
+            
+            {/* Identity Card */}
+            <div className="rounded-2xl border border-white/10 bg-[#111118] overflow-hidden relative">
+              <div className="h-32 bg-gradient-to-r from-[#00D4FF]/20 via-[#A855F7]/20 to-transparent"></div>
+              
+              <div className="px-6 sm:px-8 pb-8">
+                <div className="flex flex-col sm:flex-row items-center sm:items-end gap-6 -mt-16 sm:-mt-12 mb-6">
+                  <div className="shrink-0 relative">
+                    <div className="absolute inset-0 bg-[#00D4FF] blur-md opacity-30 rounded-full"></div>
+                    {primaryProfile.profile.image ? (
+                      <Image
+                        src={primaryProfile.profile.image}
+                        alt={primaryProfile.profile.username}
+                        width={112}
+                        height={112}
+                        className="rounded-full object-cover border-4 border-[#111118] relative z-10 bg-[#111118]"
+                      />
+                    ) : (
+                      <div className="w-28 h-28 rounded-full bg-[#1A1A24] flex items-center justify-center border-4 border-[#111118] relative z-10">
+                        <User className="h-12 w-12 text-[#6B7280]" />
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="flex-1 text-center sm:text-left pt-2 sm:pt-0 pb-2 flex flex-col sm:flex-row justify-between w-full sm:items-end gap-4">
+                    <div>
+                      <h2 className="text-2xl font-bold text-white tracking-tight mb-1">
+                        @{primaryProfile.profile.username}
+                      </h2>
+                      {walletAddress && (
+                        <p className="text-[13px] text-[#A855F7] font-mono break-all max-w-[280px] sm:max-w-[400px] truncate mb-2">
+                          {walletAddress}
+                        </p>
+                      )}
+                      <div className="flex items-center justify-center sm:justify-start gap-4 text-[14px]">
+                        <div className="flex gap-1.5 items-center">
+                          <span className="font-bold text-white">{followersCount}</span>
+                          <span className="text-[#6B7280]">Followers</span>
+                        </div>
+                        <div className="w-1 h-1 rounded-full bg-white/20"></div>
+                        <div className="flex gap-1.5 items-center">
+                          <span className="font-bold text-white">{followingCount}</span>
+                          <span className="text-[#6B7280]">Following</span>
+                        </div>
+                      </div>
                     </div>
-                  )}
+                    
+                    <div className="shrink-0 flex justify-center">
+                      <EditProfileDialog
+                        profileId={primaryProfile.profile.id}
+                        currentUsername={primaryProfile.profile.username}
+                        currentBio={primaryProfile.profile.bio}
+                        currentImage={primaryProfile.profile.image}
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div className="min-w-0 flex-1 space-y-1">
-                  <h2 className="text-xl font-semibold truncate">
-                    {primaryProfile.profile.username}
-                  </h2>
-                  {walletAddress && (
-                    <p className="text-sm text-muted-foreground font-mono break-all">
-                      {walletAddress}
-                    </p>
-                  )}
-                  <p className="text-sm text-muted-foreground">
-                    {followersCount} followers | {followingCount} following
+
+                <div className="bg-white/[0.02] border border-white/5 rounded-xl p-5">
+                  <h3 className="text-[12px] uppercase tracking-wider font-semibold text-[#6B7280] mb-2">Bio</h3>
+                  <p className="text-white/90 text-[15px] leading-relaxed whitespace-pre-wrap">
+                    {primaryProfile.profile.bio?.trim() || <span className="text-white/40 italic">No bio provided.</span>}
                   </p>
-                  <div className="flex flex-wrap items-center gap-2 pt-1">
-                    <EditProfileDialog
-                      profileId={primaryProfile.profile.id}
-                      currentUsername={primaryProfile.profile.username}
-                      currentBio={primaryProfile.profile.bio}
-                      currentImage={primaryProfile.profile.image}
-                    />
-                  </div>
                 </div>
               </div>
+            </div>
 
-              <div className="mt-6 pt-4 border-t">
-                <h3 className="text-sm font-medium text-foreground mb-1">Bio</h3>
-                <p className="text-muted-foreground whitespace-pre-wrap">
-                  {primaryProfile.profile.bio?.trim() || "no bio"}
-                </p>
-              </div>
-
-              <div className="mt-6 pt-4 border-t">
-                <h3 className="text-sm font-medium text-foreground mb-3">Profile</h3>
-                <div className="grid gap-4 text-sm">
-                  <div className="flex gap-6">
-                    <span className="text-muted-foreground">Followers</span>
-                    <span className="font-medium">{followersCount}</span>
-                  </div>
-                  <div className="flex gap-6">
-                    <span className="text-muted-foreground">Following</span>
-                    <span className="font-medium">{followingCount}</span>
-                  </div>
+            {/* Grid for Connections & Activity */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              
+              {/* Network Suggestions */}
+              <div className="rounded-2xl border border-white/10 bg-[#111118] p-6">
+                <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#00FF88]"></span>
+                  Network Discovery
+                </h3>
+                
+                <div className="space-y-6">
                   <div>
-                    <p className="text-muted-foreground mb-2">Suggested friends</p>
+                    <h4 className="text-[13px] font-medium text-[#6B7280] mb-3 uppercase tracking-wider">Suggested Friends</h4>
                     {suggestedFriendsList.length > 0 ? (
-                      <ul className="space-y-1">
-                        {suggestedFriendsList.slice(0, 5).map((item: { profile?: { id: string; username: string } }) => (
-                          <li key={item.profile?.id}>
-                            <Link href={`/discover?q=${item.profile?.username ?? ''}`} className="text-iris-primary hover:underline">
-                              {item.profile?.username ?? '—'}
-                            </Link>
-                          </li>
+                      <div className="space-y-2">
+                        {suggestedFriendsList.slice(0, 4).map((item: { profile?: { id: string; username: string } }) => (
+                          <Link 
+                            key={item.profile?.id}
+                            href={`/discover?q=${item.profile?.username ?? ''}`} 
+                            className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] border border-transparent hover:border-white/10 transition-all group"
+                          >
+                            <span className="font-medium text-white group-hover:text-[#00D4FF] transition-colors">
+                              @{item.profile?.username ?? '—'}
+                            </span>
+                            <span className="text-[12px] text-[#6B7280] group-hover:text-white/60">View</span>
+                          </Link>
                         ))}
-                      </ul>
+                      </div>
                     ) : (
-                      <p className="text-muted-foreground italic">no data</p>
+                      <div className="p-4 rounded-xl bg-white/[0.02] border border-dashed border-white/10 text-center">
+                        <p className="text-[#6B7280] text-[13px]">No friends suggested yet.</p>
+                      </div>
                     )}
                   </div>
+                  
                   <div>
-                    <p className="text-muted-foreground mb-2">Suggested global profiles</p>
+                    <h4 className="text-[13px] font-medium text-[#6B7280] mb-3 uppercase tracking-wider">Global Profiles</h4>
                     {suggestedGlobalList.length > 0 ? (
-                      <ul className="space-y-1">
-                        {suggestedGlobalList.slice(0, 5).map((p: { profile?: { id: string; username: string } }) => (
-                          <li key={p.profile?.id}>
-                            <Link href={`/discover?q=${p.profile?.username ?? ''}`} className="text-iris-primary hover:underline">
-                              {p.profile?.username ?? '—'}
-                            </Link>
-                          </li>
+                      <div className="space-y-2">
+                        {suggestedGlobalList.slice(0, 4).map((p: { profile?: { id: string; username: string } }) => (
+                          <Link 
+                            key={p.profile?.id}
+                            href={`/discover?q=${p.profile?.username ?? ''}`} 
+                            className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] border border-transparent hover:border-white/10 transition-all group"
+                          >
+                            <span className="font-medium text-white group-hover:text-[#00D4FF] transition-colors">
+                              @{p.profile?.username ?? '—'}
+                            </span>
+                            <span className="text-[12px] text-[#6B7280] group-hover:text-white/60">View</span>
+                          </Link>
                         ))}
-                      </ul>
+                      </div>
                     ) : (
-                      <p className="text-muted-foreground italic">no data</p>
+                      <div className="p-4 rounded-xl bg-white/[0.02] border border-dashed border-white/10 text-center">
+                        <p className="text-[#6B7280] text-[13px]">No global suggestions available.</p>
+                      </div>
                     )}
                   </div>
                 </div>
               </div>
 
-              <div className="mt-6 pt-4 border-t">
-                <p className="text-sm font-medium text-foreground mb-2">Write a comment</p>
-                <form onSubmit={handleSendComment} className="space-y-2">
+              {/* Compose Section */}
+              <div className="rounded-2xl border border-white/10 bg-[#111118] p-6 flex flex-col">
+                <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#00D4FF]"></span>
+                  Leave a Note
+                </h3>
+                
+                <form onSubmit={handleSendComment} className="flex-1 flex flex-col">
                   <textarea
                     value={commentText}
                     onChange={(e) => setCommentText(e.target.value)}
-                    placeholder="Write a comment..."
-                    className="w-full min-h-[80px] rounded-md border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    placeholder="Write a comment or status update..."
+                    className="flex-1 w-full min-h-[140px] rounded-xl border border-white/10 bg-white/[0.02] p-4 text-[15px] placeholder:text-[#6B7280] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#00D4FF] focus-visible:border-[#00D4FF] resize-none transition-all disabled:opacity-50"
                     disabled={creatingComment}
                   />
-                  <Button type="submit" size="sm" disabled={creatingComment || !commentText.trim()}>
-                    {creatingComment ? "Sending..." : "Send comment"}
-                  </Button>
+                  <div className="mt-4 flex justify-end">
+                    <Button 
+                      type="submit" 
+                      className="bg-[#00D4FF] hover:bg-[#00D4FF]/80 text-[#0A0A0F] font-semibold px-6 h-10 transition-all"
+                      disabled={creatingComment || !commentText.trim()}
+                    >
+                      {creatingComment ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Posting...
+                        </>
+                      ) : (
+                        <>
+                          <Send className="w-4 h-4 mr-2" />
+                          Post Status
+                        </>
+                      )}
+                    </Button>
+                  </div>
                 </form>
               </div>
             </div>
-          </div>
-          {walletAddress && <ImportConnectionsSection walletAddress={walletAddress} />}
-        </>
-      ) : (
-        <div className="rounded-xl border bg-card p-8 text-center">
-          <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
-            <User className="h-8 w-8 text-muted-foreground" />
-          </div>
-          <h2 className="text-lg font-semibold mb-2">No profile yet</h2>
-          <p className="text-muted-foreground mb-6">
-            Create a Tapestry profile to show your username and bio here.
-          </p>
-          <Button asChild className="bg-iris-primary hover:bg-iris-primary/80">
-            <Link href="/">Create profile</Link>
-          </Button>
-        </div>
-      )}
 
-      <p className="mt-6 text-sm text-muted-foreground">
-        <Link href="/" className="underline hover:text-foreground">Back to home</Link>
-        {hasProfile && (
-          <>
-            {" · "}
-            <Link href="/feed" className="underline hover:text-foreground">Feed</Link>
-          </>
+            {walletAddress && (
+              <div className="rounded-2xl border border-white/10 bg-[#111118] overflow-hidden">
+                <ImportConnectionsSection walletAddress={walletAddress} />
+              </div>
+            )}
+            
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-white/10 bg-[#111118] p-12 text-center shadow-xl">
+            <div className="w-20 h-20 rounded-full bg-[#00D4FF]/10 flex items-center justify-center mx-auto mb-6 relative">
+              <div className="absolute inset-0 bg-[#00D4FF] blur-md opacity-20 rounded-full"></div>
+              <User className="h-10 w-10 text-[#00D4FF] relative z-10" />
+            </div>
+            <h2 className="text-2xl font-bold text-white mb-3">No Profile Yet</h2>
+            <p className="text-[#6B7280] mb-8 max-w-md mx-auto leading-relaxed">
+              Create your identity on the network to set up your username, bio, and start connecting with others.
+            </p>
+            <Button asChild className="bg-[#00D4FF] hover:bg-[#00D4FF]/80 text-[#0A0A0F] font-bold h-12 px-8 text-[15px]">
+              <Link href="/">Create Profile</Link>
+            </Button>
+          </div>
         )}
-      </p>
+
+        <div className="flex items-center justify-center gap-4 pt-8 text-[14px]">
+          <Link href="/" className="text-[#6B7280] hover:text-white flex items-center gap-2 transition-colors">
+            <ArrowLeft className="w-4 h-4" />
+            Back to home
+          </Link>
+          {hasProfile && (
+            <>
+              <span className="text-[#6B7280]">•</span>
+              <Link href="/feed" className="text-[#00D4FF] hover:text-[#00D4FF]/80 font-medium transition-colors">
+                View Feed
+              </Link>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

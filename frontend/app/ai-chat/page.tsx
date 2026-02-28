@@ -12,7 +12,8 @@ import {
   Settings, 
   BarChart3,
   Users,
-  Zap
+  Zap,
+  Loader2
 } from 'lucide-react';
 import { aiAgentService, ChatMessage } from '@/lib/services/ai-agent-service';
 import { personalizationService, PersonalizedRecommendation } from '@/lib/services/personalization-service';
@@ -31,20 +32,13 @@ export default function AIChatPage() {
       try {
         console.log('🚀 Initializing AI Chat Page...');
         
-        // Initialize AI agent service
         await aiAgentService.initialize();
-        
-        // Initialize personalization service
         await personalizationService.initializeUser('user_123');
-        
-        // Set up real-time updates
         realtimeService.subscribe('ai-chat', handleRealtimeUpdate);
         
-        // Load user preferences
         const userProfile = personalizationService.getUserProfile();
         setUserPreferences(userProfile?.preferences || null);
         
-        // Load recommendations
         const recs = personalizationService.getRecommendations();
         setRecommendations(recs);
         
@@ -60,23 +54,19 @@ export default function AIChatPage() {
 
     initializeServices();
 
-    // Cleanup on unmount
     return () => {
       realtimeService.unsubscribe('ai-chat');
     };
   }, []);
 
-  // Handle real-time updates
   const handleRealtimeUpdate = useCallback((update: RealtimeUpdate) => {
-    setRealtimeUpdates(prev => [update, ...prev.slice(0, 9)]); // Keep last 10 updates
+    setRealtimeUpdates(prev => [update, ...prev.slice(0, 9)]);
     
-    // Show notification for high priority updates
     if (update.priority === 'urgent' || update.priority === 'high') {
       showNotification(update);
     }
   }, []);
 
-  // Show notification
   const showNotification = (update: RealtimeUpdate) => {
     if ('Notification' in window && Notification.permission === 'granted') {
       new Notification(`Belisasari Alert: ${update.type}`, {
@@ -86,15 +76,11 @@ export default function AIChatPage() {
     }
   };
 
-  // Handle chat message
   const handleChatMessage = async (message: ChatMessage) => {
     try {
-      // Send message to AI agent service
       const response = await aiAgentService.sendMessage(message.content);
       
-      // Update personalization based on user interaction
       if (message.type === 'user') {
-        // This would update user preferences based on the message
         console.log('📝 Updating user preferences based on message:', message.content);
       }
       
@@ -110,199 +96,213 @@ export default function AIChatPage() {
     }
   };
 
-  // Handle voice command
   const handleVoiceCommand = (command: string) => {
     console.log('🎤 Voice command received:', command);
-    // Process voice command through AI agent
     aiAgentService.sendMessage(command);
   };
 
-  // Mark recommendation as read
   const markRecommendationAsRead = (id: string) => {
     personalizationService.markRecommendationAsRead(id);
     setRecommendations(prev => prev.filter(rec => rec.id !== id));
   };
 
-  // Update user preferences
   const updatePreferences = async (newPreferences: any) => {
     await personalizationService.updatePreferences(newPreferences);
     setUserPreferences(newPreferences);
     
-    // Regenerate recommendations
     const recs = personalizationService.getRecommendations();
     setRecommendations(recs);
   };
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-screen bg-[#0A0A0F] flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Initializing AI Assistant...</p>
+          <Loader2 className="w-10 h-10 text-[#00D4FF] animate-spin mx-auto mb-4" />
+          <p className="text-[#6B7280]">Initializing Elfa AI Agent...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto p-4">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-screen">
+    <div className="min-h-[100dvh] bg-[#0A0A0F] text-white">
+      <div className="container max-w-[1400px] mx-auto py-6 px-4">
+        
+        {/* Header */}
+        <div className="flex items-center gap-3 mb-6 px-2">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#00D4FF] to-[#00D4FF]/40 p-0.5 shadow-lg shadow-[#00D4FF]/20">
+            <div className="w-full h-full bg-[#111118] rounded-xl flex items-center justify-center">
+              <Bot className="w-6 h-6 text-[#00D4FF]" />
+            </div>
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+              Elfa AI Agent
+              <Badge className="bg-[#00D4FF]/10 text-[#00D4FF] border border-[#00D4FF]/20 hover:bg-[#00D4FF]/20 ml-2">Beta</Badge>
+            </h1>
+            <p className="text-[14px] text-[#6B7280]">Your intelligent companion for the Stitch network.</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[calc(100vh-140px)] min-h-[600px]">
           {/* Main Chat Interface */}
           <div className="lg:col-span-3">
-            <Card className="h-full">
+            <Card className="h-full bg-[#111118] border-white/10 rounded-2xl overflow-hidden shadow-2xl">
               <AIChatInterface
                 onMessage={handleChatMessage}
                 onVoiceCommand={handleVoiceCommand}
                 personalization={userPreferences}
-                className="h-full"
+                className="h-full border-0 bg-transparent rounded-none"
               />
             </Card>
           </div>
 
           {/* Sidebar */}
-          <div className="lg:col-span-1 space-y-4">
+          <div className="lg:col-span-1 space-y-4 overflow-y-auto pr-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {/* System Status */}
-            <Card className="p-4">
-              <div className="flex items-center space-x-2 mb-3">
-                <Bot className="h-5 w-5 text-blue-500" />
-                <h3 className="font-semibold">System Status</h3>
+            <Card className="p-5 bg-[#111118] border-white/10 rounded-2xl shadow-xl">
+              <div className="flex items-center space-x-2 mb-4">
+                <Bot className="h-5 w-5 text-[#00D4FF]" />
+                <h3 className="font-bold text-white tracking-tight">System Status</h3>
               </div>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span>AI Agent:</span>
-                  <Badge variant={isInitialized ? "default" : "destructive"}>
-                    {isInitialized ? "Online" : "Offline"}
-                  </Badge>
+              <div className="space-y-3 text-[13px] font-medium">
+                <div className="flex justify-between items-center bg-white/[0.02] p-2.5 rounded-lg border border-white/5">
+                  <span className="text-[#6B7280]">Agent Core</span>
+                  <div className="flex items-center gap-2">
+                    <span className={`w-2 h-2 rounded-full ${isInitialized ? "bg-[#00FF88] animate-pulse" : "bg-red-500"}`}></span>
+                    <span className="text-white">{isInitialized ? "Online" : "Offline"}</span>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span>Real-time:</span>
-                  <Badge variant={realtimeService.isWebSocketConnected() ? "default" : "secondary"}>
-                    {realtimeService.isWebSocketConnected() ? "Connected" : "Simulated"}
-                  </Badge>
+                <div className="flex justify-between items-center bg-white/[0.02] p-2.5 rounded-lg border border-white/5">
+                  <span className="text-[#6B7280]">Data Stream</span>
+                  <div className="flex items-center gap-2">
+                    <span className={`w-2 h-2 rounded-full ${realtimeService.isWebSocketConnected() ? "bg-[#00FF88]" : "bg-yellow-500"}`}></span>
+                    <span className="text-white">{realtimeService.isWebSocketConnected() ? "Live" : "Simulated"}</span>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span>Updates:</span>
-                  <span className="text-muted-foreground">{realtimeUpdates.length}</span>
+                <div className="flex justify-between items-center bg-white/[0.02] p-2.5 rounded-lg border border-white/5">
+                  <span className="text-[#6B7280]">Processed Events</span>
+                  <span className="text-[#00D4FF] font-bold">{realtimeUpdates.length}</span>
                 </div>
               </div>
             </Card>
 
-            {/* Personalized Recommendations */}
-            <Card className="p-4">
-              <div className="flex items-center space-x-2 mb-3">
-                <TrendingUp className="h-5 w-5 text-green-500" />
-                <h3 className="font-semibold">Recommendations</h3>
+            {/* Quick Actions */}
+            <Card className="p-5 bg-[#111118] border-white/10 rounded-2xl shadow-xl">
+              <div className="flex items-center space-x-2 mb-4">
+                <Settings className="h-5 w-5 text-[#A855F7]" />
+                <h3 className="font-bold text-white tracking-tight">Quick Actions</h3>
               </div>
-              <div className="space-y-2">
+              <div className="grid grid-cols-2 gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="h-20 flex-col gap-2 bg-white/[0.02] border-white/5 hover:bg-white/[0.05] hover:border-white/10 text-[#6B7280] hover:text-white rounded-xl"
+                  onClick={() => aiAgentService.sendMessage('Show me trending memecoins')}
+                >
+                  <TrendingUp className="h-5 w-5 text-[#00FF88]" />
+                  <span className="text-[11px] font-medium whitespace-normal leading-tight text-center">Trending Tokens</span>
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="h-20 flex-col gap-2 bg-white/[0.02] border-white/5 hover:bg-white/[0.05] hover:border-white/10 text-[#6B7280] hover:text-white rounded-xl"
+                  onClick={() => aiAgentService.sendMessage('Analyze the current market')}
+                >
+                  <BarChart3 className="h-5 w-5 text-[#00D4FF]" />
+                  <span className="text-[11px] font-medium whitespace-normal leading-tight text-center">Market Analysis</span>
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="h-20 flex-col gap-2 bg-white/[0.02] border-white/5 hover:bg-white/[0.05] hover:border-white/10 text-[#6B7280] hover:text-white rounded-xl"
+                  onClick={() => aiAgentService.sendMessage('Show my portfolio')}
+                >
+                  <Users className="h-5 w-5 text-[#A855F7]" />
+                  <span className="text-[11px] font-medium whitespace-normal leading-tight text-center">My Portfolio</span>
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="h-20 flex-col gap-2 bg-white/[0.02] border-white/5 hover:bg-white/[0.05] hover:border-white/10 text-[#6B7280] hover:text-white rounded-xl"
+                  onClick={() => aiAgentService.sendMessage('Help me learn about trading')}
+                >
+                  <Bell className="h-5 w-5 text-amber-500" />
+                  <span className="text-[11px] font-medium whitespace-normal leading-tight text-center">Trading Guide</span>
+                </Button>
+              </div>
+            </Card>
+
+            {/* Personalized Recommendations */}
+            <Card className="p-5 bg-[#111118] border-white/10 rounded-2xl shadow-xl flex-1">
+              <div className="flex items-center space-x-2 mb-4">
+                <TrendingUp className="h-5 w-5 text-[#00FF88]" />
+                <h3 className="font-bold text-white tracking-tight">Insights</h3>
+              </div>
+              <div className="space-y-3">
                 {recommendations.slice(0, 3).map((rec) => (
                   <div
                     key={rec.id}
-                    className="p-2 bg-muted rounded-lg cursor-pointer hover:bg-muted/80"
+                    className="p-3 bg-white/[0.02] border border-white/5 rounded-xl cursor-pointer hover:bg-white/[0.05] hover:border-white/10 transition-colors group"
                     onClick={() => markRecommendationAsRead(rec.id)}
                   >
-                    <div className="flex items-start justify-between">
+                    <div className="flex items-start justify-between gap-2">
                       <div className="flex-1">
-                        <p className="text-sm font-medium">{rec.title}</p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {rec.content.substring(0, 50)}...
+                        <p className="text-[13px] font-bold text-white group-hover:text-[#00D4FF] transition-colors">{rec.title}</p>
+                        <p className="text-[11px] text-[#6B7280] mt-1 line-clamp-2 leading-relaxed">
+                          {rec.content}
                         </p>
                       </div>
-                      <Badge 
-                        variant={rec.priority === 'high' ? 'destructive' : rec.priority === 'medium' ? 'default' : 'secondary'}
-                        className="ml-2"
-                      >
-                        {rec.priority}
-                      </Badge>
+                      <div className={`w-2 h-2 rounded-full mt-1 shrink-0 ${
+                        rec.priority === 'high' ? 'bg-red-500' : 
+                        rec.priority === 'medium' ? 'bg-yellow-500' : 'bg-[#00D4FF]'
+                      }`} />
                     </div>
                   </div>
                 ))}
                 {recommendations.length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    No recommendations yet
-                  </p>
+                  <div className="flex flex-col items-center justify-center py-6 text-center border border-dashed border-white/10 rounded-xl bg-white/[0.01]">
+                    <TrendingUp className="h-6 w-6 text-[#6B7280]/40 mb-2" />
+                    <p className="text-[12px] text-[#6B7280] font-medium">No new insights right now.</p>
+                  </div>
                 )}
               </div>
             </Card>
 
             {/* Real-time Updates */}
-            <Card className="p-4">
-              <div className="flex items-center space-x-2 mb-3">
-                <Zap className="h-5 w-5 text-yellow-500" />
-                <h3 className="font-semibold">Live Updates</h3>
-              </div>
-              <div className="space-y-2 max-h-48 overflow-y-auto">
-                {realtimeUpdates.slice(0, 5).map((update) => (
-                  <div key={update.id} className="p-2 bg-muted rounded-lg">
-                    <div className="flex items-center justify-between">
-                      <Badge 
-                        variant={update.priority === 'urgent' ? 'destructive' : update.priority === 'high' ? 'default' : 'secondary'}
-                        className="text-xs"
-                      >
-                        {update.type}
-                      </Badge>
-                      <span className="text-xs text-muted-foreground">
-                        {update.timestamp.toLocaleTimeString()}
-                      </span>
+            {realtimeUpdates.length > 0 && (
+              <Card className="p-5 bg-[#111118] border-white/10 rounded-2xl shadow-xl">
+                <div className="flex items-center space-x-2 mb-4">
+                  <Zap className="h-5 w-5 text-amber-500" />
+                  <h3 className="font-bold text-white tracking-tight">Live Network Feeds</h3>
+                </div>
+                <div className="space-y-3 max-h-48 overflow-y-auto pr-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                  {realtimeUpdates.slice(0, 4).map((update) => (
+                    <div key={update.id} className="p-3 bg-white/[0.02] border border-white/5 rounded-xl">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <Badge 
+                          variant="outline"
+                          className={`text-[9px] uppercase tracking-wider font-bold border-0 px-2 py-0.5 ${
+                            update.priority === 'urgent' ? 'bg-red-500/10 text-red-500' : 
+                            update.priority === 'high' ? 'bg-[#00D4FF]/10 text-[#00D4FF]' : 
+                            'bg-white/5 text-[#6B7280]'
+                          }`}
+                        >
+                          {update.type}
+                        </Badge>
+                        <span className="text-[10px] text-[#6B7280] font-medium">
+                          {update.timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                        </span>
+                      </div>
+                      <p className="text-[12px] text-white/90 leading-tight">
+                        {update.data?.message || update.data?.content || 'Network update received'}
+                      </p>
                     </div>
-                    <p className="text-xs mt-1 text-muted-foreground">
-                      {update.data?.message || update.data?.content || 'Update received'}
-                    </p>
-                  </div>
-                ))}
-                {realtimeUpdates.length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    No updates yet
-                  </p>
-                )}
-              </div>
-            </Card>
-
-            {/* Quick Actions */}
-            <Card className="p-4">
-              <div className="flex items-center space-x-2 mb-3">
-                <Settings className="h-5 w-5 text-gray-500" />
-                <h3 className="font-semibold">Quick Actions</h3>
-              </div>
-              <div className="space-y-2">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="w-full justify-start"
-                  onClick={() => aiAgentService.sendMessage('Show me trending memecoins')}
-                >
-                  <TrendingUp className="h-4 w-4 mr-2" />
-                  Trending Analysis
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="w-full justify-start"
-                  onClick={() => aiAgentService.sendMessage('Analyze the current market')}
-                >
-                  <BarChart3 className="h-4 w-4 mr-2" />
-                  Market Analysis
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="w-full justify-start"
-                  onClick={() => aiAgentService.sendMessage('Show my portfolio')}
-                >
-                  <Users className="h-4 w-4 mr-2" />
-                  Portfolio
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="w-full justify-start"
-                  onClick={() => aiAgentService.sendMessage('Help me learn about trading')}
-                >
-                  <Bell className="h-4 w-4 mr-2" />
-                  Learn Trading
-                </Button>
-              </div>
-            </Card>
+                  ))}
+                </div>
+              </Card>
+            )}
           </div>
         </div>
       </div>

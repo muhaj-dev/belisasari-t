@@ -1,22 +1,20 @@
 "use client";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import type { ITokenSearchResult } from "@/lib/types/jupiter";
 import type { TokenListCategory } from "@/hooks/use-token-search-trading";
 import Image from "next/image";
 import Link from "next/link";
-import { LineChart } from "lucide-react";
+import { LineChart, Search, X } from "lucide-react";
 import { useTokenSearchTrading } from "@/hooks/use-token-search-trading";
 import { useEffect, useState } from "react";
 
 const CATEGORIES: { value: TokenListCategory; label: string }[] = [
-  { value: "verified", label: "Verified" },
+  { value: "verified", label: "Strict" },
   { value: "trending", label: "Trending" },
-  { value: "recent", label: "Recent" },
-  { value: "toptraded", label: "Top traded" },
+  { value: "toptraded", label: "Top" },
   { value: "toporganic", label: "Organic" },
-  { value: "lst", label: "LST" },
 ];
 
 type OnSelect = (token: { address: string; symbol: string; name: string; decimals: number }) => void;
@@ -58,85 +56,106 @@ export function TokenSearchDialog(props: {
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle>Select token</DialogTitle>
+      <DialogContent className="max-w-md bg-[#111118] border border-white/10 rounded-2xl p-0 overflow-hidden text-white gap-0 shadow-2xl [&>button]:hidden">
+        <DialogHeader className="sr-only">
+          <DialogTitle>Search Tokens</DialogTitle>
+          <DialogDescription>Search for a token to select it.</DialogDescription>
         </DialogHeader>
-        <Input
-          placeholder="Search by name, symbol, or address"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="mb-2"
-        />
-        {!query.trim() && (
-          <div className="flex flex-wrap gap-1 mb-2">
-            {CATEGORIES.map((c) => (
-              <button
-                key={c.value}
-                type="button"
-                onClick={() => {
-                  setQuery("");
-                  setCategory(c.value);
-                }}
-                className={`px-2 py-1 rounded-md text-xs font-medium transition-colors ${
-                  category === c.value
-                    ? "bg-iris-primary text-primary-foreground"
-                    : "bg-muted hover:bg-muted/80"
-                }`}
-              >
-                {c.label}
-              </button>
-            ))}
+        <div className="p-4 border-b border-white/5 space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold">Select Token</h2>
+            <button onClick={onClose} className="p-2 -mr-2 rounded-full hover:bg-white/5 text-[#6B7280] hover:text-white transition-colors">
+              <X className="w-5 h-5" />
+            </button>
           </div>
-        )}
-        <div className="max-h-[320px] overflow-y-auto space-y-1">
-          {isLoading && (
-            <p className="text-sm text-muted-foreground">Loading...</p>
-          )}
-          {!isLoading &&
-            searchResults.slice(0, 80).map((t) => (
-              <div
-                key={t.address}
-                className="flex items-center gap-2 group"
-              >
+          
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
+            <Input
+              placeholder="Search by name, symbol, or address"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 h-11 text-[15px] focus-visible:ring-1 focus-visible:ring-[#00D4FF] focus-visible:border-[#00D4FF] placeholder:text-[#6B7280] text-white"
+            />
+          </div>
+          
+          {!query.trim() && (
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+              {CATEGORIES.map((c) => (
                 <button
+                  key={c.value}
                   type="button"
-                  className="flex-1 flex items-center gap-3 p-2 rounded-lg hover:bg-muted text-left min-w-0"
-                  onClick={() => handleSelect(t)}
+                  onClick={() => {
+                    setQuery("");
+                    setCategory(c.value);
+                  }}
+                  className={`px-3 py-1.5 rounded-full text-[13px] font-medium whitespace-nowrap transition-all ${
+                    category === c.value
+                      ? "bg-[#00D4FF]/20 text-[#00D4FF] border border-[#00D4FF]/30"
+                      : "bg-white/5 text-[#6B7280] border border-transparent hover:bg-white/10 hover:text-white"
+                  }`}
                 >
-                  {t.logoURI ? (
-                    <Image
-                      src={t.logoURI}
-                      alt=""
-                      width={32}
-                      height={32}
-                      className="rounded-full shrink-0"
-                    />
-                  ) : (
-                    <div className="w-8 h-8 rounded-full bg-muted shrink-0" />
-                  )}
-                  <div className="min-w-0 flex-1">
-                    <p className="font-medium flex items-center gap-1">
-                      {t.symbol}
-                      {t.verified && (
-                        <span className="text-xs text-muted-foreground">✓</span>
-                      )}
-                    </p>
-                    <p className="text-xs text-muted-foreground truncate max-w-[200px]">
-                      {t.name}
-                    </p>
-                  </div>
+                  {c.label}
                 </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="max-h-[400px] min-h-[300px] overflow-y-auto p-2">
+          {isLoading && (
+            <div className="flex flex-col items-center justify-center h-[200px] text-[#6B7280]">
+              <div className="w-8 h-8 border-2 border-white/10 border-t-[#00D4FF] rounded-full animate-spin mb-3"></div>
+              <p className="text-[13px]">Searching tokens...</p>
+            </div>
+          )}
+          
+          {!isLoading && searchResults.length === 0 && (
+            <div className="flex flex-col items-center justify-center h-[200px] text-[#6B7280]">
+              <Search className="w-8 h-8 opacity-20 mb-3" />
+              <p className="text-[13px]">No tokens found.</p>
+            </div>
+          )}
+
+          {!isLoading && searchResults.slice(0, 80).map((t) => (
+            <div
+              key={t.address}
+              className="flex items-center justify-between p-2 rounded-xl hover:bg-white/[0.04] cursor-pointer group transition-colors"
+              onClick={() => handleSelect(t)}
+            >
+              <div className="flex items-center gap-3 min-w-0 pr-4">
+                {t.logoURI ? (
+                  <img src={(t.logoURI)} alt={t.symbol} width={36} height={36} className="rounded-full shrink-0 border border-white/5" />
+                ) : (
+                  <div className="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-[10px] text-[#6B7280] border border-white/5 shrink-0">
+                    {t.symbol.slice(0,2)}
+                  </div>
+                )}
+                <div className="min-w-0 flex flex-col justify-center">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-bold text-[15px] text-white truncate group-hover:text-[#00D4FF] transition-colors">{t.symbol}</span>
+                    {t.verified && (
+                      <span className="flex items-center justify-center w-[14px] h-[14px] rounded-full bg-[#00FF88]/20 text-[#00FF88] text-[9px]">
+                        ✓
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-[12px] text-[#6B7280] truncate">{t.name}</span>
+                </div>
+              </div>
+              
+              <div className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                 <Link
                   href={`/trading/token/${t.address}`}
                   onClick={(e) => e.stopPropagation()}
-                  className="p-2 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground shrink-0"
+                  className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-[#6B7280] hover:bg-white/10 hover:text-white transition-colors"
                   title="View chart"
                 >
                   <LineChart className="h-4 w-4" />
                 </Link>
               </div>
-            ))}
+            </div>
+          ))}
         </div>
       </DialogContent>
     </Dialog>

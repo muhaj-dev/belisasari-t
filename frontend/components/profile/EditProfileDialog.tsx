@@ -51,50 +51,59 @@ export function EditProfileDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {trigger ?? (
-          <Button variant="outline" size="sm">
-            <Pencil className="h-4 w-4 mr-1" /> Edit profile
+          <Button variant="outline" size="sm" className="bg-white/5 border-white/10 text-white hover:bg-white/10 transition-colors">
+            <Pencil className="h-4 w-4 mr-2" /> Edit profile
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="sm:max-w-md bg-[#111118] border-white/10 text-white shadow-2xl">
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
+          <DialogTitle className="text-xl font-bold tracking-tight">Edit profile</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="text-sm font-medium">Username</label>
+        <form onSubmit={handleSubmit} className="space-y-5 pt-4">
+          <div className="space-y-1.5">
+            <label className="text-[13px] font-bold text-white/90 uppercase tracking-wide">Username</label>
             <Input
               value={username}
               onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ''))}
               placeholder="username"
-              className="mt-1"
+              className="bg-white/5 border-white/10 text-white focus-visible:ring-1 focus-visible:ring-[#00D4FF] focus-visible:border-[#00D4FF] placeholder:text-[#6B7280]"
             />
           </div>
-          <div>
-            <label className="text-sm font-medium">Bio</label>
+          <div className="space-y-1.5">
+            <label className="text-[13px] font-bold text-white/90 uppercase tracking-wide">Bio</label>
             <Input
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               placeholder="Short bio"
-              className="mt-1"
+              className="bg-white/5 border-white/10 text-white focus-visible:ring-1 focus-visible:ring-[#00D4FF] focus-visible:border-[#00D4FF] placeholder:text-[#6B7280]"
             />
           </div>
-          <div>
-            <label className="text-sm font-medium">Image URL</label>
+          <div className="space-y-1.5">
+            <label className="text-[13px] font-bold text-white/90 uppercase tracking-wide">Image URL</label>
             <Input
               value={image}
               onChange={(e) => setImage(e.target.value)}
               placeholder="https://..."
-              className="mt-1"
+              className="bg-white/5 border-white/10 text-white focus-visible:ring-1 focus-visible:ring-[#00D4FF] focus-visible:border-[#00D4FF] placeholder:text-[#6B7280]"
             />
           </div>
-          {error && <p className="text-sm text-destructive">{error}</p>}
-          <div className="flex justify-end gap-2">
-            <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
+          {error && <p className="text-[13px] font-medium text-red-500">{error}</p>}
+          <div className="flex justify-end gap-3 pt-3 border-t border-white/5">
+            <Button 
+              type="button" 
+              variant="ghost" 
+              onClick={() => setOpen(false)}
+              className="text-[#6B7280] hover:text-white hover:bg-white/5"
+            >
               Cancel
             </Button>
-            <Button type="submit" disabled={loading}>
-              {loading ? 'Saving...' : 'Save'}
+            <Button 
+              type="submit" 
+              disabled={loading}
+              className="bg-[#00D4FF] text-[#111118] hover:bg-[#00D4FF]/80 hover:text-[#111118] px-6"
+            >
+              {loading ? 'Saving...' : 'Save Changes'}
             </Button>
           </div>
         </form>

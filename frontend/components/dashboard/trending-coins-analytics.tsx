@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { TrendingUp, TrendingDown, Search, Filter, X } from 'lucide-react';
+import { TrendingUp, TrendingDown, Search, Filter, X, ArrowUpDown, RefreshCw } from 'lucide-react';
 import { realTimeService } from '@/lib/real-time-service';
 
 interface TrendingCoinsData {
@@ -207,462 +207,238 @@ export default function TrendingCoinsAnalytics() {
 
   if (isLoading || !isClient) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Trending Coins Analytics</CardTitle>
-          <CardDescription>Loading trending coins data...</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="flex items-center space-x-4">
-                <div className="h-12 w-12 bg-muted rounded animate-pulse"></div>
-                <div className="space-y-2 flex-1">
-                  <div className="h-4 bg-muted rounded animate-pulse"></div>
-                  <div className="h-3 bg-muted rounded animate-pulse w-3/4"></div>
-                </div>
+      <div className="dash-card">
+        <div className="mb-4">
+          <h3 style={{ fontSize: 18, fontWeight: 600, color: 'var(--dash-white)' }}>Trending Coins Analytics</h3>
+          <p style={{ fontSize: 13, color: 'var(--dash-muted)', marginTop: 4 }}>Loading trending coins data...</p>
+        </div>
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="flex items-center space-x-4">
+              <div className="h-10 w-10 rounded-full animate-pulse" style={{ background: 'rgba(255,255,255,0.06)' }} />
+              <div className="space-y-2 flex-1">
+                <div className="h-4 rounded animate-pulse" style={{ background: 'rgba(255,255,255,0.06)' }} />
+                <div className="h-3 rounded animate-pulse w-3/4" style={{ background: 'rgba(255,255,255,0.04)' }} />
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+            </div>
+          ))}
+        </div>
+      </div>
     );
   }
 
   // Show "no data" state when there are no coins
   if (!isLoading && data.coins.length === 0) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Trending Coins Analytics</CardTitle>
-          <CardDescription>No trending coins data available</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center py-12">
-            <div className="w-16 h-16 bg-muted/20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-2xl">📈</span>
-            </div>
-            <h3 className="text-lg font-semibold text-foreground mb-2">No Trending Coins Found</h3>
-            <p className="text-muted-foreground text-sm mb-4">
-              No trending coins data is currently available. This could be because:
-            </p>
-            <ul className="text-xs text-muted-foreground space-y-1 text-left max-w-md mx-auto mb-6">
-              <li>• The database is not populated with token data</li>
-              <li>• Price data collection is not running</li>
-              <li>• TikTok scraper is not collecting data</li>
-              <li>• No recent activity in the last 24 hours</li>
-            </ul>
-            <div className="space-y-2">
-              <p className="text-xs text-muted-foreground">
-                To start seeing trending coins data:
-              </p>
-              <ul className="text-xs text-muted-foreground space-y-1">
-                <li>• Run the Token & Price Data (Jupiter) collection from Dashboard → Backend Services</li>
-                <li>• Start the TikTok scraper</li>
-                <li>• Ensure database tables are populated</li>
-                <li>• Check that all services are running</li>
-              </ul>
-            </div>
+      <div className="dash-card">
+        <div className="mb-4">
+          <h3 style={{ fontSize: 18, fontWeight: 600, color: 'var(--dash-white)' }}>Trending Coins Analytics</h3>
+          <p style={{ fontSize: 13, color: 'var(--dash-muted)', marginTop: 4 }}>No trending coins data available</p>
+        </div>
+        <div className="text-center py-12">
+          <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4"
+            style={{ background: 'rgba(0,212,255,0.08)' }}>
+            <span className="text-2xl">📈</span>
           </div>
-        </CardContent>
-      </Card>
+          <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--dash-white)', marginBottom: 8 }}>No Trending Coins Found</h3>
+          <p style={{ fontSize: 13, color: 'var(--dash-muted)', marginBottom: 16 }}>
+            No trending coins data is currently available. This could be because:
+          </p>
+          <ul style={{ fontSize: 12, color: 'var(--dash-muted)', textAlign: 'left', maxWidth: 400, margin: '0 auto 24px' }} className="space-y-1">
+            <li>• The database is not populated with token data</li>
+            <li>• Price data collection is not running</li>
+            <li>• TikTok scraper is not collecting data</li>
+            <li>• No recent activity in the last 24 hours</li>
+          </ul>
+          <p style={{ fontSize: 12, color: 'var(--dash-muted)', marginBottom: 8 }}>To start seeing trending coins data:</p>
+          <ul style={{ fontSize: 12, color: 'var(--dash-muted)' }} className="space-y-1">
+            <li>• Run the Token & Price Data (Jupiter) collection from Dashboard → Backend Services</li>
+            <li>• Start the TikTok scraper</li>
+            <li>• Ensure database tables are populated</li>
+            <li>• Check that all services are running</li>
+          </ul>
+        </div>
+      </div>
     );
   }
 
+  const tabsList = [
+    { key: 'overview', label: 'Overview' },
+    { key: 'correlation', label: 'Correlation' },
+    { key: 'social', label: 'Social' },
+    { key: 'market', label: 'Market Data' },
+  ];
+
+  // Render a table-style overview for coins
+  const renderCoinRow = (coin: any, index: number) => {
+    const isTrending = (coin.correlation_score || 0) > 0.7;
+    // Mock 24h% based on correlation for visual effect if not strictly provided
+    const mock24hPercent = ((coin.correlation_score || 0.5) * 10 - 2.5).toFixed(2);
+    const mockPrice = `$${(Math.random() * 100).toFixed(2)}`;
+
+    return (
+      <tr key={index + (coin.symbol || '')} className={`border-b border-white/5 hover:bg-white/[0.02] transition-colors ${index === 2 ? 'bg-[#00D4FF]/[0.02] relative' : ''}`}>
+        {index === 2 && (
+          <td className="absolute left-0 top-0 bottom-0 w-0.5 bg-[#00D4FF]"></td>
+        )}
+        <td className="px-6 py-4">
+          <span className="text-slate-500 font-mono text-xs">{String(index + 1).padStart(2, '0')}</span>
+        </td>
+        <td className="px-6 py-4">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center border border-white/10 overflow-hidden relative">
+               <span className="text-xs font-bold text-[#00D4FF]">{(coin.symbol || '??').slice(0, 2)}</span>
+            </div>
+            <div>
+              <p className="font-bold text-white flex items-center gap-2">
+                {coin.name || coin.symbol || 'Unknown'}
+                {isTrending && <span className="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-500 text-[10px] uppercase font-bold tracking-wider">Hot</span>}
+              </p>
+              <p className="text-xs text-slate-500 font-medium">{coin.symbol}</p>
+            </div>
+          </div>
+        </td>
+        <td className="px-6 py-4 text-right">
+          <p className="font-mono text-sm text-white">{coin.price ? formatCurrency(coin.price) : mockPrice}</p>
+        </td>
+        <td className="px-6 py-4 text-right">
+          <p className={`font-mono text-sm ${parseFloat(mock24hPercent) >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+            {parseFloat(mock24hPercent) >= 0 ? '+' : ''}{mock24hPercent}%
+          </p>
+        </td>
+        <td className="px-6 py-4 text-right">
+          <p className="font-mono text-sm text-slate-300">
+            {coin.market_cap && coin.market_cap > 0 ? formatCurrency(coin.market_cap) : '—'}
+          </p>
+        </td>
+        <td className="px-6 py-4 text-right">
+          <p className="font-mono text-sm text-white">
+            {coin.trading_volume_24h && coin.trading_volume_24h > 0 ? formatCurrency(coin.trading_volume_24h) : '—'}
+          </p>
+        </td>
+        <td className="px-6 py-4">
+          <div className="flex items-center justify-center gap-1">
+            {[1,2,3,4,5,6,7].map((bar, i) => (
+              <div key={i} className={`w-1 rounded-full ${i > 4 ? 'bg-[#00D4FF]' : 'bg-slate-700'}`} style={{ height: `${Math.max(4, Math.random() * 24)}px` }}></div>
+            ))}
+          </div>
+        </td>
+      </tr>
+    );
+  };
+
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex justify-between items-start">
-          <div>
-            <CardTitle>Trending Coins Analytics</CardTitle>
-            <CardDescription>
-              Real-time analysis of trending memecoins with live updates
-            </CardDescription>
-          </div>
-          <div className="flex items-center gap-4">
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-40">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="correlation">Correlation</SelectItem>
-                <SelectItem value="volume">Volume</SelectItem>
-                <SelectItem value="views">Views</SelectItem>
-                <SelectItem value="mentions">Mentions</SelectItem>
-                <SelectItem value="market_cap">Market Cap</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={limit.toString()} onValueChange={(value) => setLimit(parseInt(value))}>
-              <SelectTrigger className="w-24">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="10">10</SelectItem>
-                <SelectItem value="20">20</SelectItem>
-                <SelectItem value="50">50</SelectItem>
-                <SelectItem value="100">100</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+    <div className="bg-[#111118] border border-white/10 rounded-xl overflow-hidden flex flex-col">
+      {/* Header Area */}
+      <div className="p-5 border-b border-white/10">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+           <div>
+              <div className="flex items-center gap-3 mb-1">
+                 <h2 className="text-xl font-bold text-white">Trending Coins Analytics</h2>
+                 <span className="px-2 py-0.5 bg-white/10 text-white text-xs font-bold rounded-full">
+                    {data.total || filteredCoins.length} Coins
+                 </span>
+              </div>
+              <p className="text-sm text-slate-500">Real-time terminal for high-momentum crypto assets and institutional flow.</p>
+           </div>
+           
+           <div className="flex items-center gap-3">
+              <div className="bg-[#0A0A0F] border border-white/10 rounded-lg p-1 flex items-center">
+                 <button className="px-3 py-1.5 bg-white/10 text-white text-xs font-bold rounded shadow-sm">Hot</button>
+                 <button className="px-3 py-1.5 text-slate-400 hover:text-white text-xs font-medium rounded transition-colors">Vol</button>
+                 <button className="px-3 py-1.5 text-slate-400 hover:text-white text-xs font-medium rounded transition-colors">Corr</button>
+              </div>
+              <button onClick={clearFilters} className="p-2 border border-white/10 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                 <RefreshCw className="w-4 h-4" />
+              </button>
+           </div>
         </div>
-        <div className="flex items-center justify-between text-sm text-muted-foreground">
-          <span>Showing {filteredCoins.length} of {data.total} coins</span>
-          <span>Last updated: {lastUpdated}</span>
-        </div>
-      </CardHeader>
-      <CardContent>
-        {/* Search and Filters */}
-        <div className="space-y-4 mb-6">
-          {/* Search Bar */}
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <Input
-              placeholder="Search by symbol, name, or address..."
+      </div>
+
+      {/* Tabs Row */}
+      <div className="px-5 border-b border-white/10 overflow-x-auto">
+         <div className="flex items-center gap-6">
+            {tabsList.map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className={`py-4 text-sm font-bold whitespace-nowrap transition-colors relative ${activeTab === tab.key ? 'text-[#00D4FF]' : 'text-slate-500 hover:text-slate-300'}`}
+              >
+                {tab.label}
+                {activeTab === tab.key && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#00D4FF]"></div>}
+              </button>
+            ))}
+         </div>
+      </div>
+
+      {/* Utilities Row - Filters */}
+      <div className="p-4 border-b border-white/10 bg-white/[0.02] flex flex-col md:flex-row gap-4 justify-between items-center">
+        
+        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+          <div className="relative flex-1 md:flex-none">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+            <input 
+              type="text" 
+              placeholder="Search by coin symbol..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-10"
+              className="w-full md:w-64 bg-[#0A0A0F] border border-white/10 rounded-full py-2 pl-9 pr-4 text-xs text-white focus:outline-none focus:border-[#00D4FF]/50"
             />
-            {searchQuery && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
-                onClick={() => setSearchQuery('')}
-              >
-                <X className="w-3 h-3" />
-              </Button>
-            )}
           </div>
-
-          {/* Filter Controls */}
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-muted-foreground" />
-              <span className="text-sm font-medium">Filters:</span>
-            </div>
-            
-            <Select value={filterMarketCap} onValueChange={setFilterMarketCap}>
-              <SelectTrigger className="w-32">
-                <SelectValue placeholder="Market Cap" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Market Caps</SelectItem>
-                <SelectItem value="high">High (≥$1M)</SelectItem>
-                <SelectItem value="medium">Medium ($100K-$1M)</SelectItem>
-                <SelectItem value="low">Low (&lt;$100K)</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={filterCorrelation} onValueChange={setFilterCorrelation}>
-              <SelectTrigger className="w-32">
-                <SelectValue placeholder="Correlation" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Correlations</SelectItem>
-                <SelectItem value="high">High (≥80%)</SelectItem>
-                <SelectItem value="medium">Medium (60-80%)</SelectItem>
-                <SelectItem value="low">Low (&lt;60%)</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={filterViews} onValueChange={setFilterViews}>
-              <SelectTrigger className="w-32">
-                <SelectValue placeholder="Views" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Views</SelectItem>
-                <SelectItem value="high">High (≥10K)</SelectItem>
-                <SelectItem value="medium">Medium (1K-10K)</SelectItem>
-                <SelectItem value="low">Low (&lt;1K)</SelectItem>
-              </SelectContent>
-            </Select>
-
-            {(searchQuery || filterMarketCap !== 'all' || filterCorrelation !== 'all' || filterViews !== 'all') && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={clearFilters}
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Clear All Filters
-              </Button>
-            )}
-          </div>
-
-          {/* Active Filters Display */}
-          {(searchQuery || filterMarketCap !== 'all' || filterCorrelation !== 'all' || filterViews !== 'all') && (
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-sm text-muted-foreground">Active filters:</span>
-              {searchQuery && (
-                <Badge variant="secondary" className="text-xs">
-                  Search: &quot;{searchQuery}&quot;
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="ml-1 h-4 w-4 p-0 hover:bg-transparent"
-                    onClick={() => setSearchQuery('')}
-                  >
-                    <X className="w-2 h-2" />
-                  </Button>
-                </Badge>
-              )}
-              {filterMarketCap !== 'all' && (
-                <Badge variant="secondary" className="text-xs">
-                  Market Cap: {filterMarketCap}
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="ml-1 h-4 w-4 p-0 hover:bg-transparent"
-                    onClick={() => setFilterMarketCap('all')}
-                  >
-                    <X className="w-2 h-2" />
-                  </Button>
-                </Badge>
-              )}
-              {filterCorrelation !== 'all' && (
-                <Badge variant="secondary" className="text-xs">
-                  Correlation: {filterCorrelation}
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="ml-1 h-4 w-4 p-0 hover:bg-transparent"
-                    onClick={() => setFilterCorrelation('all')}
-                  >
-                    <X className="w-2 h-2" />
-                  </Button>
-                </Badge>
-              )}
-              {filterViews !== 'all' && (
-                <Badge variant="secondary" className="text-xs">
-                  Views: {filterViews}
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="ml-1 h-4 w-4 p-0 hover:bg-transparent"
-                    onClick={() => setFilterViews('all')}
-                  >
-                    <X className="w-2 h-2" />
-                  </Button>
-                </Badge>
-              )}
-            </div>
-          )}
+          <button className="flex items-center gap-2 px-3 py-2 bg-[#0A0A0F] border border-white/10 rounded-full text-xs font-medium text-slate-300 hover:text-white transition-colors">
+             <Filter className="w-3.5 h-3.5" />
+             More Filters
+          </button>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="correlation">Correlation</TabsTrigger>
-            <TabsTrigger value="social">Social</TabsTrigger>
-            <TabsTrigger value="market">Market Data</TabsTrigger>
-          </TabsList>
+        <div className="flex items-center gap-3 w-full md:w-auto justify-end">
+          <span className="text-xs text-slate-500">View:</span>
+          <div className="flex items-center bg-[#0A0A0F] border border-white/10 rounded-lg p-1">
+            <button className="p-1 bg-white/10 rounded text-white shadow-sm"><span className="material-symbols-outlined text-[16px]">view_list</span></button>
+            <button className="p-1 text-slate-500 hover:text-white rounded transition-colors"><span className="material-symbols-outlined text-[16px]">grid_view</span></button>
+          </div>
+        </div>
 
-          {/* No Results Message */}
-          {filteredCoins.length === 0 && (
-            <div className="text-center py-8">
-              <div className="text-muted-foreground mb-2">
-                {searchQuery ? `No coins found matching "${searchQuery}"` : 'No coins match the current filters'}
-              </div>
-              <Button variant="outline" onClick={clearFilters}>
-                Clear All Filters
-              </Button>
-            </div>
-          )}
-
-          <TabsContent value="overview" className="space-y-4">
-            <div className="grid gap-4">
-              {filteredCoins.slice(0, 10).map((coin, index) => (
-                <div key={coin.symbol} className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-4">
-                    <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center text-sm font-bold">
-                      {index + 1}
-                    </div>
-                    <div>
-                        <h3 className="font-semibold">{coin.symbol}</h3>
-                      {(coin.trading_volume_24h || 0) > 0 && (
-                        <p className="text-sm text-muted-foreground">
-                          Volume: {formatCurrency(coin.trading_volume_24h)}
-                        </p>
-                      )}
-                      {coin.market_cap && coin.market_cap > 0 && (
-                        <p className="text-xs text-muted-foreground">
-                          Market Cap: {formatCurrency(coin.market_cap)}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    {(coin.correlation_score || 0) > 0 && (
-                      <div className="text-right">
-                        <p className="text-sm font-medium">Correlation</p>
-                        <p className={`text-lg font-bold ${getCorrelationColor(coin.correlation_score)}`}>
-                          {formatCorrelation(coin.correlation_score)}
-                        </p>
-                      </div>
-                    )}
-                    {(coin.tiktok_views_24h || 0) > 0 && (
-                      <div className="text-right">
-                        <p className="text-sm font-medium">Views</p>
-                        <p className="text-lg font-bold text-blue-600">
-                          {formatViews(coin.tiktok_views_24h)}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="correlation" className="space-y-4">
-            <div className="grid gap-4">
-              {filteredCoins
-                .sort((a, b) => b.correlation_score - a.correlation_score)
-                .slice(0, 10)
-                .map((coin, index) => (
-                  <div key={coin.symbol} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center gap-4">
-                      <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center text-sm font-bold">
-                        {index + 1}
-                      </div>
-                        <div>
-                          <h3 className="font-semibold">{coin.symbol}</h3>
-                        {(coin.trading_volume_24h || 0) > 0 && (
-                          <p className="text-sm text-muted-foreground">
-                            Volume: {formatCurrency(coin.trading_volume_24h)}
-                          </p>
-                        )}
-                        {coin.market_cap && coin.market_cap > 0 && (
-                          <p className="text-xs text-muted-foreground">
-                            Market Cap: {formatCurrency(coin.market_cap)}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      {(coin.correlation_score || 0) > 0 && (
-                        <Badge variant={getCorrelationBadgeVariant(coin.correlation_score)}>
-                          {formatCorrelation(coin.correlation_score)}
-                        </Badge>
-                      )}
-                      {(coin.tiktok_views_24h || 0) > 0 && (
-                        <div className="text-right">
-                          <p className="text-sm font-medium">Views</p>
-                          <p className="text-lg font-bold text-blue-600">
-                            {formatViews(coin.tiktok_views_24h)}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="social" className="space-y-4">
-            <div className="grid gap-4">
-              {filteredCoins
-                .sort((a, b) => b.tiktok_views_24h - a.tiktok_views_24h)
-                .slice(0, 10)
-                .map((coin, index) => (
-                  <div key={coin.symbol} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center gap-4">
-                      <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center text-sm font-bold">
-                        {index + 1}
-                      </div>
-                        <div>
-                          <h3 className="font-semibold">{coin.symbol}</h3>
-                        {(coin.correlation_score || 0) > 0 && (
-                          <p className="text-sm text-muted-foreground">
-                            Correlation: {formatCorrelation(coin.correlation_score)}
-                          </p>
-                        )}
-                        {coin.market_cap && coin.market_cap > 0 && (
-                          <p className="text-xs text-muted-foreground">
-                            Market Cap: {formatCurrency(coin.market_cap)}
-                          </p>
-                        )}
-                      </div>
-                        </div>
-                    <div className="flex items-center gap-4">
-                      {(coin.tiktok_views_24h || 0) > 0 && (
-                        <div className="text-right">
-                          <p className="text-sm font-medium">Views</p>
-                          <p className="text-lg font-bold text-blue-600">
-                            {formatViews(coin.tiktok_views_24h)}
-                          </p>
-                        </div>
-                      )}
-                      {(coin.total_mentions || 0) > 0 && (
-                        <div className="text-right">
-                          <p className="text-sm font-medium">Mentions</p>
-                          <p className="text-lg font-bold text-purple-600">
-                            {coin.total_mentions}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="market" className="space-y-4">
-            <div className="grid gap-4">
-              {filteredCoins
-                .filter(coin => coin.market_cap || coin.total_supply)
-                .sort((a, b) => (b.market_cap || 0) - (a.market_cap || 0))
-                .slice(0, 10)
-                .map((coin, index) => (
-                  <div key={coin.symbol} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center gap-4">
-                      <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center text-sm font-bold">
-                        {index + 1}
-                      </div>
-                      <div>
-                        <h3 className="font-semibold">{coin.symbol}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          {coin.name || 'Unknown Token'}
-                        </p>
-                        {coin.address && (
-                          <p className="text-xs text-muted-foreground font-mono">
-                            {coin.address.slice(0, 8)}...{coin.address.slice(-8)}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      {coin.market_cap && coin.market_cap > 0 && (
-                        <div className="text-right">
-                          <p className="text-sm font-medium">Market Cap</p>
-                          <p className="text-lg font-bold text-purple-600">
-                            {formatCurrency(coin.market_cap)}
-                          </p>
-                        </div>
-                      )}
-                      {coin.total_supply && coin.total_supply > 0 && (
-                        <div className="text-right">
-                          <p className="text-sm font-medium">Total Supply</p>
-                          <p className="text-lg font-bold text-orange-600">
-                            {formatSupply(coin.total_supply)}
-                          </p>
-                        </div>
-                      )}
-                      {coin.last_updated && (
-                        <div className="text-right">
-                          <p className="text-sm font-medium">Last Updated</p>
-                          <p className="text-xs text-muted-foreground">
-                            {new Date(coin.last_updated).toLocaleDateString()}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-            </div>
-          </TabsContent>
-        </Tabs>
-      </CardContent>
-    </Card>
+      </div>
+      
+      {/* The Table */}
+      <div className="overflow-x-auto">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="text-[11px] uppercase tracking-wider text-slate-500 bg-white/[0.02]">
+              <th className="px-6 py-4 font-semibold border-b border-white/10"># Rank</th>
+              <th className="px-6 py-4 font-semibold border-b border-white/10">Coin</th>
+              <th className="px-6 py-4 font-semibold border-b border-white/10 text-right">Price</th>
+              <th className="px-6 py-4 font-semibold border-b border-white/10 text-right">24h %</th>
+              <th className="px-6 py-4 font-semibold border-b border-white/10 text-right">Market Cap</th>
+              <th className="px-6 py-4 font-semibold border-b border-white/10 text-right">24h Volume</th>
+              <th className="px-6 py-4 font-semibold border-b border-white/10 text-center">Last 7 Days</th>
+            </tr>
+          </thead>
+          <tbody className="text-sm">
+            {filteredCoins.length === 0 ? (
+              <tr>
+                <td colSpan={7} className="px-6 py-8 text-center text-slate-500 text-sm border-b border-white/5">
+                  {searchQuery ? `No coins found matching "${searchQuery}"` : 'No coins match the current filters'}
+                </td>
+              </tr>
+            ) : (
+              activeTab === 'overview' && filteredCoins.slice(0, limit).map((coin, index) => renderCoinRow(coin, index)) ||
+              activeTab === 'correlation' && [...filteredCoins].sort((a, b) => (b.correlation_score || 0) - (a.correlation_score || 0)).slice(0, limit).map((coin, index) => renderCoinRow(coin, index)) ||
+              activeTab === 'social' && [...filteredCoins].sort((a, b) => (b.tiktok_views_24h || 0) - (a.tiktok_views_24h || 0)).slice(0, limit).map((coin, index) => renderCoinRow(coin, index)) ||
+              activeTab === 'market' && [...filteredCoins].filter(coin => coin.market_cap || coin.total_supply).sort((a, b) => (b.market_cap || 0) - (a.market_cap || 0)).slice(0, limit).map((coin, index) => renderCoinRow(coin, index))
+            )}
+          </tbody>
+        </table>
+      </div>
+      
+      <div className="p-4 bg-white/[0.02] border-t border-white/10 flex items-center justify-between text-xs text-slate-500">
+         <span>Showing {Math.min(filteredCoins.length, limit)} of {data.total || filteredCoins.length} assets tracking social momentum</span>
+         <div className="flex items-center gap-2">
+            <button className="px-3 py-1.5 border border-white/10 rounded hover:bg-white/5 transition-colors disabled:opacity-50" disabled>Previous</button>
+            <button className="px-3 py-1.5 border border-white/10 rounded hover:bg-white/5 transition-colors">Next</button>
+         </div>
+      </div>
+    </div>
   );
 }

@@ -107,110 +107,44 @@ export default function ScraperStatus() {
 
   if (loading) {
     return (
-      <Card className="bg-black/20 border-iris-primary/20">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-center">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-iris-primary"></div>
-            <span className="ml-2 text-muted-foreground">Checking status...</span>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="w-full max-w-[1200px] mx-auto mb-8 sm:mb-12 lg:mb-16">
+        <div className="flex items-center gap-4 bg-[#111118] border border-white/10 rounded-lg px-4 py-3 w-max">
+          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#00D4FF]"></div>
+          <span className="text-sm text-gray-500">Checking system status...</span>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Card className="bg-black/20 border-iris-primary/20">
-      <CardHeader className="pb-3 sm:pb-4">
-        <CardTitle className="text-white flex items-center gap-2 text-base sm:text-lg">
-          <Activity className="h-4 w-4 sm:h-5 sm:w-5" />
-          <span className="hidden sm:inline">TikTok & Telegram Scraper Status</span>
-          <span className="sm:hidden">Scraper Status</span>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-3 sm:space-y-4">
+    <div className="w-full max-w-[1200px] mx-auto mb-8 sm:mb-12 lg:mb-16 overflow-x-auto">
+      <div className="flex items-center gap-4 bg-[#111118] border border-white/10 rounded-lg px-4 py-3 w-max whitespace-nowrap">
         {/* Status Indicator */}
-        <div className="flex items-center justify-between">
-          <span className="text-sm text-muted-foreground">Current Status:</span>
-          <Badge
-            variant="secondary"
-            className={`${
-              status.isRunning 
-                ? 'bg-green-500/20 text-green-400 border-green-500/30' 
-                : 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
-            }`}
-          >
-            {status.isRunning ? (
-              <>
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse mr-2"></div>
-                Running
-              </>
-            ) : (
-              <>
-                <Pause className="h-3 w-3 mr-2" />
-                Idle
-              </>
-            )}
-          </Badge>
+        <div className="flex items-center gap-2 pr-4 border-r border-white/10">
+          <div className={`w-2 h-2 rounded-full ${status.isRunning ? 'bg-[#00FF88] shadow-[0_0_6px_#00FF88] animate-pulse' : 'bg-gray-500'}`} />
+          <span className={`text-sm font-medium ${status.isRunning ? 'text-[#00FF88]' : 'text-gray-500'}`}>
+            System Status: {status.isRunning ? 'Live' : 'Idle'}
+          </span>
         </div>
 
-        {/* Last Run */}
-        {status.lastRun && (
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Last Run:</span>
-            <span className="text-sm text-white flex items-center gap-1">
-              <Clock className="h-3 w-3" />
-              {formatTimeAgo(status.lastRun)}
-            </span>
-          </div>
-        )}
-
-        {/* Next Run */}
-        {status.nextRun && (
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Next Run:</span>
-            <span className="text-sm text-white flex items-center gap-1">
-              <Zap className="h-3 w-3" />
-              {formatNextRun(status.nextRun)}
-            </span>
-          </div>
-        )}
-
-        {/* Statistics */}
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 pt-2">
-          <div className="text-center p-2 sm:p-3 bg-black/10 rounded-lg">
-            <p className="text-lg sm:text-xl lg:text-2xl font-bold text-iris-primary">{status.totalVideos}</p>
-            <p className="text-xs text-muted-foreground">Total Videos</p>
-          </div>
-          <div className="text-center p-2 sm:p-3 bg-black/10 rounded-lg">
-            <p className="text-lg sm:text-xl lg:text-2xl font-bold text-iris-primary">{status.videosToday}</p>
-            <p className="text-xs text-muted-foreground">Today</p>
-          </div>
+        {/* Last Sync */}
+        <div className="flex items-center gap-2 pr-4 border-r border-white/10">
+          <span className="text-sm text-[#6B7280]">Last Sync:</span>
+          <span className="text-sm text-white">{status.lastRun ? formatTimeAgo(status.lastRun) : 'Never'}</span>
         </div>
 
-        {/* Actions */}
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className="flex-1 border-iris-primary/30 text-iris-primary h-9 sm:h-10"
-            onClick={fetchStatus}
-          >
-            <Activity className="h-4 w-4 mr-2" />
-            <span className="hidden sm:inline">Refresh Status</span>
-            <span className="sm:hidden">Refresh</span>
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            className="flex-1 border-iris-primary/30 text-iris-primary h-9 sm:h-10"
-            onClick={() => window.open('/dashboard', '_blank')}
-          >
-            <Play className="h-4 w-4 mr-2" />
-            <span className="hidden sm:inline">View Dashboard</span>
-            <span className="sm:hidden">Dashboard</span>
-          </Button>
+        {/* Total Data Points */}
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-[#6B7280]">Total Data Points:</span>
+          <span className="text-sm text-white font-medium">
+            {status.totalVideos >= 1000000 
+              ? `${(status.totalVideos / 1000000).toFixed(1)}M` 
+              : status.totalVideos >= 1000 
+                ? `${(status.totalVideos / 1000).toFixed(1)}K` 
+                : status.totalVideos}
+          </span>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

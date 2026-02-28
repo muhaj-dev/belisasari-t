@@ -1,7 +1,5 @@
 "use client";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { useCurrentWallet } from "@/hooks/use-current-wallet";
 import { useJupiterSwap } from "@/hooks/use-jupiter-swap";
 import { useTokenInfoTrading } from "@/hooks/use-token-info-trading";
@@ -11,7 +9,7 @@ import { ESwapMode } from "@/lib/types/jupiter";
 import { SOL_MINT } from "@/lib/trading-constants";
 import { useSolanaWallets } from "@privy-io/react-auth";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowDownUp, Loader2 } from "lucide-react";
+import { ArrowDownUp, Loader2, Settings2 } from "lucide-react";
 import { SwapPay } from "./SwapPay";
 import { SwapReceive } from "./SwapReceive";
 import { TokenSearchDialog } from "./TokenSearchDialog";
@@ -40,6 +38,7 @@ export function SwapCard() {
   const [slippageBps, setSlippageBps] = useState<number | "auto">(50);
   const [showInputSearch, setShowInputSearch] = useState(false);
   const [showOutputSearch, setShowOutputSearch] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   const inputToken = useTokenInfoTrading(inputMint);
   const outputToken = useTokenInfoTrading(outputMint);
@@ -89,7 +88,6 @@ export function SwapCard() {
     if (v === "" || v === "." || /^[0-9]*\.?[0-9]*$/.test(v)) setOutAmount(v);
   };
 
-
   const handleInputTokenSelect = (t: { address: string; symbol: string; name: string; decimals: number }) => {
     setInputMint(t.address);
     setInputs({ inputMint: t.address, outputMint, inputAmount: parseFloat(inAmount) || 0 });
@@ -122,17 +120,44 @@ export function SwapCard() {
     setInAmount(val.toFixed(Math.min(9, inputToken.decimals)));
   };
 
-  const canSwap = wallet && walletAddress && inAmount && Number(inAmount) > 0 && expectedOutput;
+  const canSwap = !!(wallet && walletAddress && inAmount && Number(inAmount) > 0 && expectedOutput);
 
   return (
-    <Card className="max-w-md mx-auto">
-      <CardHeader className="pb-2">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-iris-primary">Swap</h2>
-          <SlippageSettings slippageBps={slippageBps} onSlippageChange={setSlippageBps} />
+    <div className="w-full bg-[#111118] border border-white/10 rounded-3xl p-2 relative shadow-2xl">
+      <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-[#00D4FF]/30 to-transparent"></div>
+      
+      <div className="px-4 py-3 flex items-center justify-between mb-1">
+        <div className="flex gap-4">
+          <button className="text-white font-semibold text-[15px] relative">
+            Swap
+            <div className="absolute -bottom-3 left-0 right-0 h-0.5 bg-[#00D4FF] rounded-t-full"></div>
+          </button>
+          <button className="text-[#6B7280] font-medium text-[15px] hover:text-white transition-colors">
+            Limit
+          </button>
+          <button className="text-[#6B7280] font-medium text-[15px] hover:text-white transition-colors">
+            DCA
+          </button>
         </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
+        <div className="relative">
+          <button 
+            className={`p-2 rounded-full hover:bg-white/5 transition-colors ${showSettings ? 'text-white bg-white/5' : 'text-[#6B7280]'}`}
+            onClick={() => setShowSettings(!showSettings)}
+          >
+            <Settings2 className="w-4 h-4" />
+          </button>
+          {showSettings && (
+            <div className="absolute right-0 top-full mt-2 z-20 bg-[#111118] border border-white/10 rounded-xl p-4 shadow-xl min-w-[240px]">
+              <SlippageSettings slippageBps={slippageBps} onSlippageChange={(val) => {
+                setSlippageBps(val);
+                setShowSettings(false);
+              }} />
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="p-1 space-y-1 relative">
         <SwapPay
           inputTokenSymbol={inputToken.symbol}
           inputTokenImageUri={inputToken.imageUrl}
@@ -145,15 +170,17 @@ export function SwapCard() {
           onPercent={handlePercent}
         />
 
-        <div className="flex items-center justify-center">
-          <button
-            type="button"
-            className="p-2 rounded-full border bg-card hover:bg-muted"
-            onClick={handleSwapDirection}
-            aria-label="Swap direction"
-          >
-            <ArrowDownUp className="h-5 w-5" />
-          </button>
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 flex flex-col items-center group">
+          <div className="bg-[#111118] p-1 rounded-full">
+            <button
+              type="button"
+              className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 hover:border-[#00D4FF]/30 transition-all group-hover:rotate-180 duration-300"
+              onClick={handleSwapDirection}
+              aria-label="Swap direction"
+            >
+              <ArrowDownUp className="h-4 w-4" />
+            </button>
+          </div>
         </div>
 
         <SwapReceive
@@ -165,26 +192,38 @@ export function SwapCard() {
           onTokenClick={() => setShowOutputSearch(true)}
           onFocus={() => setSwapMode(ESwapMode.EXACT_OUT)}
         />
+      </div>
 
-        {priceImpact && (
-          <p className="text-xs text-muted-foreground">Price impact: {priceImpact}%</p>
-        )}
+      {priceImpact && Number(priceImpact) > 1 && (
+        <div className="px-4 py-3 mt-2 mx-1 bg-[#FF3B3B]/10 border border-[#FF3B3B]/20 rounded-xl flex items-center justify-between">
+          <span className="text-[#FF3B3B] text-[13px] font-medium">Price Impact Warning</span>
+          <span className="text-[#FF3B3B] text-[13px] font-bold">{priceImpact}%</span>
+        </div>
+      )}
 
-        <Button
-          className="w-full bg-iris-primary hover:bg-iris-primary/90"
-          size="lg"
+      <div className="p-1 mt-1">
+        <button
+          className="w-full h-14 rounded-2xl bg-[#00D4FF] hover:bg-[#00D4FF]/80 text-[#0A0A0F] font-bold text-[16px] flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={!canSwap || loading}
           onClick={handleSwap}
         >
-          {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Swap"}
-        </Button>
-        {!walletAddress && (
-          <p className="text-center text-sm text-muted-foreground">Connect wallet to swap</p>
-        )}
-      </CardContent>
+          {loading ? (
+            <div className="flex items-center gap-2">
+              <Loader2 className="h-5 w-5 animate-spin" />
+              <span>Routing...</span>
+            </div>
+          ) : !walletAddress ? (
+            "Connect Wallet"
+          ) : !inAmount || Number(inAmount) === 0 ? (
+            "Enter Amount"
+          ) : (
+            "Swap"
+          )}
+        </button>
+      </div>
 
       <TokenSearchDialog open={showInputSearch} onClose={() => setShowInputSearch(false)} onSelect={handleInputTokenSelect} />
       <TokenSearchDialog open={showOutputSearch} onClose={() => setShowOutputSearch(false)} onSelect={handleOutputTokenSelect} />
-    </Card>
+    </div>
   );
 }

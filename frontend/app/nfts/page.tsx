@@ -79,344 +79,398 @@ export default function NftsPage() {
 
   if (!walletIsConnected) {
     return (
-      <div className="container mx-auto p-6 max-w-4xl">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Layers className="h-6 w-6" />
-              NFT Portfolio (Helius)
-            </CardTitle>
-            <CardDescription>
+      <div className="min-h-screen bg-[#0A0A0F] pt-12">
+        <div className="container mx-auto p-6 max-w-2xl text-center">
+          <div className="bg-[#111118] border border-white/10 rounded-xl p-8 shadow-lg">
+            <div className="w-12 h-12 bg-[#00D4FF]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Layers className="h-6 w-6 text-[#00D4FF]" />
+            </div>
+            <h1 className="text-[24px] font-bold text-white mb-2">NFT Portfolio (Helius)</h1>
+            <p className="text-[#6B7280] text-[15px] mb-8">
               Connect your wallet to view your NFT portfolio, collection analytics, metadata, and transaction history.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
             <Button
-              className="bg-iris-primary hover:bg-iris-primary/90"
+              className="bg-[#00D4FF] hover:bg-[#00D4FF]/80 text-[#0A0A0F] font-bold px-8 h-11 border-none"
               onClick={() => ready && !authenticated && login({ loginMethods: ["wallet"], walletChainType: "solana-only" })}
             >
               <Image src="/solana.png" width={20} height={20} className="rounded-full mr-2" alt="Solana" />
               Connect wallet
             </Button>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6 max-w-6xl">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Layers className="h-7 w-7" />
-            NFTs (Helius)
-          </h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            NFT portfolio viewer, collection analytics, metadata, and transaction history
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() =>
-              postTweet(
-                "Viewing my NFT collection on Belisasari (Helius). #Belisasari #Solana #NFTs"
-              )
-            }
-            disabled={twitterPosting}
-          >
-            {twitterPosting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-            Share to Twitter
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => refetch()} disabled={loading}>
-            {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <RefreshCw className="h-4 w-4 mr-2" />}
-            Refresh
-          </Button>
-        </div>
-      </div>
-
-      {error && (
-        <Card className="border-destructive/50">
-          <CardContent className="pt-6">
-            <p className="text-destructive text-sm">{error}</p>
-            <p className="text-muted-foreground text-xs mt-1">
-              Use RPC_URL with Helius (e.g. https://mainnet.helius-rpc.com/?api-key=...) for DAS and enhanced APIs.
+    <div className="min-h-screen bg-[#0A0A0F] py-8 text-white">
+      <div className="container mx-auto px-6 space-y-8 max-w-[1200px]">
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/10 pb-6">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-[2px] h-6 bg-[#00D4FF]"></div>
+              <h1 className="text-[24px] font-bold text-white tracking-tight flex items-center gap-2">
+                NFT Portfolio
+              </h1>
+            </div>
+            <p className="text-[#6B7280] text-[14px]">
+              NFT portfolio viewer, collection analytics, metadata, and transaction history
             </p>
-          </CardContent>
-        </Card>
-      )}
+          </div>
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              size="sm"
+              className="bg-transparent border-white/10 text-white hover:bg-white/5 h-9"
+              onClick={() =>
+                postTweet(
+                  "Viewing my NFT collection on Belisasari (Helius). #Belisasari #Solana #NFTs"
+                )
+              }
+              disabled={twitterPosting}
+            >
+              {twitterPosting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <ExternalLink className="h-4 w-4 mr-2" />}
+              Share to Twitter
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="bg-transparent border-white/10 text-[#00D4FF] hover:bg-[#00D4FF]/10 hover:text-[#00D4FF] h-9"
+              onClick={() => refetch()} 
+              disabled={loading}
+            >
+              {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <RefreshCw className="h-4 w-4 mr-2" />}
+              Refresh
+            </Button>
+          </div>
+        </div>
 
-      {/* AI insight (OpenAI) */}
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium flex items-center gap-2">
-            <Sparkles className="h-4 w-4" />
-            AI insight
-          </CardTitle>
-          <CardDescription>Get a short AI summary of your NFT collection (Helius + OpenAI).</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={aiLoading}
-            onClick={() => {
-              const context = `NFT count: ${nfts.length}. Collections: ${collectionAnalytics.length}. Top collections: ${collectionAnalytics.slice(0, 5).map((c) => `${c.collectionId.slice(0, 8)}… (${c.count} NFTs)`).join("; ")}.`;
-              fetchInsight(
-                context,
-                "Based on this NFT collection snapshot on Solana, give 2-3 short sentences of insight (collecting, diversification, or what to watch). Be concise."
-              );
-            }}
-          >
-            {aiLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Sparkles className="h-4 w-4 mr-2" />}
-            Get AI insight
-          </Button>
-          {aiError && <p className="text-destructive text-xs">{aiError}</p>}
-          {aiInsight && <p className="text-sm text-muted-foreground whitespace-pre-wrap">{aiInsight}</p>}
-        </CardContent>
-      </Card>
+        {error && (
+          <div className="bg-[#FF3B3B]/10 border border-[#FF3B3B]/20 rounded-xl p-4 flex items-start gap-3">
+            <div className="min-w-0">
+              <p className="text-[#FF3B3B] text-[14px] font-medium">{error}</p>
+              <p className="text-[#FF3B3B]/70 text-[12px] mt-1">
+                Use RPC_URL with Helius (e.g. https://mainnet.helius-rpc.com/?api-key=...) for DAS and enhanced APIs.
+              </p>
+            </div>
+          </div>
+        )}
 
-      {/* Collection analytics */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Layers className="h-5 w-5" />
-            Collection analytics
-          </CardTitle>
-          <CardDescription>NFTs grouped by collection</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {loading ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-            </div>
-          ) : collectionAnalytics.length === 0 ? (
-            <p className="text-muted-foreground text-sm py-4">No collections yet.</p>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-              {collectionAnalytics.slice(0, 12).map(({ collectionId, count, sample }) => (
-                <div
-                  key={collectionId}
-                  className="rounded-lg border p-3 flex items-center gap-3 hover:bg-muted/50"
-                >
-                  <div className="h-10 w-10 rounded overflow-hidden bg-muted shrink-0">
-                    {sample && imageUrl(sample) ? (
-                      <img
-                        src={imageUrl(sample)!}
-                        alt=""
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <div className="h-full w-full flex items-center justify-center">
-                        <ImageIcon className="h-5 w-5 text-muted-foreground" />
-                      </div>
-                    )}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Main Content Column (Portfolio) */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* NFT portfolio viewer */}
+            <div className="bg-[#111118] border border-white/10 rounded-xl overflow-hidden">
+              <div className="border-b border-white/10 p-5">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-[18px] font-semibold text-white flex items-center gap-2">
+                    <Wallet className="h-5 w-5 text-[#00D4FF]" />
+                    Your NFTs
+                  </h2>
+                  <Badge className="bg-white/10 text-white hover:bg-white/20 border-none">
+                    {total != null ? `${total} Assets` : "Loading..."}
+                  </Badge>
+                </div>
+              </div>
+              <div className="p-5">
+                {loading ? (
+                  <div className="flex items-center justify-center py-16">
+                    <Loader2 className="h-10 w-10 animate-spin text-[#00D4FF]" />
                   </div>
-                  <div className="min-w-0">
-                    <p className="text-xs text-muted-foreground font-mono truncate" title={collectionId}>
-                      {collectionId.slice(0, 6)}…
-                    </p>
-                    <p className="font-semibold">{count} NFT{count !== 1 ? "s" : ""}</p>
+                ) : nfts.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-16 text-center">
+                    <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-4">
+                      <ImageIcon className="h-8 w-8 text-[#6B7280]" />
+                    </div>
+                    <p className="text-[#6B7280] text-[15px]">No NFTs found in this wallet.</p>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* NFT portfolio viewer */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Wallet className="h-5 w-5" />
-            NFT portfolio
-          </CardTitle>
-          <CardDescription>
-            {total != null ? `Total: ${total} NFT(s)` : "Your NFTs"}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-10 w-10 animate-spin text-muted-foreground" />
-            </div>
-          ) : nfts.length === 0 ? (
-            <p className="text-muted-foreground text-sm py-8 text-center">No NFTs in this wallet.</p>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {nfts.map((asset) => {
-                const img = imageUrl(asset);
-                return (
-                  <button
-                    key={asset.id}
-                    type="button"
-                    className="rounded-lg border overflow-hidden bg-muted/30 hover:bg-muted/60 text-left transition focus:outline-none focus:ring-2 focus:ring-primary"
-                    onClick={() => setSelectedNft(asset)}
-                  >
-                    <div className="aspect-square relative bg-muted">
-                      {img ? (
-                        <img
-                          src={img}
-                          alt=""
-                          className="object-cover w-full h-full"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <ImageIcon className="h-12 w-12 text-muted-foreground" />
-                        </div>
-                      )}
-                    </div>
-                    <div className="p-2">
-                      <p className="text-xs font-mono truncate text-muted-foreground">{asset.id.slice(0, 8)}…</p>
-                      <p className="text-sm font-medium truncate">
-                        {(asset.content?.metadata as { name?: string })?.name ?? "—"}
-                      </p>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Metadata display modal */}
-      <Dialog open={!!selectedNft} onOpenChange={() => setSelectedNft(null)}>
-        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
-          {selectedNft && (
-            <>
-              <DialogHeader>
-                <DialogTitle>Metadata</DialogTitle>
-                <DialogDescription>NFT details and attributes</DialogDescription>
-              </DialogHeader>
-              <div className="space-y-4">
-                <div className="aspect-square rounded-lg overflow-hidden bg-muted">
-                  {imageUrl(selectedNft) ? (
-                    <img
-                      src={imageUrl(selectedNft)!}
-                      alt=""
-                      className="object-contain w-full h-full"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <ImageIcon className="h-16 w-16 text-muted-foreground" />
-                    </div>
-                  )}
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Name</p>
-                  <p className="font-medium">
-                    {(selectedNft.content?.metadata as { name?: string })?.name ?? "—"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Description</p>
-                  <p className="text-sm">
-                    {(selectedNft.content?.metadata as { description?: string })?.description ?? "—"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Mint (ID)</p>
-                  <p className="font-mono text-xs break-all">{selectedNft.id}</p>
-                  <a
-                    href={`https://solscan.io/token/${selectedNft.id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary text-sm inline-flex items-center gap-1 mt-1"
-                  >
-                    View on Solscan <ExternalLink className="h-3 w-3" />
-                  </a>
-                </div>
-                {selectedNft.grouping && selectedNft.grouping.length > 0 && (
-                  <div>
-                    <p className="text-sm text-muted-foreground">Collection</p>
-                    <p className="font-mono text-xs break-all">
-                      {selectedNft.grouping.find((g) => g.group_key === "collection")?.group_value ?? "—"}
-                    </p>
-                  </div>
-                )}
-                {selectedNft.creators && selectedNft.creators.length > 0 && (
-                  <div>
-                    <p className="text-sm text-muted-foreground">Creators</p>
-                    <ul className="text-xs font-mono space-y-1">
-                      {selectedNft.creators.map((c, i) => (
-                        <li key={i}>
-                          {c.address} {c.verified ? "✓" : ""}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {(selectedNft.content?.metadata as { attributes?: Array<{ trait_type: string; value: string }> })?.attributes && (
-                  <div>
-                    <p className="text-sm text-muted-foreground mb-2">Attributes</p>
-                    <div className="flex flex-wrap gap-2">
-                      {((selectedNft.content?.metadata as { attributes?: Array<{ trait_type: string; value: string }> }).attributes ?? []).map((a, i) => (
-                        <Badge key={i} variant="secondary">
-                          {a.trait_type}: {a.value}
-                        </Badge>
-                      ))}
-                    </div>
+                ) : (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    {nfts.map((asset) => {
+                      const img = imageUrl(asset);
+                      return (
+                        <button
+                          key={asset.id}
+                          type="button"
+                          className="group rounded-xl border border-white/10 overflow-hidden bg-[#1A1A24] text-left transition-all hover:border-[#00D4FF]/50 focus:outline-none focus:ring-2 focus:ring-[#00D4FF]"
+                          onClick={() => setSelectedNft(asset)}
+                        >
+                          <div className="aspect-square relative bg-white/5 overflow-hidden">
+                            {img ? (
+                              <img
+                                src={img}
+                                alt=""
+                                className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center">
+                                <ImageIcon className="h-8 w-8 text-[#6B7280]" />
+                              </div>
+                            )}
+                          </div>
+                          <div className="p-3">
+                            <p className="text-[11px] font-mono truncate text-[#6B7280] mb-1">{asset.id.slice(0, 8)}…</p>
+                            <p className="text-[14px] font-medium text-white truncate">
+                              {(asset.content?.metadata as { name?: string })?.name ?? "Unnamed"}
+                            </p>
+                          </div>
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
               </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
-
-      {/* Transaction history */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <History className="h-5 w-5" />
-            NFT transaction history
-          </CardTitle>
-          <CardDescription>Recent NFT-related activity</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {loadingTx ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
             </div>
-          ) : transactions.length === 0 ? (
-            <p className="text-muted-foreground text-sm py-4">No NFT transactions found.</p>
-          ) : (
-            <div className="space-y-2 max-h-[400px] overflow-y-auto">
-              {transactions.map((tx: HeliusEnhancedTransaction) => (
-                <div
-                  key={tx.signature}
-                  className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-muted/50"
+            
+            {/* Collection analytics */}
+            <div className="bg-[#111118] border border-white/10 rounded-xl overflow-hidden">
+              <div className="border-b border-white/10 p-5">
+                <h2 className="text-[18px] font-semibold text-white flex items-center gap-2">
+                  <Layers className="h-5 w-5 text-[#00D4FF]" />
+                  Collection Analytics
+                </h2>
+              </div>
+              <div className="p-5">
+                {loading ? (
+                  <div className="flex items-center justify-center py-12">
+                    <Loader2 className="h-8 w-8 animate-spin text-[#00D4FF]" />
+                  </div>
+                ) : collectionAnalytics.length === 0 ? (
+                  <p className="text-[#6B7280] text-[14px] py-6 text-center">No collections data available.</p>
+                ) : (
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {collectionAnalytics.slice(0, 12).map(({ collectionId, count, sample }) => (
+                      <div
+                        key={collectionId}
+                        className="rounded-lg border border-white/10 bg-white/[0.02] p-3 flex items-center gap-3 hover:bg-white/[0.04] transition-colors"
+                      >
+                        <div className="h-10 w-10 rounded overflow-hidden bg-white/5 shrink-0 border border-white/10">
+                          {sample && imageUrl(sample) ? (
+                            <img
+                              src={imageUrl(sample)!}
+                              alt=""
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <div className="h-full w-full flex items-center justify-center">
+                              <ImageIcon className="h-4 w-4 text-[#6B7280]" />
+                            </div>
+                          )}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-[11px] text-[#00D4FF] font-mono truncate mb-0.5" title={collectionId}>
+                            {collectionId.slice(0, 8)}…
+                          </p>
+                          <p className="font-semibold text-white text-[13px]">{count} Asset{count !== 1 ? "s" : ""}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Sidebar Column */}
+          <div className="space-y-6">
+            {/* AI insight (OpenAI) */}
+            <div className="bg-[#111118] border border-[#A855F7]/30 rounded-xl overflow-hidden shadow-[0_0_15px_rgba(168,85,247,0.05)] relative">
+              <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-[#A855F7]/50 to-transparent"></div>
+              <div className="p-5 border-b border-white/10 bg-gradient-to-b from-[#A855F7]/5 to-transparent">
+                <h2 className="text-[16px] font-semibold text-white flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-[#A855F7]" />
+                  AI Insight
+                </h2>
+                <p className="text-[13px] text-[#6B7280] mt-1">AI-powered summary of your portfolio</p>
+              </div>
+              <div className="p-5">
+                <Button
+                  className="w-full bg-[#A855F7]/10 hover:bg-[#A855F7]/20 text-[#A855F7] border border-[#A855F7]/30 h-10 mb-4"
+                  disabled={aiLoading}
+                  onClick={() => {
+                    const context = `NFT count: ${nfts.length}. Collections: ${collectionAnalytics.length}. Top collections: ${collectionAnalytics.slice(0, 5).map((c) => `${c.collectionId.slice(0, 8)}… (${c.count} NFTs)`).join("; ")}.`;
+                    fetchInsight(
+                      context,
+                      "Based on this NFT collection snapshot on Solana, give 2-3 short sentences of insight (collecting, diversification, or what to watch). Be concise."
+                    );
+                  }}
                 >
-                  <div className="min-w-0">
-                    <p className="font-medium capitalize">
-                      {tx.type ? String(tx.type).replace(/_/g, " ") : "Transaction"}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {formatDate(tx.timestamp)}
-                    </p>
-                    {tx.description && (
-                      <p className="text-xs text-muted-foreground truncate mt-0.5">{tx.description}</p>
+                  {aiLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Sparkles className="h-4 w-4 mr-2" />}
+                  Generate Analysis
+                </Button>
+                
+                {aiError && (
+                  <div className="p-3 rounded-lg bg-[#FF3B3B]/10 border border-[#FF3B3B]/20">
+                    <p className="text-[#FF3B3B] text-[12px]">{aiError}</p>
+                  </div>
+                )}
+                
+                {aiInsight && (
+                  <div className="p-4 rounded-lg bg-white/5 border border-white/10 relative">
+                    <div className="absolute -left-px top-4 bottom-4 w-[2px] bg-[#A855F7]"></div>
+                    <p className="text-[14px] text-white/90 leading-relaxed font-medium">{aiInsight}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Transaction history */}
+            <div className="bg-[#111118] border border-white/10 rounded-xl overflow-hidden">
+              <div className="p-5 border-b border-white/10">
+                <h2 className="text-[16px] font-semibold text-white flex items-center gap-2">
+                  <History className="h-4 w-4 text-[#00D4FF]" />
+                  Recent Activity
+                </h2>
+              </div>
+              <div className="p-0">
+                {loadingTx ? (
+                  <div className="flex items-center justify-center py-12">
+                    <Loader2 className="h-8 w-8 animate-spin text-[#00D4FF]" />
+                  </div>
+                ) : transactions.length === 0 ? (
+                  <p className="text-[#6B7280] text-[13px] py-8 text-center px-4">No recent NFT transactions found.</p>
+                ) : (
+                  <div className="max-h-[500px] overflow-y-auto divide-y divide-white/5">
+                    {transactions.map((tx: HeliusEnhancedTransaction) => (
+                      <div
+                        key={tx.signature}
+                        className="py-3 px-5 hover:bg-white/[0.02] transition-colors group flex items-start justify-between gap-3"
+                      >
+                        <div className="min-w-0">
+                          <p className="text-[14px] font-semibold text-white capitalize mb-0.5">
+                            {tx.type ? String(tx.type).replace(/_/g, " ") : "Transaction"}
+                          </p>
+                          {tx.description && (
+                            <p className="text-[13px] text-[#6B7280] leading-snug line-clamp-2 mb-1">{tx.description}</p>
+                          )}
+                          <p className="text-[11px] text-[#6B7280] flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#00D4FF]/50"></span>
+                            {formatDate(tx.timestamp)}
+                          </p>
+                        </div>
+                        <a
+                          href={`https://solscan.io/tx/${tx.signature}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-[#6B7280] hover:bg-white/10 hover:text-white shrink-0 transition-all opacity-50 group-hover:opacity-100"
+                          title="View on Solscan"
+                        >
+                          <ExternalLink className="h-3.5 w-3.5" />
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Metadata display modal */}
+        <Dialog open={!!selectedNft} onOpenChange={() => setSelectedNft(null)}>
+          <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto bg-[#111118] border-white/10 text-white p-6 shadow-2xl">
+            {selectedNft && (
+              <>
+                <DialogHeader className="mb-4">
+                  <DialogTitle className="text-[20px] font-bold text-white">Asset Details</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-6">
+                  <div className="aspect-square rounded-xl overflow-hidden bg-white/5 border border-white/10 relative">
+                    {imageUrl(selectedNft) ? (
+                      <img
+                        src={imageUrl(selectedNft)!}
+                        alt=""
+                        className="object-contain w-full h-full"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <ImageIcon className="h-16 w-16 text-[#6B7280]" />
+                      </div>
                     )}
                   </div>
-                  <a
-                    href={`https://solscan.io/tx/${tx.signature}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-foreground shrink-0 ml-2"
-                    title="View on Solscan"
-                  >
-                    <ExternalLink className="h-4 w-4" />
-                  </a>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-[12px] uppercase tracking-wider text-[#6B7280] font-semibold mb-1">Name</p>
+                      <p className="text-[16px] font-bold text-white">
+                        {(selectedNft.content?.metadata as { name?: string })?.name ?? "Unnamed Asset"}
+                      </p>
+                    </div>
+                    
+                    {((selectedNft.content?.metadata as { description?: string })?.description) && (
+                      <div>
+                        <p className="text-[12px] uppercase tracking-wider text-[#6B7280] font-semibold mb-1">Description</p>
+                        <p className="text-[14px] text-white/80 leading-relaxed bg-white/5 p-3 rounded-lg border border-white/5">
+                          {(selectedNft.content?.metadata as { description?: string })?.description}
+                        </p>
+                      </div>
+                    )}
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-[12px] uppercase tracking-wider text-[#6B7280] font-semibold mb-1">Mint ID</p>
+                        <div className="flex items-center gap-2">
+                          <p className="font-mono text-[13px] text-[#00D4FF] truncate" title={selectedNft.id}>
+                            {selectedNft.id.slice(0, 12)}…
+                          </p>
+                          <a
+                            href={`https://solscan.io/token/${selectedNft.id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#6B7280] hover:text-white"
+                          >
+                            <ExternalLink className="h-3.5 w-3.5" />
+                          </a>
+                        </div>
+                      </div>
+                      
+                      {selectedNft.grouping?.some((g) => g.group_key === "collection") && (
+                        <div>
+                          <p className="text-[12px] uppercase tracking-wider text-[#6B7280] font-semibold mb-1">Collection</p>
+                          <p className="font-mono text-[13px] text-white truncate" title={selectedNft.grouping.find((g) => g.group_key === "collection")?.group_value}>
+                            {selectedNft.grouping.find((g) => g.group_key === "collection")?.group_value?.slice(0, 12)}…
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {selectedNft.creators && selectedNft.creators.length > 0 && (
+                      <div>
+                        <p className="text-[12px] uppercase tracking-wider text-[#6B7280] font-semibold mb-2">Creators</p>
+                        <ul className="space-y-2">
+                          {selectedNft.creators.map((c, i) => (
+                            <li key={i} className="flex items-center justify-between bg-white/[0.02] border border-white/5 p-2 rounded px-3">
+                              <span className="font-mono text-[13px] text-white/80 truncate mr-3">{c.address.slice(0, 16)}…</span>
+                              {c.verified && (
+                                <Badge className="bg-[#00FF88]/10 text-[#00FF88] hover:bg-[#00FF88]/20 border-none text-[10px] px-1.5 py-0">Verified</Badge>
+                              )}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    
+                    {(selectedNft.content?.metadata as { attributes?: Array<{ trait_type: string; value: string }> })?.attributes?.length ? (
+                      <div>
+                        <p className="text-[12px] uppercase tracking-wider text-[#6B7280] font-semibold mb-2">Attributes</p>
+                        <div className="flex flex-wrap gap-2">
+                          {((selectedNft.content?.metadata as { attributes?: Array<{ trait_type: string; value: string }> }).attributes ?? []).map((a, i) => (
+                            <div key={i} className="bg-[#1A1A24] border border-white/10 rounded-lg px-3 py-1.5 flex flex-col">
+                              <span className="text-[10px] text-[#6B7280] uppercase mix-blend-screen">{a.trait_type}</span>
+                              <span className="text-[13px] font-semibold text-white">{a.value}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ): null}
+                  </div>
                 </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+              </>
+            )}
+          </DialogContent>
+        </Dialog>
+      </div>
     </div>
   );
 }

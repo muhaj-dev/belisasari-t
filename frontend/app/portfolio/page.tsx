@@ -93,368 +93,401 @@ export default function PortfolioPage() {
 
   if (!walletIsConnected) {
     return (
-      <div className="container mx-auto p-6 max-w-4xl">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Wallet className="h-6 w-6" />
-              Portfolio Tracking (Zerion)
-            </CardTitle>
-            <CardDescription>
+      <div className="min-h-screen bg-[#0A0A0F] pt-12">
+        <div className="container mx-auto p-6 max-w-2xl text-center">
+          <div className="bg-[#111118] border border-white/10 rounded-xl p-8 shadow-lg">
+            <div className="w-12 h-12 bg-[#00D4FF]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Wallet className="h-6 w-6 text-[#00D4FF]" />
+            </div>
+            <h1 className="text-[24px] font-bold text-white mb-2">Portfolio Tracking (Zerion)</h1>
+            <p className="text-[#6B7280] text-[15px] mb-8">
               Connect your wallet to view performance charts, token balances, DeFi positions, and transaction history.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
             <Button
-              className="bg-iris-primary hover:bg-iris-primary/90"
+              className="bg-[#00D4FF] hover:bg-[#00D4FF]/80 text-[#0A0A0F] font-bold px-8 h-11 border-none"
               onClick={() => ready && !authenticated && login({ loginMethods: ["wallet"], walletChainType: "solana-only" })}
             >
               <Image src="/solana.png" width={20} height={20} className="rounded-full mr-2" alt="Solana" />
               Connect wallet
             </Button>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6 max-w-6xl">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Wallet className="h-7 w-7" />
-            Portfolio (Zerion)
-          </h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Wallet performance, token balances, DeFi positions, and transaction history
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() =>
-              postTweet(
-                "Just checked my Solana portfolio on Belisasari (Zerion). #Belisasari #Solana #Portfolio"
-              )
-            }
-            disabled={twitterPosting}
-          >
-            {twitterPosting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-            Share to Twitter
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => refetch()} disabled={loading}>
-            {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <RefreshCw className="h-4 w-4 mr-2" />}
-            Refresh
-          </Button>
-        </div>
-      </div>
-
-      {error && (
-        <Card className="border-destructive/50">
-          <CardContent className="pt-6">
-            <p className="text-destructive text-sm">{error}</p>
-            <p className="text-muted-foreground text-xs mt-1">
-              Add ZERION_API_KEY to your server environment to enable Zerion. Get a key at{" "}
-              <a
-                href="https://dashboard.zerion.io"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline"
-              >
-                dashboard.zerion.io
-              </a>
+    <div className="min-h-screen bg-[#0A0A0F] py-8 text-white">
+      <div className="container mx-auto px-6 space-y-8 max-w-[1200px]">
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/10 pb-6">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-[2px] h-6 bg-[#00D4FF]"></div>
+              <h1 className="text-[24px] font-bold text-white tracking-tight flex items-center gap-2">
+                Portfolio Insight
+              </h1>
+            </div>
+            <p className="text-[#6B7280] text-[14px]">
+              Wallet performance, token balances, DeFi positions, and transaction history
             </p>
-          </CardContent>
-        </Card>
-      )}
+          </div>
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              size="sm"
+              className="bg-transparent border-white/10 text-white hover:bg-white/5 h-9"
+              onClick={() =>
+                postTweet(
+                  "Just checked my Solana portfolio on Belisasari (Zerion). #Belisasari #Solana #Portfolio"
+                )
+              }
+              disabled={twitterPosting}
+            >
+              {twitterPosting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <ExternalLink className="h-4 w-4 mr-2" />}
+              Share
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="bg-transparent border-white/10 text-[#00D4FF] hover:bg-[#00D4FF]/10 hover:text-[#00D4FF] h-9"
+              onClick={() => refetch()} 
+              disabled={loading}
+            >
+              {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <RefreshCw className="h-4 w-4 mr-2" />}
+              Refresh
+            </Button>
+          </div>
+        </div>
 
-      {/* AI insight (OpenAI) */}
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium flex items-center gap-2">
-            <Sparkles className="h-4 w-4" />
-            AI insight
-          </CardTitle>
-          <CardDescription>Get a short AI summary of your portfolio (Zerion data + OpenAI).</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={aiLoading}
-            onClick={() => {
-              const context = `Portfolio total value: ${formatUsd(totalValue)}. 24h change: ${percent1d >= 0 ? "+" : ""}${percent1d.toFixed(2)}%. Positions: ${positionList.length}. Top symbols: ${walletPositions.slice(0, 8).map((p) => p.attributes?.fungible_info?.symbol ?? "?").join(", ")}.`;
-              fetchInsight(
-                context,
-                "Based on this portfolio snapshot, give 2-3 short sentences of insight or advice (diversification, risk, or what to watch). Be concise."
-              );
-            }}
-          >
-            {aiLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Sparkles className="h-4 w-4 mr-2" />}
-            Get AI insight
-          </Button>
-          {aiError && <p className="text-destructive text-xs">{aiError}</p>}
-          {aiInsight && <p className="text-sm text-muted-foreground whitespace-pre-wrap">{aiInsight}</p>}
-        </CardContent>
-      </Card>
+        {error && (
+          <div className="bg-[#FF3B3B]/10 border border-[#FF3B3B]/20 rounded-xl p-4 flex items-start gap-3">
+            <div className="min-w-0">
+              <p className="text-[#FF3B3B] text-[14px] font-medium">{error}</p>
+              <p className="text-[#FF3B3B]/70 text-[12px] mt-1">
+                Add ZERION_API_KEY to your server environment to enable Zerion. Get a key at{" "}
+                <a
+                  href="https://dashboard.zerion.io"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline text-white font-semibold"
+                >
+                  dashboard.zerion.io
+                </a>
+              </p>
+            </div>
+          </div>
+        )}
 
-      {/* Portfolio value + 24h change */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total value</CardTitle>
-          </CardHeader>
-          <CardContent>
+        {/* Portfolio Overview Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-[#111118] border border-white/10 rounded-xl p-5 hover:border-white/20 transition-all">
+            <p className="text-[13px] text-[#6B7280] uppercase tracking-wider font-semibold mb-2">Total Value</p>
             {loading && !portfolio ? (
-              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+              <Loader2 className="h-6 w-6 animate-spin text-[#00D4FF]" />
             ) : (
-              <span className="text-2xl font-bold">{formatUsd(totalValue)}</span>
+              <h2 className="text-[32px] font-bold text-white tracking-tight">{formatUsd(totalValue)}</h2>
             )}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">24h change</CardTitle>
-          </CardHeader>
-          <CardContent>
+          </div>
+          
+          <div className="bg-[#111118] border border-white/10 rounded-xl p-5 hover:border-white/20 transition-all">
+            <p className="text-[13px] text-[#6B7280] uppercase tracking-wider font-semibold mb-2">24h Change</p>
             {loading && !portfolio ? (
-              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+              <Loader2 className="h-6 w-6 animate-spin text-[#00D4FF]" />
             ) : (
-              <span className={`text-xl font-semibold flex items-center gap-1 ${percent1d >= 0 ? "text-green-600" : "text-red-600"}`}>
-                {percent1d >= 0 ? <TrendingUp className="h-5 w-5" /> : <TrendingDown className="h-5 w-5" />}
-                {percent1d >= 0 ? "+" : ""}{percent1d.toFixed(2)}% ({formatUsd(abs1d)})
-              </span>
+              <div className="flex items-center gap-2">
+                <span className={`text-[28px] font-bold flex items-center gap-1 ${percent1d >= 0 ? "text-[#00FF88]" : "text-[#FF3B3B]"}`}>
+                  {percent1d >= 0 ? <TrendingUp className="h-6 w-6" /> : <TrendingDown className="h-6 w-6" />}
+                  {percent1d >= 0 ? "+" : ""}{percent1d.toFixed(2)}%
+                </span>
+                <span className="text-[14px] text-[#6B7280] font-medium ml-2">({formatUsd(abs1d)})</span>
+              </div>
             )}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Positions</CardTitle>
-          </CardHeader>
-          <CardContent>
+          </div>
+
+          <div className="bg-[#111118] border border-white/10 rounded-xl p-5 hover:border-white/20 transition-all">
+            <p className="text-[13px] text-[#6B7280] uppercase tracking-wider font-semibold mb-2">Active Positions</p>
             {loading && !positions ? (
-              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+              <Loader2 className="h-6 w-6 animate-spin text-[#00D4FF]" />
             ) : (
-              <span className="text-2xl font-bold">{positionList.length}</span>
+              <h2 className="text-[32px] font-bold text-white">{positionList.length}</h2>
             )}
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </div>
 
-      {/* Performance chart */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <BarChart3 className="h-5 w-5" />
-            Wallet performance (24h)
-          </CardTitle>
-          <CardDescription>Portfolio value over time (USD)</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {loading && chartData.length === 0 ? (
-            <div className="h-[280px] flex items-center justify-center">
-              <Loader2 className="h-10 w-10 animate-spin text-muted-foreground" />
-            </div>
-          ) : chartData.length === 0 ? (
-            <div className="h-[280px] flex items-center justify-center text-muted-foreground text-sm">
-              No chart data yet. Zerion may need a moment to sync your wallet.
-            </div>
-          ) : (
-            <ResponsiveContainer width="100%" height={280}>
-              <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="portfolioGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.4} />
-                    <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                <XAxis dataKey="time" tick={{ fontSize: 12 }} />
-                <YAxis tickFormatter={(v) => formatUsd(v)} tick={{ fontSize: 12 }} />
-                <Tooltip
-                  formatter={(value: number) => [formatUsd(value), "Value"]}
-                  labelFormatter={(_, payload) => payload?.[0]?.payload?.time ?? ""}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="value"
-                  stroke="hsl(var(--primary))"
-                  fill="url(#portfolioGradient)"
-                  strokeWidth={2}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Token balance tracking */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Coins className="h-5 w-5" />
-            Token balances
-          </CardTitle>
-          <CardDescription>Fungible holdings (wallet positions)</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {loading && positionList.length === 0 ? (
-            <div className="py-8 flex justify-center">
-              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-            </div>
-          ) : walletPositions.length === 0 ? (
-            <p className="text-muted-foreground text-sm py-4">No token positions to show.</p>
-          ) : (
-            <div className="space-y-2 max-h-[320px] overflow-y-auto">
-              {walletPositions.slice(0, 30).map((pos) => {
-                const info = pos.attributes?.fungible_info;
-                const value = pos.attributes?.value ?? 0;
-                const qty = pos.attributes?.quantity?.numeric ?? "0";
-                const symbol = info?.symbol ?? "???";
-                const name = info?.name ?? "";
-                const icon = info?.icon?.url;
-                return (
-                  <div
-                    key={pos.id}
-                    className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-muted/50"
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      {icon ? (
-                        <img src={icon} alt="" className="h-8 w-8 rounded-full shrink-0" />
-                      ) : (
-                        <div className="h-8 w-8 rounded-full bg-muted shrink-0" />
-                      )}
-                      <div className="min-w-0">
-                        <p className="font-medium truncate">{symbol}</p>
-                        {name && <p className="text-xs text-muted-foreground truncate">{name}</p>}
-                      </div>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <p className="font-medium">{formatUsd(value)}</p>
-                      <p className="text-xs text-muted-foreground">{Number(qty).toLocaleString(undefined, { maximumFractionDigits: 4 })}</p>
-                    </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Main Content Column */}
+          <div className="lg:col-span-2 space-y-6">
+            
+            {/* Performance chart */}
+            <div className="bg-[#111118] border border-white/10 rounded-xl overflow-hidden">
+              <div className="p-5 border-b border-white/10">
+                <h2 className="text-[18px] font-semibold text-white flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5 text-[#00D4FF]" />
+                  Wallet Performance (24h)
+                </h2>
+              </div>
+              <div className="p-5">
+                {loading && chartData.length === 0 ? (
+                  <div className="h-[280px] flex items-center justify-center">
+                    <Loader2 className="h-10 w-10 animate-spin text-[#00D4FF]" />
                   </div>
-                );
-              })}
-              {walletPositions.length > 30 && (
-                <p className="text-muted-foreground text-xs py-2">+ {walletPositions.length - 30} more</p>
-              )}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* DeFi position monitoring */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <BarChart3 className="h-5 w-5" />
-            DeFi position monitoring
-          </CardTitle>
-          <CardDescription>
-            Staked, deposited, and protocol positions (Solana protocol positions may be limited in Zerion)
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {distribution && (
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-              {[
-                { key: "wallet", label: "Wallet", value: distribution.wallet ?? 0 },
-                { key: "staked", label: "Staked", value: distribution.staked ?? 0 },
-                { key: "deposited", label: "Deposited", value: distribution.deposited ?? 0 },
-                { key: "locked", label: "Locked", value: distribution.locked ?? 0 },
-                { key: "borrowed", label: "Borrowed", value: distribution.borrowed ?? 0 },
-              ].map(({ key, label, value }) => (
-                <div key={key} className="rounded-lg border p-3">
-                  <p className="text-xs text-muted-foreground">{label}</p>
-                  <p className="font-semibold">{formatUsd(value)}</p>
-                </div>
-              ))}
-            </div>
-          )}
-          {defiPositions.length > 0 ? (
-            <div className="space-y-2">
-              <p className="text-sm font-medium">Protocol positions</p>
-              {defiPositions.map((pos) => {
-                const info = pos.attributes?.fungible_info;
-                const value = pos.attributes?.value ?? 0;
-                const protocol = pos.attributes?.protocol ?? pos.attributes?.position_type ?? "—";
-                return (
-                  <div
-                    key={pos.id}
-                    className="flex items-center justify-between py-2 px-3 rounded-lg bg-muted/30"
-                  >
-                    <div>
-                      <p className="font-medium">{info?.symbol ?? pos.id}</p>
-                      <p className="text-xs text-muted-foreground">{protocol}</p>
-                    </div>
-                    <p className="font-medium">{formatUsd(value)}</p>
+                ) : chartData.length === 0 ? (
+                  <div className="h-[280px] flex items-center justify-center bg-white/5 rounded-xl border border-dashed border-white/10">
+                    <p className="text-[#6B7280] text-[14px]">No chart data yet. Zerion may need a moment to sync your wallet.</p>
                   </div>
-                );
-              })}
+                ) : (
+                  <ResponsiveContainer width="100%" height={280}>
+                    <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="portfolioGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#00D4FF" stopOpacity={0.3} />
+                          <stop offset="100%" stopColor="#00D4FF" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+                      <XAxis dataKey="time" tick={{ fill: "#6B7280", fontSize: 12 }} axisLine={false} tickLine={false} dy={10} />
+                      <YAxis tickFormatter={(v) => formatUsd(v)} tick={{ fill: "#6B7280", fontSize: 12 }} axisLine={false} tickLine={false} dx={-10} />
+                      <Tooltip
+                        contentStyle={{ backgroundColor: "#111118", borderColor: "rgba(255,255,255,0.1)", borderRadius: "8px", color: "#fff" }}
+                        itemStyle={{ color: "#00D4FF", fontWeight: 600 }}
+                        formatter={(value: number) => [formatUsd(value), "Value"]}
+                        labelFormatter={(_, payload) => payload?.[0]?.payload?.time ?? ""}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="value"
+                        stroke="#00D4FF"
+                        fill="url(#portfolioGradient)"
+                        strokeWidth={2}
+                        activeDot={{ r: 6, fill: "#00D4FF", stroke: "#111118", strokeWidth: 2 }}
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                )}
+              </div>
             </div>
-          ) : (
-            <p className="text-muted-foreground text-sm">No DeFi protocol positions detected.</p>
-          )}
-        </CardContent>
-      </Card>
 
-      {/* Transaction history */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <History className="h-5 w-5" />
-            Transaction history
-          </CardTitle>
-          <CardDescription>Recent wallet activity</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {loading && txList.length === 0 ? (
-            <div className="py-8 flex justify-center">
-              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-            </div>
-          ) : txList.length === 0 ? (
-            <p className="text-muted-foreground text-sm py-4">No transactions to show.</p>
-          ) : (
-            <div className="space-y-2 max-h-[360px] overflow-y-auto">
-              {txList.map((tx) => {
-                const attrs = tx.attributes;
-                const op = attrs?.operation_type ?? "—";
-                const hash = attrs?.hash;
-                const minedAt = attrs?.mined_at;
-                const status = attrs?.status;
-                return (
-                  <div
-                    key={tx.id}
-                    className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-muted/50"
-                  >
-                    <div className="min-w-0">
-                      <p className="font-medium capitalize">{String(op).replace(/_/g, " ")}</p>
-                      <p className="text-xs text-muted-foreground">{minedAt ? formatDate(minedAt) : tx.id}</p>
-                    </div>
-                    <div className="flex items-center gap-2 shrink-0">
-                      {status && <Badge variant="secondary" className="text-xs">{status}</Badge>}
-                      {hash && (
-                        <a
-                          href={`https://solscan.io/tx/${hash}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-muted-foreground hover:text-foreground"
-                          title="View on Solscan"
+            {/* Token balances */}
+            <div className="bg-[#111118] border border-white/10 rounded-xl overflow-hidden">
+              <div className="p-5 border-b border-white/10 flex items-center justify-between">
+                <h2 className="text-[18px] font-semibold text-white flex items-center gap-2">
+                  <Coins className="h-5 w-5 text-[#00D4FF]" />
+                  Token Balances
+                </h2>
+                <Badge className="bg-white/10 text-white hover:bg-white/20 border-none px-3 py-1 text-[12px]">{walletPositions.length} Assets</Badge>
+              </div>
+              <div className="p-0">
+                {loading && positionList.length === 0 ? (
+                  <div className="py-12 flex justify-center">
+                    <Loader2 className="h-8 w-8 animate-spin text-[#00D4FF]" />
+                  </div>
+                ) : walletPositions.length === 0 ? (
+                  <p className="text-[#6B7280] text-[14px] py-12 text-center">No token positions available.</p>
+                ) : (
+                  <div className="max-h-[400px] overflow-y-auto divide-y divide-white/5">
+                    {walletPositions.map((pos) => {
+                      const info = pos.attributes?.fungible_info;
+                      const value = pos.attributes?.value ?? 0;
+                      const qty = pos.attributes?.quantity?.numeric ?? "0";
+                      const symbol = info?.symbol ?? "Unknown";
+                      const name = info?.name ?? "";
+                      const icon = info?.icon?.url;
+                      return (
+                        <div
+                          key={pos.id}
+                          className="flex items-center justify-between py-3 px-5 hover:bg-white/[0.02] transition-colors"
                         >
-                          <ExternalLink className="h-4 w-4" />
-                        </a>
-                      )}
-                    </div>
+                          <div className="flex items-center gap-4 min-w-0">
+                            {icon ? (
+                              <img src={icon} alt={symbol} className="h-9 w-9 rounded-full shrink-0 border border-white/10" />
+                            ) : (
+                              <div className="h-9 w-9 rounded-full bg-white/5 flex items-center justify-center shrink-0 border border-white/10">
+                                <Coins className="h-4 w-4 text-[#6B7280]" />
+                              </div>
+                            )}
+                            <div className="min-w-0">
+                              <p className="font-bold text-[15px] text-white truncate">{symbol}</p>
+                              {name && <p className="text-[12px] text-[#6B7280] truncate">{name}</p>}
+                            </div>
+                          </div>
+                          <div className="text-right shrink-0">
+                            <p className="font-bold text-[15px] text-white">{formatUsd(value)}</p>
+                            <p className="text-[12px] text-[#6B7280]">{Number(qty).toLocaleString(undefined, { maximumFractionDigits: 4 })} {symbol}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
-                );
-              })}
+                )}
+              </div>
             </div>
-          )}
-        </CardContent>
-      </Card>
+
+            {/* DeFi protocol positions */}
+            <div className="bg-[#111118] border border-white/10 rounded-xl overflow-hidden">
+              <div className="p-5 border-b border-white/10">
+                <h2 className="text-[18px] font-semibold text-white flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5 text-[#00D4FF]" />
+                  DeFi Protocol Positions
+                </h2>
+              </div>
+              <div className="p-5">
+                {distribution && (
+                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
+                    {[
+                      { key: "wallet", label: "Wallet", value: distribution.wallet ?? 0 },
+                      { key: "staked", label: "Staked", value: distribution.staked ?? 0 },
+                      { key: "deposited", label: "Deposited", value: distribution.deposited ?? 0 },
+                      { key: "locked", label: "Locked", value: distribution.locked ?? 0 },
+                      { key: "borrowed", label: "Borrowed", value: distribution.borrowed ?? 0 },
+                    ].map(({ key, label, value }) => (
+                      <div key={key} className="rounded-xl border border-white/10 bg-white/[0.02] p-3 text-center">
+                        <p className="text-[11px] uppercase tracking-wider text-[#6B7280] font-semibold mb-1">{label}</p>
+                        <p className="font-bold text-[14px] text-white">{formatUsd(value)}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
+                {defiPositions.length > 0 ? (
+                  <div className="space-y-3">
+                    <p className="text-[12px] uppercase tracking-wider text-[#6B7280] font-semibold mb-2">Active Protocols</p>
+                    {defiPositions.map((pos) => {
+                      const info = pos.attributes?.fungible_info;
+                      const value = pos.attributes?.value ?? 0;
+                      const protocol = pos.attributes?.protocol ?? pos.attributes?.position_type ?? "—";
+                      return (
+                        <div
+                          key={pos.id}
+                          className="flex items-center justify-between py-3 px-4 rounded-xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.05] transition-colors"
+                        >
+                          <div>
+                            <p className="font-bold text-[14px] text-white">{info?.symbol ?? pos.id}</p>
+                            <p className="text-[12px] text-[#6B7280] uppercase mt-0.5">{protocol}</p>
+                          </div>
+                          <p className="font-bold text-[15px] text-[#00D4FF]">{formatUsd(value)}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="py-8 text-center bg-white/[0.02] rounded-xl border border-dashed border-white/10">
+                    <p className="text-[#6B7280] text-[14px]">No active DeFi protocol positions detected.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Sidebar Column */}
+          <div className="space-y-6">
+            
+            {/* AI Insight */}
+            <div className="bg-[#111118] border border-[#A855F7]/30 rounded-xl overflow-hidden shadow-[0_0_15px_rgba(168,85,247,0.05)] relative">
+              <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-[#A855F7]/50 to-transparent"></div>
+              <div className="p-5 border-b border-white/10 bg-gradient-to-b from-[#A855F7]/5 to-transparent">
+                <h2 className="text-[16px] font-semibold text-white flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-[#A855F7]" />
+                  AI Intelligence
+                </h2>
+                <p className="text-[13px] text-[#6B7280] mt-1">Smart analysis of your token distribution</p>
+              </div>
+              <div className="p-5">
+                <Button
+                  className="w-full bg-[#A855F7]/10 hover:bg-[#A855F7]/20 text-[#A855F7] border border-[#A855F7]/30 h-10 mb-4 font-semibold"
+                  disabled={aiLoading}
+                  onClick={() => {
+                    const context = `Portfolio total value: ${formatUsd(totalValue)}. 24h change: ${percent1d >= 0 ? "+" : ""}${percent1d.toFixed(2)}%. Positions: ${positionList.length}. Top symbols: ${walletPositions.slice(0, 8).map((p) => p.attributes?.fungible_info?.symbol ?? "?").join(", ")}.`;
+                    fetchInsight(
+                      context,
+                      "Based on this portfolio snapshot, give 2-3 short sentences of insight or advice (diversification, risk, or what to watch). Be concise."
+                    );
+                  }}
+                >
+                  {aiLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Sparkles className="h-4 w-4 mr-2" />}
+                  Analyze Portfolio
+                </Button>
+                
+                {aiError && (
+                  <div className="p-3 rounded-lg bg-[#FF3B3B]/10 border border-[#FF3B3B]/20">
+                    <p className="text-[#FF3B3B] text-[12px]">{aiError}</p>
+                  </div>
+                )}
+                
+                {aiInsight && (
+                  <div className="p-4 rounded-lg bg-white/5 border border-white/10 relative">
+                    <div className="absolute -left-px top-4 bottom-4 w-[2px] bg-[#A855F7]"></div>
+                    <p className="text-[14px] text-white/90 leading-relaxed font-medium">{aiInsight}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Transaction History */}
+            <div className="bg-[#111118] border border-white/10 rounded-xl overflow-hidden">
+              <div className="p-5 border-b border-white/10">
+                <h2 className="text-[16px] font-semibold text-white flex items-center gap-2">
+                  <History className="h-4 w-4 text-[#00D4FF]" />
+                  Transaction History
+                </h2>
+              </div>
+              <div className="p-0">
+                {loading && txList.length === 0 ? (
+                  <div className="py-12 flex justify-center">
+                    <Loader2 className="h-8 w-8 animate-spin text-[#00D4FF]" />
+                  </div>
+                ) : txList.length === 0 ? (
+                  <p className="text-[#6B7280] text-[13px] py-8 text-center px-4">No recent transactions found.</p>
+                ) : (
+                  <div className="max-h-[500px] overflow-y-auto divide-y divide-white/5">
+                    {txList.map((tx) => {
+                      const attrs = tx.attributes;
+                      const op = attrs?.operation_type ?? "—";
+                      const hash = attrs?.hash;
+                      const minedAt = attrs?.mined_at;
+                      const status = attrs?.status;
+                      
+                      const isSuccess = status === 'confirmed' || status === 'success';
+                      
+                      return (
+                        <div
+                          key={tx.id}
+                          className="py-3 px-5 hover:bg-white/[0.02] transition-colors group flex items-start justify-between gap-3"
+                        >
+                          <div className="min-w-0">
+                            <p className="font-semibold text-[14px] text-white capitalize mb-1">{String(op).replace(/_/g, " ")}</p>
+                            <div className="flex items-center gap-2 text-[11px] text-[#6B7280]">
+                              <span>{minedAt ? formatDate(minedAt) : tx.id.slice(0, 10)}</span>
+                              {status && (
+                                <Badge variant="outline" className={`h-4 text-[9px] uppercase px-1.5 border-none font-bold ${isSuccess ? 'bg-[#00FF88]/10 text-[#00FF88]' : 'bg-white/10 text-white'}`}>
+                                  {status}
+                                </Badge>
+                              )}
+                            </div>
+                          </div>
+                          
+                          {hash && (
+                            <a
+                              href={`https://solscan.io/tx/${hash}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-[#6B7280] hover:bg-white/10 hover:text-white shrink-0 transition-all opacity-50 group-hover:opacity-100 mt-1"
+                              title="View on Solscan"
+                            >
+                              <ExternalLink className="h-3.5 w-3.5" />
+                            </a>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

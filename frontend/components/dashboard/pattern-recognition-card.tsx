@@ -32,6 +32,7 @@ export function PatternRecognitionCard({ className }: PatternRecognitionCardProp
   const [isLoading, setIsLoading] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+  const [activeTab, setActiveTab] = useState('summary');
 
   // Load pattern data
   const loadPatternData = async () => {
@@ -116,187 +117,202 @@ export function PatternRecognitionCard({ className }: PatternRecognitionCardProp
   const getInsightTypeIcon = (insightType: string) => {
     switch (insightType) {
       case 'opportunity':
-        return <Target className="h-4 w-4 text-green-600" />;
+        return <Target className="h-4 w-4" style={{ color: 'var(--dash-green)' }} />;
       case 'warning':
-        return <AlertTriangle className="h-4 w-4 text-yellow-600" />;
+        return <AlertTriangle className="h-4 w-4" style={{ color: '#EAB308' }} />;
       case 'trend':
-        return <TrendingUp className="h-4 w-4 text-blue-600" />;
+        return <TrendingUp className="h-4 w-4" style={{ color: 'var(--dash-cyan)' }} />;
       case 'anomaly':
-        return <AlertTriangle className="h-4 w-4 text-red-600" />;
+        return <AlertTriangle className="h-4 w-4" style={{ color: 'var(--dash-red)' }} />;
       default:
-        return <Lightbulb className="h-4 w-4 text-gray-600" />;
+        return <Lightbulb className="h-4 w-4" style={{ color: 'var(--dash-muted)' }} />;
     }
   };
 
-  return (
-    <Card className={className}>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Brain className="h-6 w-6 text-purple-600" />
-            <div>
-              <CardTitle>Pattern Recognition</CardTitle>
-              <CardDescription>
-                AI-powered pattern detection and analysis
-              </CardDescription>
-            </div>
-          </div>
-          <div className="flex space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={loadPatternData}
-              disabled={isLoading}
-            >
-              <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-            </Button>
-            <Button
-              size="sm"
-              onClick={startPatternRecognition}
-              disabled={isRunning}
-            >
-              <Play className="h-4 w-4 mr-2" />
-              {isRunning ? 'Running...' : 'Start Analysis'}
-            </Button>
-          </div>
-        </div>
-        {lastUpdate && (
-          <p className="text-xs text-muted-foreground">
-            Last updated: {lastUpdate.toLocaleTimeString()}
-          </p>
-        )}
-      </CardHeader>
-      <CardContent>
-        <Tabs defaultValue="summary" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="summary">Summary</TabsTrigger>
-            <TabsTrigger value="detections">Detections</TabsTrigger>
-            <TabsTrigger value="insights">Insights</TabsTrigger>
-          </TabsList>
+  const tabs = [
+    { key: 'summary', label: 'Summary' },
+    { key: 'detections', label: 'Detections' },
+    { key: 'insights', label: 'Insights' },
+  ];
 
-          <TabsContent value="summary" className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {patternSummary.map((summary) => (
-                <div key={summary.pattern_type} className="p-4 border rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center space-x-2">
-                      {getPatternTypeIcon(summary.pattern_type)}
-                      <span className="font-medium capitalize">
-                        {summary.pattern_type.replace('_', ' ')}
+  return (
+    <div className={`dash-card ${className || ''}`}>
+      {/* Header */}
+      <div className="flex items-center justify-between mb-1">
+        <span style={{ fontSize: 16, fontWeight: 600, color: 'var(--dash-white)' }}>
+          Pattern Recognition
+        </span>
+        <div className="flex items-center gap-2">
+          <button
+            className="dash-play-btn"
+            onClick={loadPatternData}
+            disabled={isLoading}
+          >
+            <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin' : ''}`} />
+          </button>
+          <button
+            className="dash-btn-cyan"
+            onClick={startPatternRecognition}
+            disabled={isRunning}
+          >
+            <Play className="h-3.5 w-3.5" />
+            {isRunning ? 'Running...' : 'Start Analysis'}
+          </button>
+        </div>
+      </div>
+      {lastUpdate && (
+        <p style={{ fontSize: 11, color: 'var(--dash-muted)', marginBottom: 12 }}>
+          Last updated: {lastUpdate.toLocaleTimeString()}
+        </p>
+      )}
+
+      {/* Tab bar */}
+      <div className="flex gap-0 border-b" style={{ borderColor: 'var(--dash-border)' }}>
+        {tabs.map((tab) => (
+          <button
+            key={tab.key}
+            className={`dash-tab ${activeTab === tab.key ? 'dash-tab--active' : ''}`}
+            onClick={() => setActiveTab(tab.key)}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Tab content */}
+      <div className="mt-4">
+        {activeTab === 'summary' && (
+          <div className="space-y-3">
+            {patternSummary.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {patternSummary.map((summary) => (
+                  <div key={summary.pattern_type} className="p-3 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dash-border)' }}>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2" style={{ color: 'var(--dash-white)' }}>
+                        {getPatternTypeIcon(summary.pattern_type)}
+                        <span style={{ fontSize: 13, fontWeight: 500 }} className="capitalize">
+                          {summary.pattern_type.replace('_', ' ')}
+                        </span>
+                      </div>
+                      <span style={{ fontSize: 11, color: 'var(--dash-cyan)', background: 'rgba(0,212,255,0.1)', padding: '2px 8px', borderRadius: 6 }}>
+                        {summary.detection_count} detected
                       </span>
                     </div>
-                    <Badge variant="secondary">
-                      {summary.detection_count} detected
-                    </Badge>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span>Avg Strength</span>
-                      <span>{(summary.avg_strength * 100).toFixed(1)}%</span>
+                    <div className="space-y-2">
+                      <div className="flex justify-between" style={{ fontSize: 12 }}>
+                        <span style={{ color: 'var(--dash-muted)' }}>Avg Strength</span>
+                        <span style={{ color: 'var(--dash-white)' }}>{(summary.avg_strength * 100).toFixed(1)}%</span>
+                      </div>
+                      <div style={{ height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.06)' }}>
+                        <div style={{ height: '100%', borderRadius: 2, background: 'var(--dash-cyan)', width: `${summary.avg_strength * 100}%` }} />
+                      </div>
+                      <div className="flex justify-between" style={{ fontSize: 12 }}>
+                        <span style={{ color: 'var(--dash-muted)' }}>Avg Confidence</span>
+                        <span style={{ color: 'var(--dash-white)' }}>{(summary.avg_confidence * 100).toFixed(1)}%</span>
+                      </div>
+                      <div style={{ height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.06)' }}>
+                        <div style={{ height: '100%', borderRadius: 2, background: 'var(--dash-green)', width: `${summary.avg_confidence * 100}%` }} />
+                      </div>
                     </div>
-                    <Progress value={summary.avg_strength * 100} className="h-2" />
-                    <div className="flex justify-between text-sm">
-                      <span>Avg Confidence</span>
-                      <span>{(summary.avg_confidence * 100).toFixed(1)}%</span>
-                    </div>
-                    <Progress value={summary.avg_confidence * 100} className="h-2" />
                   </div>
-                </div>
-              ))}
-            </div>
-            {patternSummary.length === 0 && (
-              <div className="text-center py-8 text-muted-foreground">
-                <Brain className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>No pattern data available</p>
-                <p className="text-sm">Run pattern recognition to detect patterns</p>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <Brain className="h-10 w-10 mx-auto mb-3" style={{ color: 'var(--dash-muted)', opacity: 0.5 }} />
+                <p style={{ color: 'var(--dash-muted)', fontSize: 13 }}>No pattern data available</p>
+                <p style={{ color: 'var(--dash-muted)', fontSize: 12, opacity: 0.7 }}>Run pattern recognition to detect patterns</p>
               </div>
             )}
-          </TabsContent>
+          </div>
+        )}
 
-          <TabsContent value="detections" className="space-y-4">
-            <div className="space-y-3">
-              {patternDetections.map((detection) => (
-                <div key={detection.id} className="p-4 border rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center space-x-2">
+        {activeTab === 'detections' && (
+          <div className="space-y-3">
+            {patternDetections.length > 0 ? (
+              patternDetections.map((detection) => (
+                <div key={detection.id} className="p-3 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dash-border)' }}>
+                  <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
+                    <div className="flex items-center gap-2" style={{ color: 'var(--dash-white)' }}>
                       {getPatternTypeIcon(detection.pattern_type)}
-                      <span className="font-medium">{detection.token_symbol}</span>
-                      <Badge className={getPatternTypeColor(detection.pattern_type)}>
+                      <span style={{ fontWeight: 500, fontSize: 13 }}>{detection.token_symbol}</span>
+                      <span style={{ fontSize: 11, padding: '2px 8px', borderRadius: 6, background: 'rgba(168,85,247,0.1)', color: 'var(--dash-purple)' }}>
                         {detection.pattern_name}
-                      </Badge>
+                      </span>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <Badge variant="outline">
-                        Strength: {(detection.pattern_strength * 100).toFixed(1)}%
-                      </Badge>
-                      <Badge variant="outline">
-                        Confidence: {(detection.pattern_confidence * 100).toFixed(1)}%
-                      </Badge>
+                    <div className="flex items-center gap-2">
+                      <span style={{ fontSize: 11, color: 'var(--dash-muted)', border: '1px solid var(--dash-border)', padding: '2px 6px', borderRadius: 4 }}>
+                        Str: {(detection.pattern_strength * 100).toFixed(1)}%
+                      </span>
+                      <span style={{ fontSize: 11, color: 'var(--dash-muted)', border: '1px solid var(--dash-border)', padding: '2px 6px', borderRadius: 4 }}>
+                        Conf: {(detection.pattern_confidence * 100).toFixed(1)}%
+                      </span>
                     </div>
                   </div>
-                  <div className="flex justify-between text-sm text-muted-foreground">
+                  <div className="flex justify-between" style={{ fontSize: 11, color: 'var(--dash-muted)' }}>
                     <span>Detected: {new Date(detection.detected_at).toLocaleString()}</span>
-                    <span className={detection.is_active ? 'text-green-600' : 'text-gray-500'}>
+                    <span style={{ color: detection.is_active ? 'var(--dash-green)' : 'var(--dash-muted)' }}>
                       {detection.is_active ? 'Active' : 'Expired'}
                     </span>
                   </div>
                 </div>
-              ))}
-            </div>
-            {patternDetections.length === 0 && (
-              <div className="text-center py-8 text-muted-foreground">
-                <Eye className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>No pattern detections available</p>
-                <p className="text-sm">Run pattern recognition to detect patterns</p>
+              ))
+            ) : (
+              <div className="text-center py-8">
+                <Eye className="h-10 w-10 mx-auto mb-3" style={{ color: 'var(--dash-muted)', opacity: 0.5 }} />
+                <p style={{ color: 'var(--dash-muted)', fontSize: 13 }}>No pattern detections available</p>
+                <p style={{ color: 'var(--dash-muted)', fontSize: 12, opacity: 0.7 }}>Run pattern recognition to detect patterns</p>
               </div>
             )}
-          </TabsContent>
+          </div>
+        )}
 
-          <TabsContent value="insights" className="space-y-4">
-            <div className="space-y-3">
-              {patternInsights.map((insight) => (
-                <div key={insight.id} className="p-4 border rounded-lg">
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex items-start space-x-2">
+        {activeTab === 'insights' && (
+          <div className="space-y-3">
+            {patternInsights.length > 0 ? (
+              patternInsights.map((insight) => (
+                <div key={insight.id} className="p-3 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dash-border)' }}>
+                  <div className="flex items-start justify-between mb-2 flex-wrap gap-2">
+                    <div className="flex items-start gap-2">
                       {getInsightTypeIcon(insight.insight_type)}
                       <div>
-                        <h4 className="font-medium">{insight.insight_title}</h4>
-                        <p className="text-sm text-muted-foreground">
+                        <h4 style={{ fontWeight: 500, fontSize: 13, color: 'var(--dash-white)' }}>{insight.insight_title}</h4>
+                        <p style={{ fontSize: 12, color: 'var(--dash-muted)', marginTop: 2 }}>
                           {insight.insight_description}
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <Badge variant="outline">
-                        Confidence: {(insight.confidence_score * 100).toFixed(1)}%
-                      </Badge>
-                      <Badge variant="outline">
+                    <div className="flex items-center gap-2">
+                      <span style={{ fontSize: 11, color: 'var(--dash-muted)', border: '1px solid var(--dash-border)', padding: '2px 6px', borderRadius: 4 }}>
+                        Conf: {(insight.confidence_score * 100).toFixed(1)}%
+                      </span>
+                      <span style={{ fontSize: 11, color: 'var(--dash-muted)', border: '1px solid var(--dash-border)', padding: '2px 6px', borderRadius: 4 }}>
                         Impact: {(insight.impact_score * 100).toFixed(1)}%
-                      </Badge>
+                      </span>
                     </div>
                   </div>
                   {insight.recommendation && (
-                    <div className="mt-2 p-2 bg-blue-50 rounded text-sm">
-                      <strong>Recommendation:</strong> {insight.recommendation}
+                    <div className="mt-2 p-2 rounded" style={{ background: 'rgba(0,212,255,0.06)', fontSize: 12 }}>
+                      <strong style={{ color: 'var(--dash-cyan)' }}>Recommendation:</strong>{' '}
+                      <span style={{ color: 'var(--dash-white)' }}>{insight.recommendation}</span>
                     </div>
                   )}
-                  <div className="flex justify-between text-sm text-muted-foreground mt-2">
+                  <div className="flex justify-between mt-2" style={{ fontSize: 11, color: 'var(--dash-muted)' }}>
                     <span>Token: {insight.token_symbol}</span>
                     <span>Created: {new Date(insight.created_at).toLocaleString()}</span>
                   </div>
                 </div>
-              ))}
-            </div>
-            {patternInsights.length === 0 && (
-              <div className="text-center py-8 text-muted-foreground">
-                <Lightbulb className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>No pattern insights available</p>
-                <p className="text-sm">Run pattern recognition to generate insights</p>
+              ))
+            ) : (
+              <div className="text-center py-8">
+                <Lightbulb className="h-10 w-10 mx-auto mb-3" style={{ color: 'var(--dash-muted)', opacity: 0.5 }} />
+                <p style={{ color: 'var(--dash-muted)', fontSize: 13 }}>No pattern insights available</p>
+                <p style={{ color: 'var(--dash-muted)', fontSize: 12, opacity: 0.7 }}>Run pattern recognition to generate insights</p>
               </div>
             )}
-          </TabsContent>
-        </Tabs>
-      </CardContent>
-    </Card>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

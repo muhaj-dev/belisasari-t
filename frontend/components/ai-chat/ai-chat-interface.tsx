@@ -16,7 +16,8 @@ import {
   BarChart3,
   Loader2,
   Volume2,
-  VolumeX
+  VolumeX,
+  TrendingUp
 } from 'lucide-react';
 
 interface Message {
@@ -24,7 +25,7 @@ interface Message {
   type: 'user' | 'ai' | 'system';
   content: string;
   timestamp: Date;
-  data?: any; // For charts, recommendations, etc.
+  data?: any;
   isTyping?: boolean;
 }
 
@@ -45,7 +46,7 @@ export function AIChatInterface({
     {
       id: '1',
       type: 'ai',
-      content: 'Hello! I\'m Belisasari, your AI memecoin hunting assistant. I can help you find trending memecoins, analyze market data, and provide trading insights. What would you like to know?',
+      content: 'Hello! I\'m Elfa, your AI memecoin hunting assistant on the Stitch network. I can help you find trending tokens, analyze market data, and provide trading insights. What would you like to know?',
       timestamp: new Date(),
     }
   ]);
@@ -56,12 +57,10 @@ export function AIChatInterface({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Handle sending messages
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
 
@@ -76,11 +75,9 @@ export function AIChatInterface({
     setInputValue('');
     setIsLoading(true);
 
-    // Call onMessage callback
     onMessage?.(userMessage);
 
     try {
-      // Simulate AI response (replace with actual API call)
       const response = await simulateAIResponse(inputValue);
       
       const aiMessage: Message = {
@@ -107,14 +104,12 @@ export function AIChatInterface({
     }
   };
 
-  // Handle voice input
   const handleVoiceInput = () => {
     if (isListening) {
       setIsListening(false);
       return;
     }
 
-    // Start voice recognition
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
       const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
       const recognition = new SpeechRecognition();
@@ -123,20 +118,13 @@ export function AIChatInterface({
       recognition.interimResults = false;
       recognition.lang = 'en-US';
 
-      recognition.onstart = () => {
-        setIsListening(true);
-      };
-
+      recognition.onstart = () => setIsListening(true);
       recognition.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
         setInputValue(transcript);
         onVoiceCommand?.(transcript);
       };
-
-      recognition.onend = () => {
-        setIsListening(false);
-      };
-
+      recognition.onend = () => setIsListening(false);
       recognition.onerror = (event: any) => {
         console.error('Speech recognition error:', event.error);
         setIsListening(false);
@@ -148,7 +136,6 @@ export function AIChatInterface({
     }
   };
 
-  // Handle key press
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -156,7 +143,6 @@ export function AIChatInterface({
     }
   };
 
-  // Simulate AI response (replace with actual API call)
   const simulateAIResponse = async (input: string): Promise<{ content: string; data?: any }> => {
     await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
 
@@ -164,7 +150,7 @@ export function AIChatInterface({
 
     if (lowerInput.includes('trending') || lowerInput.includes('trend')) {
       return {
-        content: 'Here are the current trending memecoins based on TikTok data:',
+        content: 'Here are the current trending memecoins based on network data:',
         data: {
           type: 'trending',
           tokens: [
@@ -181,8 +167,8 @@ export function AIChatInterface({
         content: 'Based on current market data and social sentiment, here\'s my analysis:',
         data: {
           type: 'analysis',
-          summary: 'Strong bullish momentum detected across multiple memecoins with high TikTok engagement',
-          recommendation: 'Consider small positions in trending tokens with proper risk management',
+          summary: 'Strong bullish momentum detected across multiple tokens with high social engagement scores.',
+          recommendation: 'Consider scaled entries in trending tokens with strict invalidation levels.',
           confidence: 0.75
         }
       };
@@ -190,39 +176,43 @@ export function AIChatInterface({
 
     if (lowerInput.includes('help') || lowerInput.includes('what can you do')) {
       return {
-        content: 'I can help you with:\n\n• Finding trending memecoins from TikTok\n• Analyzing market data and sentiment\n• Providing trading recommendations\n• Explaining trading strategies\n• Tracking your portfolio performance\n\nJust ask me anything about memecoin trading!',
+        content: 'I can help you with:\n\n• Finding trending tokens from the network\n• Analyzing market data and sentiment\n• Providing trading recommendations\n• Explaining trading strategies\n• Tracking your portfolio performance\n\nJust ask me anything about crypto trading!',
         data: { type: 'help' }
       };
     }
 
     return {
-      content: 'I understand you\'re asking about memecoins. Could you be more specific about what you\'d like to know? I can help with trending analysis, market insights, or trading recommendations.',
+      content: 'I understand you\'re asking about tokens. Could you be more specific about what you\'d like to know? I can help with trending analysis, market insights, or trading recommendations.',
       data: { type: 'general' }
     };
   };
 
-  // Render message content
   const renderMessageContent = (message: Message) => {
     if (message.data?.type === 'trending') {
       return (
-        <div className="space-y-3">
-          <p>{message.content}</p>
+        <div className="space-y-4">
+          <p className="text-white/90 leading-relaxed font-medium">{message.content}</p>
           <div className="space-y-2">
             {message.data.tokens.map((token: any, index: number) => (
-              <Card key={index} className="p-3">
+              <div key={index} className="p-3 bg-white/5 border border-white/5 rounded-xl hover:border-white/10 transition-colors">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Badge variant="outline">{token.symbol}</Badge>
-                    <span className="text-sm font-medium">${token.price.toFixed(6)}</span>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 rounded-full bg-[#1A1A24] flex items-center justify-center text-[10px] font-bold text-white border border-white/10">
+                      {token.symbol.slice(0,2)}
+                    </div>
+                    <div>
+                      <span className="font-bold text-white text-[14px] tracking-tight">{token.symbol}</span>
+                      <div className="text-[12px] font-medium text-white/90">${token.price.toFixed(6)}</div>
+                    </div>
                   </div>
                   <div className="text-right">
-                    <div className={`text-sm ${token.change > 0 ? 'text-green-500' : 'text-red-500'}`}>
+                    <div className={`text-[13px] font-bold ${token.change > 0 ? 'text-[#00FF88]' : 'text-red-500'}`}>
                       {token.change > 0 ? '+' : ''}{token.change}%
                     </div>
-                    <div className="text-xs text-muted-foreground">Vol: {token.volume}</div>
+                    <div className="text-[11px] font-medium text-[#6B7280]">Vol: {token.volume}</div>
                   </div>
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
         </div>
@@ -231,71 +221,78 @@ export function AIChatInterface({
 
     if (message.data?.type === 'analysis') {
       return (
-        <div className="space-y-3">
-          <p>{message.content}</p>
-          <Card className="p-4">
-            <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <BarChart3 className="h-4 w-4 text-blue-500" />
-                <span className="font-medium">Analysis Summary</span>
-              </div>
-              <p className="text-sm text-muted-foreground">{message.data.summary}</p>
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Recommendation:</span>
-                <Badge variant="outline">{message.data.recommendation}</Badge>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Confidence:</span>
-                <span className="text-sm font-medium">{Math.round(message.data.confidence * 100)}%</span>
+        <div className="space-y-4">
+          <p className="text-white/90 leading-relaxed font-medium">{message.content}</p>
+          <div className="p-4 bg-white/5 border border-white/5 rounded-xl space-y-3">
+            <div className="flex items-center space-x-2 pb-2 border-b border-white/10">
+              <BarChart3 className="h-4 w-4 text-[#A855F7]" />
+              <span className="font-bold text-[13px] text-white tracking-wide uppercase">Analysis Summary</span>
+            </div>
+            <p className="text-[13px] text-white/80 leading-relaxed">{message.data.summary}</p>
+            <div className="flex items-start justify-between gap-4 pt-2">
+              <span className="text-[12px] text-[#6B7280] font-medium shrink-0">Recommendation:</span>
+              <span className="text-[12px] font-bold text-[#00D4FF] text-right">{message.data.recommendation}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-[12px] text-[#6B7280] font-medium shrink-0">Confidence:</span>
+              <div className="flex items-center gap-2">
+                <div className="w-20 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-[#00D4FF] to-[#00FF88]" 
+                    style={{ width: `${message.data.confidence * 100}%` }}
+                  />
+                </div>
+                <span className="text-[12px] font-bold text-white">{Math.round(message.data.confidence * 100)}%</span>
               </div>
             </div>
-          </Card>
+          </div>
         </div>
       );
     }
 
-    return <p className="whitespace-pre-wrap">{message.content}</p>;
+    return <p className="whitespace-pre-wrap text-white/90 leading-relaxed font-medium">{message.content}</p>;
   };
 
   return (
-    <div className={`flex flex-col h-full bg-background ${className}`}>
+    <div className={`flex flex-col h-full bg-transparent ${className}`}>
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b">
-        <div className="flex items-center space-x-2">
-          <Bot className="h-6 w-6 text-blue-500" />
-          <h2 className="text-lg font-semibold">Belisasari AI Assistant</h2>
+      <div className="flex items-center justify-between p-4 border-b border-white/10 bg-white/[0.02]">
+        <div className="flex items-center space-x-3">
+          <div className="w-8 h-8 rounded-lg bg-[#00D4FF]/10 flex items-center justify-center">
+            <Bot className="h-5 w-5 text-[#00D4FF]" />
+          </div>
+          <h2 className="text-[15px] font-bold text-white tracking-tight">Elfa Assistant</h2>
         </div>
-        <div className="flex items-center space-x-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsMuted(!isMuted)}
-          >
-            {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
-          </Button>
-        </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-[#6B7280] hover:text-white hover:bg-white/5 rounded-lg"
+          onClick={() => setIsMuted(!isMuted)}
+        >
+          {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+        </Button>
       </div>
 
       {/* Messages */}
-      <ScrollArea className="flex-1 p-4">
-        <div className="space-y-4">
+      <ScrollArea className="flex-1 p-4 bg-transparent">
+        <div className="space-y-6">
           {messages.map((message) => (
             <div
               key={message.id}
-              className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+              className={`flex w-full ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`flex items-start space-x-2 max-w-[80%] ${
+                className={`flex items-end space-x-3 max-w-[85%] ${
                   message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''
                 }`}
               >
                 <div
-                  className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+                  className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center shadow-lg ${
                     message.type === 'user'
-                      ? 'bg-blue-500 text-white'
+                      ? 'bg-white text-[#111118]'
                       : message.type === 'ai'
-                      ? 'bg-green-500 text-white'
-                      : 'bg-gray-500 text-white'
+                      ? 'bg-[#111118] border border-[#00D4FF]/30 text-[#00D4FF]'
+                      : 'bg-yellow-500/20 text-yellow-500 border border-yellow-500/30'
                   }`}
                 >
                   {message.type === 'user' ? (
@@ -306,40 +303,42 @@ export function AIChatInterface({
                     <AlertCircle className="h-4 w-4" />
                   )}
                 </div>
-                <div
-                  className={`rounded-lg px-4 py-2 ${
-                    message.type === 'user'
-                      ? 'bg-blue-500 text-white'
-                      : message.type === 'ai'
-                      ? 'bg-muted'
-                      : 'bg-yellow-100 text-yellow-800'
-                  }`}
-                >
-                  {message.isTyping ? (
-                    <div className="flex items-center space-x-1">
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      <span className="text-sm">Belisasari is typing...</span>
-                    </div>
-                  ) : (
-                    renderMessageContent(message)
-                  )}
-                  <div className="text-xs opacity-70 mt-1">
-                    {message.timestamp.toLocaleTimeString()}
+                
+                <div className={`flex flex-col ${message.type === 'user' ? 'items-end' : 'items-start'}`}>
+                   {message.type === 'ai' && (
+                     <span className="text-[11px] font-medium text-[#6B7280] mb-1 ml-1">Elfa</span>
+                   )}
+                  <div
+                    className={`rounded-2xl px-5 py-3 shadow-sm ${
+                      message.type === 'user'
+                        ? 'bg-[#00D4FF] text-[#111118] rounded-br-sm'
+                        : message.type === 'ai'
+                        ? 'bg-[#1A1A24] text-white border border-white/10 rounded-bl-sm'
+                        : 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20'
+                    }`}
+                  >
+                    {renderMessageContent(message)}
+                  </div>
+                  <div className={`text-[10px] font-medium text-[#6B7280] mt-1.5 ${message.type === 'user' ? 'mr-1' : 'ml-1'}`}>
+                    {message.timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                   </div>
                 </div>
               </div>
             </div>
           ))}
+          
           {isLoading && (
             <div className="flex justify-start">
-              <div className="flex items-start space-x-2 max-w-[80%]">
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center">
+              <div className="flex items-end space-x-3 max-w-[80%]">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#111118] border border-[#00D4FF]/30 text-[#00D4FF] flex items-center justify-center">
                   <Bot className="h-4 w-4" />
                 </div>
-                <div className="rounded-lg px-4 py-2 bg-muted">
-                  <div className="flex items-center space-x-1">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    <span className="text-sm">Belisasari is thinking...</span>
+                <div className="flex flex-col items-start">
+                   <span className="text-[11px] font-medium text-[#6B7280] mb-1 ml-1">Elfa</span>
+                  <div className="rounded-2xl px-5 py-3.5 bg-[#1A1A24] border border-white/10 rounded-bl-sm flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 bg-[#00D4FF] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <span className="w-1.5 h-1.5 bg-[#00D4FF] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <span className="w-1.5 h-1.5 bg-[#00D4FF] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                   </div>
                 </div>
               </div>
@@ -350,36 +349,39 @@ export function AIChatInterface({
       </ScrollArea>
 
       {/* Input */}
-      <div className="p-4 border-t">
-        <div className="flex items-center space-x-2">
+      <div className="p-4 bg-white/[0.02]">
+        <div className="relative flex items-center">
           <Input
             ref={inputRef}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Ask Belisasari about memecoins..."
+            placeholder="Ask Elfa about tokens, trends, or analysis..."
             disabled={isLoading}
-            className="flex-1"
+            className="w-full h-14 bg-[#111118] border-white/10 rounded-xl pl-4 pr-24 text-[15px] text-white focus-visible:ring-1 focus-visible:ring-[#00D4FF] focus-visible:border-[#00D4FF] placeholder:text-[#6B7280]"
           />
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleVoiceInput}
-            disabled={isLoading}
-            className={isListening ? 'bg-red-500 text-white' : ''}
-          >
-            {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-          </Button>
-          <Button
-            onClick={handleSendMessage}
-            disabled={!inputValue.trim() || isLoading}
-            size="sm"
-          >
-            <Send className="h-4 w-4" />
-          </Button>
+          <div className="absolute right-1.5 flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleVoiceInput}
+              disabled={isLoading}
+              className={`h-11 w-11 rounded-lg transition-colors ${isListening ? 'bg-red-500/20 text-red-500 hover:bg-red-500/30 hover:text-red-500' : 'text-[#6B7280] hover:text-white hover:bg-white/5'}`}
+            >
+              {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+            </Button>
+            <Button
+              onClick={handleSendMessage}
+              disabled={!inputValue.trim() || isLoading}
+              size="icon"
+              className="h-11 w-11 rounded-lg bg-[#00D4FF] text-[#111118] hover:bg-[#00D4FF]/80 disabled:bg-[#00D4FF]/20 disabled:text-[#00D4FF]/50"
+            >
+              <Send className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
-        <div className="mt-2 text-xs text-muted-foreground">
-          Press Enter to send, or use voice input with the microphone button
+        <div className="mt-3 text-center text-[11px] font-medium text-[#6B7280]">
+          Elfa can make mistakes. Verify important trading data.
         </div>
       </div>
     </div>

@@ -43,7 +43,7 @@ export interface IIdentity {
 
 /** Tapestry content (post) list item */
 export interface IContentItem {
-  content: { id: string; created_at: number; namespace: string } | null;
+  content: { id: string; created_at: number; namespace: string; text?: string } | null;
   socialCounts: { likeCount: number; commentCount: number };
   authorProfile: IProfile;
   requestingProfileSocialInfo?: { hasLiked?: boolean };

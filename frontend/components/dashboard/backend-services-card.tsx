@@ -46,6 +46,7 @@ export function BackendServicesCard({ className }: BackendServicesCardProps) {
     bitquery?: string;
     decisionAgent?: string;
   }>({});
+  const [activeTab, setActiveTab] = useState('status');
 
   // Check service status
   const checkServiceStatus = async () => {
@@ -129,163 +130,167 @@ export function BackendServicesCard({ className }: BackendServicesCardProps) {
       key: 'adkWorkflow' as keyof ServiceStatus,
       name: 'ADK Workflow',
       description: 'Multi-agent workflow orchestrator',
-      icon: <Zap className="h-5 w-5" />,
-      color: 'text-blue-600'
+      icon: <Zap className="h-4 w-4" />,
     },
     {
       key: 'patternRecognition' as keyof ServiceStatus,
       name: 'Pattern Recognition',
       description: 'AI-powered pattern detection',
-      icon: <Brain className="h-5 w-5" />,
-      color: 'text-purple-600'
+      icon: <Brain className="h-4 w-4" />,
     },
     {
       key: 'bitquery' as keyof ServiceStatus,
       name: 'Jupiter Token & Price Data',
       description: 'Jupiter quotes → tokens & prices',
-      icon: <Database className="h-5 w-5" />,
-      color: 'text-green-600'
+      icon: <Database className="h-4 w-4" />,
     },
     {
       key: 'decisionAgent' as keyof ServiceStatus,
       name: 'Decision Agent',
       description: 'Real-time decision making',
-      icon: <Target className="h-5 w-5" />,
-      color: 'text-orange-600'
+      icon: <Target className="h-4 w-4" />,
     }
   ];
 
-  const getStatusIcon = (isActive: boolean) => {
-    return isActive ? (
-      <CheckCircle className="h-5 w-5 text-green-600" />
-    ) : (
-      <XCircle className="h-5 w-5 text-red-600" />
-    );
-  };
-
-  const getStatusBadge = (isActive: boolean) => {
-    return isActive ? (
-      <Badge variant="default" className="bg-green-100 text-green-800">
-        Active
-      </Badge>
-    ) : (
-      <Badge variant="destructive">
-        Inactive
-      </Badge>
-    );
-  };
+  const tabs = [
+    { key: 'status', label: 'Service Status' },
+    { key: 'logs', label: 'Service Logs' },
+  ];
 
   return (
-    <Card className={className}>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Activity className="h-6 w-6 text-blue-600" />
-            <div>
-              <CardTitle>Backend Services</CardTitle>
-              <CardDescription>
-                Manage and monitor backend services
-              </CardDescription>
-            </div>
-          </div>
-          <div className="flex space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={checkServiceStatus}
-              disabled={isLoading}
-            >
-              <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-            </Button>
-            <Button
-              size="sm"
-              onClick={startAllServices}
-              disabled={isRunning}
-            >
-              <Play className="h-4 w-4 mr-2" />
-              {isRunning ? 'Starting...' : 'Start All'}
-            </Button>
-          </div>
+    <div className={`dash-card ${className || ''}`}>
+      {/* Header */}
+      <div className="flex items-center justify-between mb-1">
+        <span style={{ fontSize: 16, fontWeight: 600, color: 'var(--dash-white)' }}>
+          Backend Services
+        </span>
+        <div className="flex items-center gap-2">
+          <button
+            className="dash-play-btn"
+            onClick={checkServiceStatus}
+            disabled={isLoading}
+          >
+            <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin' : ''}`} />
+          </button>
+          <button
+            className="dash-btn-cyan"
+            onClick={startAllServices}
+            disabled={isRunning}
+          >
+            <Play className="h-3.5 w-3.5" />
+            {isRunning ? 'Starting...' : 'Start All'}
+          </button>
         </div>
-        {lastUpdate && (
-          <p className="text-xs text-muted-foreground">
-            Last checked: {lastUpdate.toLocaleTimeString()}
-          </p>
-        )}
-      </CardHeader>
-      <CardContent>
-        <Tabs defaultValue="status" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="status">Service Status</TabsTrigger>
-            <TabsTrigger value="logs">Service Logs</TabsTrigger>
-          </TabsList>
+      </div>
+      {lastUpdate && (
+        <p style={{ fontSize: 11, color: 'var(--dash-muted)', marginBottom: 12 }}>
+          Last checked: {lastUpdate.toLocaleTimeString()}
+        </p>
+      )}
 
-          <TabsContent value="status" className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {services.map((service) => (
-                <div key={service.key} className="p-4 border rounded-lg">
+      {/* Tab bar */}
+      <div className="flex gap-0 border-b" style={{ borderColor: 'var(--dash-border)' }}>
+        {tabs.map((tab) => (
+          <button
+            key={tab.key}
+            className={`dash-tab ${activeTab === tab.key ? 'dash-tab--active' : ''}`}
+            onClick={() => setActiveTab(tab.key)}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Tab content */}
+      <div className="mt-4">
+        {activeTab === 'status' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {services.map((service) => {
+              const isActive = serviceStatus[service.key];
+              return (
+                <div
+                  key={service.key}
+                  className={`dash-service-card ${isActive ? 'dash-service-card--active' : 'dash-service-card--inactive'}`}
+                >
+                  {/* Status badge + live dot */}
                   <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center space-x-2">
-                      <div className={service.color}>
-                        {service.icon}
-                      </div>
-                      <div>
-                        <h3 className="font-medium">{service.name}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          {service.description}
-                        </p>
-                      </div>
-                    </div>
-                    {getStatusIcon(serviceStatus[service.key])}
+                    <span className={`dash-badge ${isActive ? 'dash-badge--active' : 'dash-badge--inactive'}`}>
+                      <span className={`dash-pulse-dot ${isActive ? 'dash-pulse-dot--green' : 'dash-pulse-dot--red'}`}
+                        style={{ width: 6, height: 6 }}
+                      />
+                      {isActive ? 'Active' : 'Inactive'}
+                    </span>
+                    <div className={`dash-pulse-dot ${isActive ? 'dash-pulse-dot--green' : 'dash-pulse-dot--red'}`} />
                   </div>
+
+                  {/* Service info */}
                   <div className="flex items-center justify-between">
-                    {getStatusBadge(serviceStatus[service.key])}
-                    <Button
-                      size="sm"
-                      variant="outline"
+                    <div>
+                      <h3 style={{ fontSize: 14, fontWeight: 600, color: 'var(--dash-white)' }}>
+                        {service.name}
+                      </h3>
+                      <p style={{ fontSize: 13, color: isActive ? 'var(--dash-green)' : 'var(--dash-red)', marginTop: 2 }}>
+                        {isActive ? 'Active' : 'Inactive'}
+                      </p>
+                      {lastUpdate && (
+                        <p style={{ fontSize: 11, color: 'var(--dash-muted)', marginTop: 4 }}>
+                          Last checked {lastUpdate.toLocaleTimeString()}
+                        </p>
+                      )}
+                    </div>
+                    <button
+                      className="dash-play-btn"
                       onClick={() => startService(service.key)}
                       disabled={isRunning}
                     >
                       {isRunning ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
                       ) : (
-                        <Play className="h-4 w-4" />
+                        <Play className="h-3.5 w-3.5" />
                       )}
-                    </Button>
+                    </button>
                   </div>
                 </div>
-              ))}
-            </div>
-          </TabsContent>
+              );
+            })}
+          </div>
+        )}
 
-          <TabsContent value="logs" className="space-y-4">
-            <div className="space-y-4">
-              {services.map((service) => (
-                <div key={service.key} className="p-4 border rounded-lg">
-                  <div className="flex items-center space-x-2 mb-3">
-                    <div className={service.color}>
-                      {service.icon}
-                    </div>
-                    <h3 className="font-medium">{service.name}</h3>
-                    {getStatusBadge(serviceStatus[service.key])}
+        {activeTab === 'logs' && (
+          <div className="space-y-3">
+            {services.map((service) => {
+              const isActive = serviceStatus[service.key];
+              return (
+                <div key={service.key} className="p-3 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dash-border)' }}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span style={{ color: 'var(--dash-white)' }}>{service.icon}</span>
+                    <h3 style={{ fontSize: 13, fontWeight: 500, color: 'var(--dash-white)' }}>{service.name}</h3>
+                    <span className={`dash-badge ${isActive ? 'dash-badge--active' : 'dash-badge--inactive'}`} style={{ fontSize: 10, padding: '2px 6px' }}>
+                      {isActive ? 'Active' : 'Inactive'}
+                    </span>
                   </div>
-                  <div className="bg-gray-50 p-3 rounded text-sm font-mono max-h-32 overflow-y-auto">
+                  <div className="p-2 rounded" style={{
+                    background: 'rgba(0,0,0,0.3)',
+                    fontSize: 12,
+                    fontFamily: 'monospace',
+                    maxHeight: 128,
+                    overflowY: 'auto',
+                    color: 'var(--dash-muted)'
+                  }}>
                     {serviceLogs[service.key] ? (
-                      <pre className="whitespace-pre-wrap">
+                      <pre className="whitespace-pre-wrap" style={{ color: 'var(--dash-green)' }}>
                         {serviceLogs[service.key]}
                       </pre>
                     ) : (
-                      <p className="text-muted-foreground">
-                        No logs available. Start the service to see output.
-                      </p>
+                      <p>No logs available. Start the service to see output.</p>
                     )}
                   </div>
                 </div>
-              ))}
-            </div>
-          </TabsContent>
-        </Tabs>
-      </CardContent>
-    </Card>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

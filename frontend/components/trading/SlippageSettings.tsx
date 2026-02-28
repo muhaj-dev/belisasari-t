@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -33,9 +32,9 @@ export function SlippageSettings({
       : String(SLIPPAGE_OPTIONS.find((o) => o.value === slippageBps)?.value ?? 50);
 
   return (
-    <div className="flex items-center gap-2">
-      <Label className="text-muted-foreground text-sm whitespace-nowrap">
-        Slippage
+    <div className="flex flex-col gap-3">
+      <Label className="text-white text-[13px] font-semibold tracking-wide uppercase">
+        Max Slippage
       </Label>
       <Select
         value={value}
@@ -43,12 +42,16 @@ export function SlippageSettings({
           onSlippageChange(v === "auto" ? "auto" : Number(v))
         }
       >
-        <SelectTrigger className="w-[100px]">
+        <SelectTrigger className="w-full bg-white/5 border border-white/10 rounded-xl h-11 text-[14px] text-white focus:ring-1 focus:ring-[#00D4FF] focus:border-[#00D4FF]">
           <SelectValue />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="bg-[#1A1A24] border border-white/10 rounded-xl shadow-2xl text-white">
           {SLIPPAGE_OPTIONS.map((o) => (
-            <SelectItem key={String(o.value)} value={String(o.value)}>
+            <SelectItem 
+              key={String(o.value)} 
+              value={String(o.value)}
+              className="hover:bg-white/5 focus:bg-white/10 focus:text-white cursor-pointer rounded-lg mx-1 my-0.5"
+            >
               {o.label}
             </SelectItem>
           ))}

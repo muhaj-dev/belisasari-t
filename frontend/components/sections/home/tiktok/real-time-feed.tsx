@@ -161,17 +161,15 @@ export default function RealTimeTikTokFeed() {
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-        <div>
-          <h2 className="text-3xl font-bold text-white mb-2 meme-title">📱 Real-Time TikTok Feed</h2>
-          <p className="text-muted-foreground meme-body">
-            Live memecoin mentions and trending videos from TikTok
-          </p>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 relative">
+        <div className="flex items-center gap-3">
+          <div className="w-[2px] h-6 bg-[#00D4FF]"></div>
+          <h2 className="text-[18px] font-semibold text-white">Live TikTok Feed</h2>
         </div>
         
         <div className="flex items-center gap-4">
           {lastUpdate && (
-            <p className="text-sm text-muted-foreground">
+            <p className="text-[13px] text-[#6B7280]">
               Last updated: {formatTimeAgo(lastUpdate.toISOString())}
             </p>
           )}
@@ -180,9 +178,9 @@ export default function RealTimeTikTokFeed() {
             onClick={fetchTikTokData}
             disabled={refreshing}
             variant="outline"
-            className="border-iris-primary/30 text-iris-primary hover:bg-iris-primary/10"
+            className="border-white/10 text-white hover:bg-white/5 h-9 rounded-[6px] text-[13px] px-4"
           >
-            <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`h-4 w-4 mr-2 text-[#00D4FF] ${refreshing ? 'animate-spin' : ''}`} />
             {refreshing ? 'Refreshing...' : 'Refresh'}
           </Button>
         </div>
@@ -217,96 +215,85 @@ export default function RealTimeTikTokFeed() {
 
       {/* TikTok Videos Grid */}
       {!loading && filteredTiktoks.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredTiktoks.slice(0, visibleVideos).map((tiktok) => {
-          const tiktokMentions = getTokenMentions(tiktok.id);
-          
-          return (
-              <Card
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+          {filteredTiktoks.slice(0, visibleVideos).map((tiktok) => {
+            const tiktokMentions = getTokenMentions(tiktok.id);
+            
+            return (
+              <div
                 key={tiktok.id}
-                className="bg-card/50 backdrop-blur-sm border-border/50 hover:border-iris-primary/50 transition-all duration-300 hover:scale-105"
+                className="bg-[#111118] rounded-[10px] border border-white/10 overflow-hidden transition-all duration-300 hover:border-[#00D4FF]/50 hover:shadow-[0_4px_20px_rgba(0,212,255,0.1)] flex flex-col"
               >
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-iris-primary to-iris-secondary rounded-full flex items-center justify-center text-black font-bold text-sm">
-                        {tiktok.username.charAt(0).toUpperCase()}
-                    </div>
-                    <div>
-                      <p className="font-semibold text-white">@{tiktok.username}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {formatTimeAgo(tiktok.created_at)}
-                      </p>
-                    </div>
-                  </div>
-                  <Clock className="h-4 w-4 text-muted-foreground" />
-                </div>
-              </CardHeader>
-              
-              <CardContent className="space-y-3">
-                {/* Thumbnail */}
-                {tiktok.thumbnail && (
-                  <div className="relative aspect-video rounded-lg overflow-hidden bg-muted">
+                {/* Thumbnail Area */}
+                <a href={tiktok.url} target="_blank" rel="noopener noreferrer" className="relative w-full aspect-[9/16] max-h-[280px] bg-[#1A1A24] overflow-hidden group block">
+                  {tiktok.thumbnail ? (
                     <img
                       src={tiktok.thumbnail}
                       alt={`TikTok by ${tiktok.username}`}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       onError={(e) => {
                         e.currentTarget.style.display = 'none';
                       }}
                     />
-                  </div>
-                )}
-                
-                {/* Stats */}
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-1">
-                      <Eye className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-white">{formatViews(tiktok.views)}</span>
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-sm bg-white/10 animate-pulse"></div>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <MessageCircle className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-white">{tiktok.comments}</span>
+                  )}
+
+                  {/* Top-right Time Badge */}
+                  <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-[11px] font-medium text-white flex items-center gap-1">
+                    {formatTimeAgo(tiktok.created_at)}
+                  </div>
+                  
+                  {/* Bottom Gradient overlay */}
+                  <div className="absolute bottom-0 left-0 w-full h-[120px] bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-4">
+                    {/* Token Mentions Pills */}
+                    {tiktokMentions.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mb-2 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                        {tiktokMentions.map((mention) => (
+                          <div
+                            key={mention.id}
+                            className="bg-[#00D4FF]/20 text-[#00D4FF] border border-[#00D4FF]/30 px-2 py-0.5 rounded text-[10px] font-bold"
+                          >
+                            #{mention.token?.symbol || `${mention.token_id}`}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1 text-white">
+                          <Eye className="w-4 h-4" />
+                          <span className="text-[13px] font-bold">{formatViews(tiktok.views)}</span>
+                        </div>
+                        <div className="flex items-center gap-1 text-white">
+                          <MessageCircle className="w-4 h-4" />
+                          <span className="text-[13px] font-bold">{tiktok.comments}</span>
+                        </div>
+                      </div>
+                      <div className="bg-[#FF0050] w-6 h-6 rounded-full flex items-center justify-center">
+                        <svg viewBox="0 0 24 24" fill="white" className="w-[14px] h-[14px]"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+                      </div>
                     </div>
                   </div>
-                  <TrendingUp className="h-4 w-4 text-iris-primary" />
+                </a>
+
+                {/* Creator bottom row */}
+                <div className="p-4 flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#00D4FF] to-purple-600 flex items-center justify-center text-white font-bold text-sm shadow-inner shrink-0 object-cover overflow-hidden">
+                    {tiktok.username.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-[14px] font-semibold text-white truncate">@{tiktok.username}</span>
+                    <span className="text-[12px] text-[#6B7280] truncate">TikTok Creator</span>
+                  </div>
                 </div>
-                
-                {/* Token Mentions */}
-                {tiktokMentions.length > 0 && (
-                  <div className="space-y-2">
-                    <p className="text-xs text-muted-foreground">Mentioned Tokens:</p>
-                    <div className="flex flex-wrap gap-1">
-                      {tiktokMentions.map((mention) => (
-                        <Badge
-                          key={mention.id}
-                          variant="secondary"
-                          className="bg-iris-primary/20 text-iris-primary border-iris-primary/30"
-                        >
-                          {mention.token?.symbol || `Token ${mention.token_id}`}
-                          <span className="ml-1 text-xs">({mention.count})</span>
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                
-                {/* View Button */}
-                <Button
-                  asChild
-                  className="w-full bg-iris-primary hover:bg-iris-primary/80 text-black"
-                  size="sm"
-                >
-                  <a href={tiktok.url} target="_blank" rel="noopener noreferrer">
-                    View on TikTok
-                  </a>
-                </Button>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+              </div>
+            );
+          })}
+        </div>
       )}
 
       {/* Load More */}
@@ -347,7 +334,7 @@ export default function RealTimeTikTokFeed() {
       )}
 
       {/* Debug Info (Development Only) */}
-      {process.env.NODE_ENV === 'development' && (
+      {/* {process.env.NODE_ENV === 'development' && (
         <div className="mt-8 p-4 bg-muted/20 rounded-lg text-xs text-muted-foreground">
           <p><strong>Debug Info:</strong></p>
           <p>TikTok count: {tiktoks.length}</p>
@@ -355,7 +342,7 @@ export default function RealTimeTikTokFeed() {
           <p>Loading: {loading.toString()}</p>
           <p>Error: {error || 'None'}</p>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

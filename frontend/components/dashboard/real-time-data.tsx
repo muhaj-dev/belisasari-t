@@ -247,150 +247,150 @@ export default function RealTimeData() {
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold mb-4">📊 Real-Time Data Overview</h2>
-        <p className="text-muted-foreground">
-          Live updates from TikTok, Telegram, and AI analysis - no refresh needed
-        </p>
-      </div>
+    <div className="space-y-5">
+      <h2 className="dash-section-title">Real-Time Data Overview</h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* TikTok Data */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-              📱 TikTok Analytics
-              <div className={`w-2 h-2 rounded-full ${
-                tiktokHashtagsConnectionStatus.isConnected 
-                  ? 'bg-green-500' 
-                  : tiktokHashtagsConnectionStatus.isConnecting 
-                    ? 'bg-yellow-500' 
-                    : 'bg-red-500'
-              }`}></div>
-          </CardTitle>
-            <p className="text-sm text-muted-foreground">
-              Live video and engagement data
-              {tiktokHashtagsConnectionStatus.isConnected && (
-                <span className="text-green-500 ml-2">● Live</span>
-              )}
-            </p>
-        </CardHeader>
-        <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <p className="text-muted-foreground">Recent Videos</p>
-                <p className="text-2xl font-bold text-blue-600">{data.tiktok.recentVideos}</p>
+        <div className="dash-card">
+          <div className="flex items-center justify-between mb-4">
+            <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--dash-white)' }}>
+              TikTok Analytics
+            </span>
+            <div className={`dash-pulse-dot ${
+              tiktokHashtagsConnectionStatus.isConnected 
+                ? 'dash-pulse-dot--green' 
+                : tiktokHashtagsConnectionStatus.isConnecting 
+                  ? 'dash-pulse-dot--cyan' 
+                  : 'dash-pulse-dot--red'
+            }`} />
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span style={{ fontSize: 13, color: 'var(--dash-muted)' }}>Total Views:</span>
+              <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--dash-cyan)' }}>
+                {data.tiktok.totalViews.toLocaleString()}
+              </span>
             </div>
-              <div>
-                <p className="text-muted-foreground">Total Views</p>
-                <p className="text-2xl font-bold text-green-600">{data.tiktok.totalViews.toLocaleString()}</p>
+            <div className="flex items-center justify-between">
+              <span style={{ fontSize: 13, color: 'var(--dash-muted)' }}>Recent Videos:</span>
+              <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--dash-cyan)' }}>
+                {data.tiktok.recentVideos}
+              </span>
             </div>
           </div>
-          
+
           {data.tiktok.trendingTokens.length > 0 && (
-            <div>
-                <p className="text-sm text-muted-foreground mb-2">Trending Tokens</p>
-                <div className="flex flex-wrap gap-2">
+            <div className="mt-4">
+              <p style={{ fontSize: 12, color: 'var(--dash-muted)', marginBottom: 6 }}>Trending Tokens</p>
+              <div className="flex flex-wrap gap-1.5">
                 {data.tiktok.trendingTokens.map((token, index) => (
-                    <Badge key={index} variant="secondary" className="text-xs">
+                  <span key={index} style={{
+                    fontSize: 11, padding: '2px 8px', borderRadius: 6,
+                    background: 'rgba(0, 212, 255, 0.1)', color: 'var(--dash-cyan)'
+                  }}>
                     {token}
-                  </Badge>
+                  </span>
                 ))}
               </div>
             </div>
           )}
-          
+
           {data.tiktok.trendingHashtags.length > 0 && (
-            <div>
-                <p className="text-sm text-muted-foreground mb-2">Trending Hashtags</p>
-                <div className="flex flex-wrap gap-2">
+            <div className="mt-3">
+              <p style={{ fontSize: 12, color: 'var(--dash-muted)', marginBottom: 6 }}>Trending Hashtags</p>
+              <div className="flex flex-wrap gap-1.5">
                 {data.tiktok.trendingHashtags.map((hashtag, index) => (
-                    <Badge key={index} variant="outline" className="text-xs">
+                  <span key={index} style={{
+                    fontSize: 11, padding: '2px 8px', borderRadius: 6,
+                    background: 'rgba(255, 255, 255, 0.06)', color: 'var(--dash-white)', border: '1px solid var(--dash-border)'
+                  }}>
                     {hashtag.hashtag} ({hashtag.count})
-                  </Badge>
+                  </span>
                 ))}
               </div>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
 
         {/* Telegram Data */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-              📡 Telegram Analytics
-              <div className={`w-2 h-2 rounded-full ${
-                telegramConnectionStatus.isConnected 
-                  ? 'bg-green-500' 
-                  : telegramConnectionStatus.isConnecting 
-                    ? 'bg-yellow-500' 
-                    : 'bg-red-500'
-              }`}></div>
-          </CardTitle>
-            <p className="text-sm text-muted-foreground">
-              Channel and message monitoring
-              {telegramConnectionStatus.isConnected && (
-                <span className="text-green-500 ml-2">● Live</span>
-              )}
-            </p>
-        </CardHeader>
-        <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <p className="text-muted-foreground">Recent Messages</p>
-                <p className="text-2xl font-bold text-purple-600">{data.telegram.recentMessages}</p>
+        <div className="dash-card">
+          <div className="flex items-center justify-between mb-4">
+            <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--dash-white)' }}>
+              Telegram Analytics
+            </span>
+            <div className={`dash-pulse-dot ${
+              telegramConnectionStatus.isConnected 
+                ? 'dash-pulse-dot--green' 
+                : telegramConnectionStatus.isConnecting 
+                  ? 'dash-pulse-dot--cyan' 
+                  : 'dash-pulse-dot--red'
+            }`} />
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span style={{ fontSize: 13, color: 'var(--dash-muted)' }}>Active Channels:</span>
+              <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--dash-cyan)' }}>
+                {data.telegram.activeChannels}
+              </span>
             </div>
-              <div>
-                <p className="text-muted-foreground">Active Channels</p>
-                <p className="text-2xl font-bold text-indigo-600">{data.telegram.activeChannels}</p>
+            <div className="flex items-center justify-between">
+              <span style={{ fontSize: 13, color: 'var(--dash-muted)' }}>Recent Messages:</span>
+              <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--dash-cyan)' }}>
+                {data.telegram.recentMessages}
+              </span>
             </div>
           </div>
-          
+
           {data.telegram.trendingKeywords.length > 0 && (
-            <div>
-                <p className="text-sm text-muted-foreground mb-2">Trending Keywords</p>
-                <div className="flex flex-wrap gap-2">
+            <div className="mt-4">
+              <p style={{ fontSize: 12, color: 'var(--dash-muted)', marginBottom: 6 }}>Trending Keywords</p>
+              <div className="flex flex-wrap gap-1.5">
                 {data.telegram.trendingKeywords.map((keyword, index) => (
-                  <Badge key={index} variant="outline" className="text-xs">
+                  <span key={index} style={{
+                    fontSize: 11, padding: '2px 8px', borderRadius: 6,
+                    background: 'rgba(255, 255, 255, 0.06)', color: 'var(--dash-white)', border: '1px solid var(--dash-border)'
+                  }}>
                     {keyword}
-                  </Badge>
+                  </span>
                 ))}
               </div>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
 
         {/* Pattern Analysis */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-              🧠 AI Pattern Analysis
-          </CardTitle>
-            <p className="text-sm text-muted-foreground">
-              Real-time insights and correlations
-            </p>
-        </CardHeader>
-        <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <p className="text-muted-foreground">Correlations</p>
-                <p className="text-2xl font-bold text-orange-600">{data.patternAnalysis.correlations}</p>
+        <div className="dash-card">
+          <div className="flex items-center justify-between mb-4">
+            <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--dash-white)' }}>
+              AI Pattern Analysis
+            </span>
+            <div className="dash-pulse-dot dash-pulse-dot--green" />
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span style={{ fontSize: 13, color: 'var(--dash-muted)' }}>Correlations:</span>
+              <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--dash-cyan)' }}>
+                {data.patternAnalysis.correlations}
+              </span>
             </div>
-              <div>
-                <p className="text-muted-foreground">Recommendations</p>
-                <p className="text-2xl font-bold text-red-600">{data.patternAnalysis.recommendations}</p>
+            <div className="flex items-center justify-between">
+              <span style={{ fontSize: 13, color: 'var(--dash-muted)' }}>Recommendations:</span>
+              <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--dash-purple)' }}>
+                {data.patternAnalysis.recommendations}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span style={{ fontSize: 13, color: 'var(--dash-muted)' }}>Last Analysis:</span>
+              <span style={{ fontSize: 13, color: 'var(--dash-muted)' }}>
+                {formattedLastAnalysis}
+              </span>
             </div>
           </div>
-          
-            <div>
-            <p className="text-sm text-muted-foreground">Last Analysis</p>
-              <p className="text-sm font-medium">{formattedLastAnalysis}</p>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
       </div>
     </div>
   );

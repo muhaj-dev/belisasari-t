@@ -5,6 +5,7 @@ import { useCurrentWallet } from "@/hooks/use-current-wallet";
 import { useAppAuth } from "@/components/provider/PrivyAppAuthContext";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { ArrowLeft, Wallet } from "lucide-react";
 
 const SwapCard = dynamic(
   () => import("@/components/trading/SwapCard").then((m) => m.SwapCard),
@@ -17,45 +18,70 @@ export default function TradingPageClient() {
 
   if (!walletIsConnected) {
     return (
-      <div className="container max-w-lg mx-auto py-12 px-4 text-center">
-        <h1 className="text-2xl font-bold mb-2 text-iris-primary">Trading (Jupiter)</h1>
-        <p className="text-muted-foreground mb-4">
-          Token swap with DEX aggregation and slippage protection. Connect your wallet (e.g. Phantom) via Privy to trade.
-        </p>
-        <Button
-          className="bg-iris-primary hover:bg-iris-primary/80"
-          disabled={!ready || (ready && authenticated)}
-          onClick={() => {
-            if (ready && !authenticated) {
-              login({
-                loginMethods: ["wallet"],
-                walletChainType: "solana-only",
-                disableSignup: false,
-              });
-            }
-          }}
-        >
-          Log in
-        </Button>
-        <p className="mt-6 text-sm text-muted-foreground">
-          <Link href="/" className="underline hover:text-foreground">Back to home</Link>
-        </p>
+      <div className="min-h-screen bg-[#0A0A0F] pt-20 px-4">
+        <div className="container max-w-md mx-auto text-center bg-[#111118] border border-white/10 rounded-2xl p-8 shadow-xl">
+          <div className="w-16 h-16 rounded-full bg-[#00D4FF]/10 flex items-center justify-center mx-auto mb-6">
+            <Wallet className="h-8 w-8 text-[#00D4FF]" />
+          </div>
+          <h1 className="text-2xl font-bold mb-3 text-white">Trading (Jupiter)</h1>
+          <p className="text-[#6B7280] mb-8 leading-relaxed">
+            Token swap with DEX aggregation and slippage protection. Connect your wallet to start trading.
+          </p>
+          <Button
+            className="w-full bg-[#00D4FF] hover:bg-[#00D4FF]/80 text-[#0A0A0F] font-bold h-12 text-[15px]"
+            disabled={!ready || (ready && authenticated)}
+            onClick={() => {
+              if (ready && !authenticated) {
+                login({
+                  loginMethods: ["wallet"],
+                  walletChainType: "solana-only",
+                  disableSignup: false,
+                });
+              }
+            }}
+          >
+            Connect Wallet
+          </Button>
+          <div className="mt-8 pt-6 border-t border-white/10">
+            <Link href="/" className="text-[#6B7280] hover:text-white flex items-center justify-center gap-2 text-sm transition-colors">
+              <ArrowLeft className="w-4 h-4" />
+              Back to home
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container max-w-2xl mx-auto py-8 px-4">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight text-iris-primary">Trading (Jupiter)</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Token swapping · DEX aggregation for best prices · Slippage protection
-        </p>
+    <div className="min-h-[100dvh] bg-[#0A0A0F] py-12 px-4 relative overflow-hidden">
+      {/* Decorative background gradients */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#00D4FF]/5 rounded-full blur-[120px] pointer-events-none -z-10"></div>
+      <div className="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] bg-[#A855F7]/5 rounded-full blur-[100px] pointer-events-none -z-10"></div>
+      
+      <div className="container max-w-[520px] mx-auto">
+        <div className="mb-8 text-center flex flex-col items-center">
+          <div className="inline-flex items-center justify-center px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-4">
+            <span className="text-[11px] uppercase tracking-wider font-semibold text-[#00D4FF]">Jupiter Aggregator</span>
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight text-white mb-2">Swap Tokens</h1>
+          <p className="text-[15px] text-[#6B7280]">
+            Best prices across all Solana DEXes instantly.
+          </p>
+        </div>
+        
+        <SwapCard />
+        
+        <div className="mt-8 flex items-center justify-between text-[13px] text-[#6B7280] px-4">
+          <Link href="/" className="hover:text-white flex items-center gap-1.5 transition-colors">
+            <ArrowLeft className="w-3.5 h-3.5" /> Home
+          </Link>
+          <div className="flex items-center gap-2">
+            <span>Powered by</span>
+            <span className="font-semibold text-white">Jupiter</span>
+          </div>
+        </div>
       </div>
-      <SwapCard />
-      <p className="mt-6 text-center text-sm text-muted-foreground">
-        Powered by Jupiter. <Link href="/" className="underline">Home</Link>
-      </p>
     </div>
   );
 }

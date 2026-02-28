@@ -5,7 +5,7 @@ import { useCreateProfileTapestry } from '@/hooks/use-create-profile-tapestry';
 import { useGetIdentities } from '@/hooks/use-get-identities';
 import type { IProfileList } from '@/lib/types/profile';
 import { usePrivy } from '@privy-io/react-auth';
-import { User } from 'lucide-react';
+import { User, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -61,32 +61,35 @@ export function CreateProfileTapestry({ onClose, onSuccess }: CreateProfileTapes
   if (loadingMainUsername && profilesLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#00D4FF]" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-xl font-semibold">Create profile</h2>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+    <div className="space-y-5">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3 pt-2">
         <Input
           value={username}
           onChange={handleInputChange}
           placeholder="username"
-          className="lowercase"
+          className="lowercase bg-white/5 border-white/10 text-white focus-visible:ring-1 focus-visible:ring-[#00D4FF] focus-visible:border-[#00D4FF] placeholder:text-[#6B7280]"
         />
-        <Button type="submit" disabled={creationLoading || !username.trim()}>
+        <Button 
+          type="submit" 
+          disabled={creationLoading || !username.trim()}
+          className="bg-[#00D4FF] text-[#111118] hover:bg-[#00D4FF]/80 hover:text-[#111118] w-full"
+        >
           {creationLoading ? 'Creating...' : 'Create profile'}
         </Button>
       </form>
 
-      {error && <p className="text-sm text-destructive">{error}</p>}
+      {error && <p className="text-[13px] text-red-500 font-medium">{error}</p>}
 
-      <div className="border-t pt-4">
-        <p className="text-muted-foreground text-sm mb-2">Or import from Tapestry</p>
+      <div className="border-t border-white/5 pt-5">
+        <p className="text-[#6B7280] text-[13px] font-medium mb-3">Or import from Tapestry</p>
         {identities?.identities?.length ? (
-          <div className="max-h-[200px] space-y-2 overflow-auto">
+          <div className="max-h-[220px] space-y-2 overflow-auto pr-1">
             {identities.identities.map((identity, i) =>
               identity.profiles?.length
                 ? identity.profiles.map((entry, j) => (
@@ -96,29 +99,31 @@ export function CreateProfileTapestry({ onClose, onSuccess }: CreateProfileTapes
                       disabled={profilesLoading}
                       onClick={() => setSelectProfile(entry)}
                       className={cn(
-                        'w-full justify-start border',
-                        selectProfile === entry ? 'border-primary' : 'border-muted'
+                        'w-full justify-start border h-auto py-3 hover:bg-white/5 transition-colors',
+                        selectProfile === entry ? 'border-[#00D4FF] bg-[#00D4FF]/5' : 'border-white/5 bg-white/[0.02]'
                       )}
                     >
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-3">
                         {entry.profile.image ? (
                           <Image
-                            width={32}
-                            height={32}
-                            alt=""
-                            className="rounded-full object-cover"
+                            width={36}
+                            height={36}
+                            alt={entry.profile.username}
+                            className="rounded-full object-cover border border-white/10"
                             src={entry.profile.image}
                             unoptimized
                           />
                         ) : (
-                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
-                            <User className="h-4 w-4" />
+                          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#1A1A24] border border-white/10">
+                            <User className="h-4 w-4 text-[#6B7280]" />
                           </div>
                         )}
-                        <div className="min-w-0 text-left">
-                          <p className="truncate font-medium">{entry.profile.username}</p>
+                        <div className="min-w-0 text-left flex-1">
+                          <p className={`truncate text-[14px] font-bold ${selectProfile === entry ? 'text-white' : 'text-white/90'}`}>
+                            {entry.profile.username}
+                          </p>
                           {entry.profile.bio && (
-                            <p className="truncate text-xs text-muted-foreground">
+                            <p className="truncate text-[12px] text-[#6B7280] mt-0.5">
                               {entry.profile.bio}
                             </p>
                           )}
@@ -130,24 +135,30 @@ export function CreateProfileTapestry({ onClose, onSuccess }: CreateProfileTapes
             )}
           </div>
         ) : (
-          <p className="text-xs text-muted-foreground">
+          <p className="text-[13px] text-[#6B7280] bg-white/[0.02] border border-white/5 rounded-lg p-4 text-center">
             {profilesLoading ? 'Loading Tapestry profiles...' : 'No Tapestry profiles found. Create one above.'}
           </p>
         )}
 
         <Button
-          className="mt-2 w-full"
+          className="mt-3 w-full bg-white/5 text-white hover:bg-white/10 border border-white/10"
           variant="secondary"
           disabled={profilesLoading || !selectProfile}
           onClick={() => selectProfile && handleImport(selectProfile)}
         >
-          {creationLoading ? 'Importing...' : 'Import profile'}
+          {creationLoading ? 'Importing...' : 'Import selected profile'}
         </Button>
       </div>
 
-      <Button variant="ghost" className="w-full text-muted-foreground" onClick={() => { logout(); onClose(); }}>
-        Disconnect wallet
-      </Button>
+      <div className="pt-2">
+        <Button 
+          variant="ghost" 
+          className="w-full text-[#6B7280] hover:text-white hover:bg-white/5 text-[13px]" 
+          onClick={() => { logout(); onClose(); }}
+        >
+          Disconnect wallet
+        </Button>
+      </div>
     </div>
   );
 }

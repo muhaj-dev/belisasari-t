@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from 'react';
 
-interface ProfileDetail {
-  profile: { id: string; username: string; bio?: string | null; image?: string | null };
-  socialCounts?: { followers: number; following: number };
+import type { IProfile, ISocialCounts } from '@/lib/types/profile';
+
+export interface ProfileDetail {
+  profile: IProfile;
+  socialCounts?: ISocialCounts;
 }
 
 export function useProfileDetail(profileId: string | null) {

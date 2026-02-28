@@ -92,9 +92,9 @@ function ChartContent({
   // Don't render chart until we're on the client side
   if (!isClient) {
     return (
-      <CardContent className="p-0 sm:p-6">
+      <CardContent className="p-0 sm:p-6 bg-[#111118]">
         <div className="h-[300px] sm:h-[400px] w-full flex items-center justify-center">
-          <p className="text-muted-foreground">Loading chart...</p>
+          <p className="text-[#6B7280]">Loading chart...</p>
         </div>
       </CardContent>
     );
@@ -135,7 +135,7 @@ function ChartContent({
               strokeDasharray="3 3"
               stroke="#374151"
             />
-            <XAxis
+             <XAxis
               dataKey="rawTimestamp"
               type="number"
               domain={xDomain}
@@ -148,7 +148,7 @@ function ChartContent({
                   minutes
                 ).padStart(2, "0")}`;
               }}
-              axisLine={{ stroke: "#E5E7EB" }}
+              axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
               tick={{
                 fill: "#6B7280",
                 fontSize: windowWidth < 768 ? 10 : 12,
@@ -160,7 +160,7 @@ function ChartContent({
               orientation="left"
               domain={[minPrice - priceMargin * 0.1, maxPrice]}
               width={windowWidth < 768 ? 40 : 50}
-              axisLine={{ stroke: "#E5E7EB" }}
+              axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
               tick={{
                 fill: "#6B7280",
                 fontSize: windowWidth < 768 ? 10 : 12,
@@ -172,7 +172,7 @@ function ChartContent({
               orientation="right"
               domain={[0, "auto"]}
               width={windowWidth < 768 ? 40 : 50}
-              axisLine={{ stroke: "#E5E7EB" }}
+              axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
               tick={{
                 fill: "#6B7280",
                 fontSize: windowWidth < 768 ? 10 : 12,
@@ -208,12 +208,15 @@ function ChartContent({
               content={({ active, payload, label }) => {
                 if (active && payload && payload.length) {
                   return (
-                    <div className="border bg-card p-2">
-                      <p className="font-bold m-0">{formatDateTime(label)}</p>
+                    <div className="border border-white/10 bg-[#1A1A24] rounded-xl shadow-xl p-3 text-white">
+                      <p className="font-bold text-[13px] mb-2">{formatDateTime(label)}</p>
                       {payload.map((entry, index) => (
-                        <p key={index} className="m-0">
-                          {entry.name}: {entry.name === "Price" ? "$" : ""}
-                          {formatFloatingNumber(entry.value as number)}
+                        <p key={index} className="m-0 text-[12px] flex items-center justify-between gap-4">
+                          <span className="text-[#6B7280]">{entry.name}</span>
+                          <span className="font-bold">
+                            {entry.name === "Price" ? "$" : ""}
+                            {formatFloatingNumber(entry.value as number)}
+                          </span>
                         </p>
                       ))}
                     </div>
@@ -370,8 +373,8 @@ export default function TimeSeriesChartWithPaywall({
         </CardContent>
       </Card>
     }>
-    <Card className="w-full max-w-[100vw] overflow-hidden sen">
-      <CardHeader className="space-y-4 p-4 sm:p-6">
+    <Card className="w-full max-w-[100vw] overflow-hidden bg-[#111118] border border-white/10 rounded-2xl shadow-xl mt-8">
+      <CardHeader className="space-y-4 p-4 sm:p-6 border-b border-white/5">
         {/* Token Header */}
         <div className="flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center">
@@ -383,10 +386,10 @@ export default function TimeSeriesChartWithPaywall({
                 e.currentTarget.src = '/placeholder-token.png';
               }}
             />
-            <CardTitle className="text-lg sm:text-xl font-bold text-iris-primary nouns tracking-widest">
+            <CardTitle className="text-lg sm:text-2xl font-bold text-white tracking-tight flex items-center gap-2">
               {tokenData.symbol.toLocaleUpperCase()}
               <span
-                className="text-muted-foreground text-xs sm:text-sm font-medium sen tracking-normal cursor-pointer"
+                className="text-[#6B7280] text-sm font-medium cursor-pointer hover:text-white transition-colors uppercase tracking-wider bg-white/5 px-2 py-0.5 rounded-md"
                 onClick={() => {
                   setUsdOrSolToggle(!usdOrSolToggle);
                 }}
@@ -399,7 +402,7 @@ export default function TimeSeriesChartWithPaywall({
             {tokenData.address && (
             <Button
               variant="ghost"
-              className="hidden sm:flex hover:bg-transparent hover:border-[1px] hover:border-secondary transform transition hover:scale-105"
+              className="hidden sm:flex hover:bg-white/5 text-[#6B7280] hover:text-white font-mono text-[13px]"
               onClick={() =>
                 window.open(
                   `https://solscan.io/token/${tokenData.address}`,
@@ -408,7 +411,7 @@ export default function TimeSeriesChartWithPaywall({
               }
             >
               {tokenData.address.slice(0, 4)}...{tokenData.address.slice(-4)}
-              <ArrowUpRightFromSquare className="w-3 h-3 ml-1" />
+              <ArrowUpRightFromSquare className="w-3 h-3 ml-2 text-[#00D4FF]" />
             </Button>
             )}
             <Select value={timeframe} onValueChange={handleTimeframeChange}>
@@ -429,11 +432,11 @@ export default function TimeSeriesChartWithPaywall({
         </div>
 
         {/* Price Display */}
-        <div className="flex items-center flex-wrap gap-2">
-          <p className="font-semibold text-xl sm:text-3xl">
-            {usdOrSolToggle
-              ? (tokenData.latest_price_usd || 0).toFixed(10)
-              : (tokenData.latest_price_sol || 0).toFixed(10)}
+        <div className="flex items-end flex-wrap gap-3">
+          <p className="font-bold text-3xl sm:text-5xl text-white tracking-tight">
+            ${usdOrSolToggle
+              ? (tokenData.latest_price_usd || 0).toFixed(6)
+              : (tokenData.latest_price_sol || 0).toFixed(6)}
           </p>
           {isPriceUp ? (
             <span className="flex items-center text-green-500 text-sm sm:text-md">
@@ -449,13 +452,13 @@ export default function TimeSeriesChartWithPaywall({
         </div>
 
         {/* Controls */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sen">
-          <div className="flex items-center space-x-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-4">
+          <div className="flex items-center space-x-3 bg-white/5 p-3 rounded-xl border border-white/5">
             <Switch
               checked={showPrice}
               onCheckedChange={setShowPrice}
               id="price-toggle"
-              className="bg-iris-primary data-[state=checked]:bg-iris-primary"
+              className="data-[state=checked]:bg-[#00D4FF]"
             />
             <div
               className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full ${
@@ -464,25 +467,25 @@ export default function TimeSeriesChartWithPaywall({
             />
             <Label
               htmlFor="price-toggle"
-              className="text-xs sm:text-sm font-medium"
+              className="text-[13px] text-white font-medium"
             >
-              Coin Price
+              Price Trajectory
             </Label>
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-3 bg-white/5 p-3 rounded-xl border border-white/5">
             <Switch
               checked={showPopularity}
               onCheckedChange={setShowPopularity}
               id="views-toggle"
-              className="bg-iris-primary data-[state=checked]:bg-iris-primary"
+              className="data-[state=checked]:bg-[#A855F7]"
             />
-            <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-[#800080]" />
+            <div className="w-3 h-3 rounded-full bg-[#A855F7]" />
             <Label
               htmlFor="popularity-toggle"
-              className="text-xs sm:text-sm font-medium"
+              className="text-[13px] text-white font-medium"
             >
-              TikTok Popularity
+              Social Virality
             </Label>
             <TooltipProvider>
               <TooltipUI delayDuration={100}>

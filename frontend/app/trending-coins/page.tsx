@@ -1,229 +1,280 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import TrendingCoinsSummary from '@/components/dashboard/trending-coins-summary';
 import TrendingCoinsAnalytics from '@/components/dashboard/trending-coins-analytics';
+import { Rocket, Calendar, Download, Search, RefreshCw, BrainCircuit, Activity, LineChart, Diamond, Gem, Coins, Cpu } from 'lucide-react';
 
 export default function TrendingCoinsPage() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedTimeframe, setSelectedTimeframe] = useState('24h');
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold">🚀 Trending Coins Analytics</h1>
-          <p className="text-xl text-muted-foreground mt-2">
-            Comprehensive analysis of trending memecoins with social and trading metrics
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Select value={selectedTimeframe} onValueChange={setSelectedTimeframe}>
-            <SelectTrigger className="w-32">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="1h">1 Hour</SelectItem>
-              <SelectItem value="4h">4 Hours</SelectItem>
-              <SelectItem value="24h">24 Hours</SelectItem>
-              <SelectItem value="7d">7 Days</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button variant="outline">
-            📊 Export Data
-          </Button>
-        </div>
-      </div>
-
-      {/* Search and Filters */}
-      <Card>
-        <CardHeader>
-          <CardTitle>🔍 Search & Filters</CardTitle>
-          <CardDescription>
-            Find specific coins or filter by various metrics
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <Input
-                placeholder="Search by coin symbol, name, or keyword..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full"
-              />
+    <div className="bg-[#0A0A0F] min-h-screen text-slate-100 font-sans pb-24">
+      <main className="max-w-[1440px] mx-auto p-6 space-y-6">
+        
+        {/* Page Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-start gap-4">
+            <div className="mt-1">
+              <Rocket className="text-[#00D4FF] w-8 h-8" />
             </div>
-            <Button variant="outline">
-              🔄 Refresh
-            </Button>
+            <div>
+              <h1 className="text-[26px] font-bold text-white leading-tight">Trending Coins Analytics</h1>
+              <p className="text-[13px] text-slate-500 font-medium">Real-time terminal for high-momentum crypto assets and institutional flow.</p>
+            </div>
           </div>
-        </CardContent>
-      </Card>
+          <div className="flex items-center gap-3">
+            <button className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm font-medium hover:bg-white/10 transition-all">
+              <Calendar className="w-4 h-4" />
+              24h Filter
+            </button>
+            <button className="flex items-center gap-2 px-4 py-2 bg-[#00D4FF] text-black rounded-lg text-sm font-bold hover:brightness-110 transition-all">
+              <Download className="w-4 h-4" />
+              Export
+            </button>
+          </div>
+        </div>
 
-      {/* Summary Metrics */}
-      <div>
-        <h2 className="text-2xl font-bold mb-4">📊 Market Overview</h2>
+        {/* Search & Quick Actions */}
+        <div className="bg-[#111118] border border-white/10 rounded-xl p-4 flex flex-col md:flex-row gap-4">
+          <div className="relative flex-1">
+            <span className="absolute inset-y-0 left-4 flex items-center text-slate-500">
+              <Search className="w-5 h-5" />
+            </span>
+            <input 
+              type="text" 
+              placeholder="Search for coins, contracts, or categories..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full bg-white/5 border-none rounded-lg py-3 pl-12 pr-4 text-sm focus:ring-1 focus:ring-[#00D4FF]/50 text-white placeholder:text-slate-500" 
+            />
+          </div>
+          <button className="flex items-center justify-center gap-2 px-6 py-3 bg-white/5 border border-white/10 rounded-lg text-sm font-medium hover:bg-white/10 transition-all">
+            <RefreshCw className="w-4 h-4" />
+            Refresh Data
+          </button>
+        </div>
+
+        {/* Market Overview Stats (Dynamically handled by components/dashboard/trending-coins-summary.tsx) */}
         <TrendingCoinsSummary />
-      </div>
 
-      {/* Detailed Analytics */}
-      <div>
-        <h2 className="text-2xl font-bold mb-4">📈 Detailed Analytics</h2>
+        {/* Main Analytics Table Card (Dynamically handled by components/dashboard/trending-coins-analytics.tsx) */}
         <TrendingCoinsAnalytics />
-      </div>
 
-      {/* Additional Insights */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Correlation Insights */}
-        <Card>
-          <CardHeader>
-            <CardTitle>🧠 Correlation Insights</CardTitle>
-            <CardDescription>
-              Understanding the relationship between social activity and trading volume
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-sm">High Correlation (80%+)</span>
-                <Badge variant="default">Strong Signal</Badge>
+        {/* Panels Row */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          
+          {/* Correlation Insights */}
+          <div className="bg-[#111118] border border-white/10 rounded-xl p-5">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <BrainCircuit className="text-[#00D4FF] w-6 h-6" />
+                <h3 className="font-bold text-lg text-white">Correlation Insights</h3>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Medium Correlation (60-80%)</span>
-                <Badge variant="secondary">Moderate Signal</Badge>
+              <span className="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Live Engine</span>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg border-l-2 border-[#00D4FF]">
+                <div>
+                  <p className="text-sm font-bold text-white">BTC / ETH Correlation</p>
+                  <p className="text-xs text-slate-500">High positive linkage detected</p>
+                </div>
+                <span className="px-3 py-1 bg-[#00D4FF] text-black text-[10px] font-black rounded-full uppercase">Strong</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Low Correlation (Below 60%)</span>
-                <Badge variant="outline">Weak Signal</Badge>
+              <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg border-l-2 border-amber-500/50">
+                <div>
+                  <p className="text-sm font-bold text-white">Layer 1 Ecosystem Flow</p>
+                  <p className="text-xs text-slate-500">Cyclical rotation in progress</p>
+                </div>
+                <span className="px-3 py-1 bg-amber-500/20 text-amber-500 text-[10px] font-black rounded-full uppercase border border-amber-500/30">Moderate</span>
+              </div>
+              <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg border-l-2 border-slate-700">
+                <div>
+                  <p className="text-sm font-bold text-white">Stablecoin Dominance</p>
+                  <p className="text-xs text-slate-500">Neutral market participants</p>
+                </div>
+                <span className="px-3 py-1 bg-white/5 text-slate-400 text-[10px] font-black rounded-full uppercase border border-white/10">Weak</span>
               </div>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Higher correlation suggests stronger alignment between social buzz and trading activity
-            </p>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Trading Signals */}
-        <Card>
-          <CardHeader>
-            <CardTitle>📊 Trading Signals</CardTitle>
-            <CardDescription>
-              Key indicators for potential trading opportunities
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Volume Spike + High Views</span>
-                <Badge variant="default">🚀 Strong Buy</Badge>
+          {/* Trading Signals */}
+          <div className="bg-[#111118] border border-white/10 rounded-xl p-5">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <Activity className="text-[#00D4FF] w-6 h-6" />
+                <h3 className="font-bold text-lg text-white">Trading Signals</h3>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">High Views + Low Volume</span>
-                <Badge variant="secondary">📱 Watch</Badge>
+              <button className="text-xs text-[#00D4FF] font-bold hover:underline">View All</button>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 bg-emerald-500/10 rounded-lg border border-emerald-500/20">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded bg-emerald-500/20 flex items-center justify-center">
+                    <TrendingUpIcon className="text-emerald-400 w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-white">Strong Buy (SOL)</p>
+                    <p className="text-xs text-emerald-400/70">Oversold on 4H RSI</p>
+                  </div>
+                </div>
+                <span className="text-xs font-mono text-slate-400">14:20:05</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">High Volume + Low Views</span>
-                <Badge variant="outline">💰 Institutional</Badge>
+              <div className="flex items-center justify-between p-3 bg-amber-500/10 rounded-lg border border-amber-500/20">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded bg-amber-500/20 flex items-center justify-center">
+                    <EyeIcon className="text-amber-400 w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-white">Watch (NEAR)</p>
+                    <p className="text-xs text-amber-400/70">Consolidation at resistance</p>
+                  </div>
+                </div>
+                <span className="text-xs font-mono text-slate-400">14:15:32</span>
+              </div>
+              <div className="flex items-center justify-between p-3 bg-[#00D4FF]/10 rounded-lg border border-[#00D4FF]/20">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded bg-[#00D4FF]/20 flex items-center justify-center">
+                    <LandmarkIcon className="text-[#00D4FF] w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-white">Institutional Flow</p>
+                    <p className="text-xs text-[#00D4FF]/70">Large wallet accumulation (BTC)</p>
+                  </div>
+                </div>
+                <span className="text-xs font-mono text-slate-400">13:58:12</span>
               </div>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Combine multiple metrics for stronger trading signals
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
 
-      {/* Market Trends */}
-      <Card>
-        <CardHeader>
-          <CardTitle>📈 Market Trends</CardTitle>
-          <CardDescription>
-            Current market patterns and emerging trends
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="trends" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="trends">Trending Patterns</TabsTrigger>
-              <TabsTrigger value="sectors">Sector Analysis</TabsTrigger>
-              <TabsTrigger value="timing">Timing Insights</TabsTrigger>
-            </TabsList>
+        </div>
 
-            <TabsContent value="trends" className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 border rounded-lg">
-                  <h4 className="font-semibold mb-2">🚀 Momentum Coins</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Coins with rapidly increasing social activity and volume
-                  </p>
-                  <div className="mt-2">
-                    <Badge variant="default">High Growth</Badge>
-                    <Badge variant="secondary" className="ml-2">Viral Potential</Badge>
+        {/* Market Trends Panel */}
+        <div className="bg-[#111118] border border-white/10 rounded-xl p-6">
+          <h3 className="font-bold text-lg mb-6 flex items-center gap-2 text-white">
+            <LineChart className="text-[#00D4FF] w-6 h-6" />
+            Market Opportunity Scanner
+          </h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            {/* Momentum Coins */}
+            <div className="space-y-4">
+              <p className="text-[11px] uppercase font-bold text-slate-500 tracking-widest">Momentum Coins</p>
+              <div className="grid grid-cols-1 gap-3">
+                
+                <div className="flex items-center justify-between p-4 bg-white/[0.03] border border-white/10 rounded-xl hover:border-[#00D4FF]/50 transition-colors">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center border border-white/10">
+                      <Diamond className="text-slate-400 w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-white">Arbitrum (ARB)</p>
+                      <span className="inline-block mt-1 px-2 py-0.5 bg-emerald-500/10 text-emerald-400 text-[10px] font-bold rounded">High Growth</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-emerald-400 font-bold">+14.2%</p>
+                    <p className="text-[10px] text-slate-500">24h Vol: $450M</p>
                   </div>
                 </div>
-                <div className="p-4 border rounded-lg">
-                  <h4 className="font-semibold mb-2">💎 Hidden Gems</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Coins with high correlation but low market attention
-                  </p>
-                  <div className="mt-2">
-                    <Badge variant="outline">Undervalued</Badge>
-                    <Badge variant="secondary" className="ml-2">Discovery Phase</Badge>
+                
+                <div className="flex items-center justify-between p-4 bg-white/[0.03] border border-white/10 rounded-xl hover:border-[#00D4FF]/50 transition-colors">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center border border-white/10">
+                      <Coins className="text-slate-400 w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-white">Injective (INJ)</p>
+                      <span className="inline-block mt-1 px-2 py-0.5 bg-emerald-500/10 text-emerald-400 text-[10px] font-bold rounded">Breakout</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-emerald-400 font-bold">+9.8%</p>
+                    <p className="text-[10px] text-slate-500">24h Vol: $120M</p>
                   </div>
                 </div>
-              </div>
-            </TabsContent>
 
-            <TabsContent value="sectors" className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-4 border rounded-lg text-center">
-                  <h4 className="font-semibold mb-2">🐕 Memecoins</h4>
-                  <p className="text-sm text-muted-foreground">Highest social engagement</p>
-                  <Badge variant="default" className="mt-2">Trending</Badge>
-                </div>
-                <div className="p-4 border rounded-lg text-center">
-                  <h4 className="font-semibold mb-2">🎮 Gaming</h4>
-                  <p className="text-sm text-muted-foreground">Growing community interest</p>
-                  <Badge variant="secondary" className="mt-2">Emerging</Badge>
-                </div>
-                <div className="p-4 border rounded-lg text-center">
-                  <h4 className="font-semibold mb-2">🔗 DeFi</h4>
-                  <p className="text-sm text-muted-foreground">High volume, low social</p>
-                  <Badge variant="outline" className="mt-2">Established</Badge>
-                </div>
               </div>
-            </TabsContent>
+            </div>
 
-            <TabsContent value="timing" className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 border rounded-lg">
-                  <h4 className="font-semibold mb-2">⏰ Best Entry Points</h4>
-                  <ul className="text-sm text-muted-foreground space-y-1">
-                    <li>• High correlation + volume spike</li>
-                    <li>• Social momentum building</li>
-                    <li>• Low market cap + high potential</li>
-                  </ul>
+            {/* Hidden Gems */}
+            <div className="space-y-4">
+              <p className="text-[11px] uppercase font-bold text-slate-500 tracking-widest">Hidden Gems</p>
+              <div className="grid grid-cols-1 gap-3">
+                
+                <div className="flex items-center justify-between p-4 bg-white/[0.03] border border-white/10 rounded-xl hover:border-[#00D4FF]/50 transition-colors">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center border border-white/10">
+                      <Cpu className="text-slate-400 w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-white">Celestia (TIA)</p>
+                      <span className="inline-block mt-1 px-2 py-0.5 bg-[#00D4FF]/10 text-[#00D4FF] text-[10px] font-bold rounded">Unrealized Potential</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-white font-bold">$12.45</p>
+                    <p className="text-[10px] text-slate-500">Cap: $1.2B</p>
+                  </div>
                 </div>
-                <div className="p-4 border rounded-lg">
-                  <h4 className="font-semibold mb-2">⚠️ Risk Factors</h4>
-                  <ul className="text-sm text-muted-foreground space-y-1">
-                    <li>• Low correlation scores</li>
-                    <li>• Declining social activity</li>
-                    <li>• Volume without social support</li>
-                  </ul>
+                
+                <div className="flex items-center justify-between p-4 bg-white/[0.03] border border-white/10 rounded-xl hover:border-[#00D4FF]/50 transition-colors">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center border border-white/10">
+                      <Gem className="text-slate-400 w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-white">Render (RNDR)</p>
+                      <span className="inline-block mt-1 px-2 py-0.5 bg-[#00D4FF]/10 text-[#00D4FF] text-[10px] font-bold rounded">Undervalued AI</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-white font-bold">$11.20</p>
+                    <p className="text-[10px] text-slate-500">Cap: $4.1B</p>
+                  </div>
                 </div>
+
               </div>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+            </div>
+
+          </div>
+        </div>
+
+      </main>
+
+      {/* Footer Stats Overlay */}
+      <footer className="border-t border-white/10 bg-[#111118]/80 backdrop-blur-md fixed bottom-0 left-0 right-0 px-6 py-2 z-50">
+        <div className="max-w-[1440px] mx-auto flex items-center justify-between text-[10px] font-bold tracking-widest uppercase text-slate-500">
+          <div className="hidden md:flex flex-row items-center gap-6">
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              Terminal Connected
+            </div>
+            <div>BTC: <span className="text-white">$64,321.40</span> <span className="text-emerald-400 ml-1">+2.4%</span></div>
+            <div>ETH: <span className="text-white">$3,450.12</span> <span className="text-rose-400 ml-1">-1.1%</span></div>
+            <div>SOL: <span className="text-white">$145.82</span> <span className="text-emerald-400 ml-1">+8.1%</span></div>
+          </div>
+          <div className="flex items-center gap-4 ml-auto">
+            <span>Latency: 24ms</span>
+            <span>API Status: Stable</span>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
+
+// Icons needed internally avoiding full import lists across imports above
+function TrendingUpIcon(props: any) {
+  return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>;
+}
+function EyeIcon(props: any) {
+  return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>;
+}
+function LandmarkIcon(props: any) {
+  return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><line x1="3" x2="21" y1="22" y2="22"/><line x1="6" x2="6" y1="18" y2="11"/><line x1="10" x2="10" y1="18" y2="11"/><line x1="14" x2="14" y1="18" y2="11"/><line x1="18" x2="18" y1="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg>;
+}
+

@@ -9,6 +9,8 @@ import { useEnvironmentStore } from "@/components/context";
 import { IPFS_GATEWAY_URL } from "@/lib/constants";
 import { SOL_MINT } from "@/lib/trading-constants";
 import { useTheme } from "next-themes";
+import Link from "next/link";
+import { ArrowLeft, Loader2 } from "lucide-react";
 
 const BIRDEYE_WIDGET_BASE = "https://birdeye.so/tv-widget";
 
@@ -23,20 +25,16 @@ export default function Ticker({ params }: { params: { id: string } }) {
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
-    // Mark that we're on the client side
     setIsClient(true);
   }, []);
 
-  // First useEffect for fetching initial coin data
   useEffect(() => {
-    // Only fetch data after we're on the client side
     if (!isClient) return;
     
     const fetchCoinDataAndPrices = async () => {
-      if (isUpdatingPrice) return; // Prevent concurrent updates
+      if (isUpdatingPrice) return;
 
       try {
-        // Use cached data if available
         const cachedToken = tokens[params.id];
         if (cachedToken) {
           setCoinData(cachedToken);
@@ -67,10 +65,8 @@ export default function Ticker({ params }: { params: { id: string } }) {
           setToken(parseInt(params.id), coinData);
         }
 
-        // Set flag before updating price
         setIsUpdatingPrice(true);
 
-        // Initiate long-running update-price API call
         const updateResponse = await fetch(`/api/supabase/update-price`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -78,7 +74,6 @@ export default function Ticker({ params }: { params: { id: string } }) {
         });
         const updateData = await updateResponse.json();
 
-        // Update prices after `update-price` completes
         if (updateData.success) {
           setCoinData((prev) =>
             prev
@@ -108,11 +103,9 @@ export default function Ticker({ params }: { params: { id: string } }) {
     };
 
     fetchCoinDataAndPrices();
-  }, [isClient, params.id, coinData, setToken, tokens, isUpdatingPrice]); // Add missing dependencies
+  }, [isClient, params.id, coinData, setToken, tokens, isUpdatingPrice]);
 
-  // Second useEffect for fetching image
   useEffect(() => {
-    // Only fetch image after we're on the client side
     if (!isClient) return;
     
     const fetchImage = async () => {
@@ -139,51 +132,70 @@ export default function Ticker({ params }: { params: { id: string } }) {
     };
 
     fetchImage();
-  }, [isClient, coinData?.uri, imageFetched]); // Add isClient to dependencies
+  }, [isClient, coinData?.uri, imageFetched]);
 
   if (coinData === null) {
     return (
-      <div className="w-full xl:w-[1250px] mx-auto mt-12 px-4">
-        <div className="flex items-center justify-center">
-          <div className="w-12 h-12 border-4 border-gray-800 border-t-yellow-500 rounded-full animate-spin"></div>
+      <div className="min-h-screen bg-[#0A0A0F] flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-10 h-10 text-[#00D4FF] animate-spin mx-auto mb-4" />
+          <p className="text-[#6B7280]">Loading token data...</p>
         </div>
       </div>
     );
   }
 
-  const theme = mounted && resolvedTheme === "light" ? "light" : "dark";
   const showBirdeye =
     coinData?.address &&
     coinData.address !== SOL_MINT &&
     coinData.address.length >= 32;
   const birdeyeSrc = showBirdeye
-    ? `${BIRDEYE_WIDGET_BASE}/${coinData.address}/${SOL_MINT}?chain=solana&theme=${theme}&chartType=Candle&chartInterval=1D&chartLeftToolbar=show&viewMode=base%2Fquote`
+    ? `${BIRDEYE_WIDGET_BASE}/${coinData.address}/${SOL_MINT}?chain=solana&theme=dark&chartType=Candle&chartInterval=1D&chartLeftToolbar=show&viewMode=base%2Fquote`
     : "";
 
   return (
-    <div className="w-full xl:w-[1250px] mx-auto mt-12 px-4">
-      {showBirdeye && (
-        <div className="mb-8 rounded-xl border bg-card overflow-hidden">
-          <div className="px-4 py-2 border-b bg-muted/50 text-sm font-medium text-muted-foreground">
-            {coinData.symbol} / SOL — Chart by Birdeye
-          </div>
-          <iframe
-            title={`${coinData.symbol} price chart`}
-            src={birdeyeSrc}
-            className="w-full h-[480px] border-0"
-            allowFullScreen
-          />
+    <div className="min-h-screen bg-[#0A0A0F] text-white">
+      <div className="w-full xl:max-w-[1250px] mx-auto pt-8 pb-16 px-4 space-y-8">
+        <div className="flex items-center gap-4 text-sm">
+          <Link href="/" className="text-[#6B7280] hover:text-white flex items-center gap-1.5 transition-colors">
+            <ArrowLeft className="w-4 h-4" />
+            Back to Home
+          </Link>
+          <span className="text-[#6B7280]">/</span>
+          <span className="text-[#00D4FF] font-medium tracking-tight">
+            ${coinData.symbol.toUpperCase()}
+          </span>
         </div>
-      )}
-      <TimeSeriesChart tokenData={coinData} />
-      <Tweets
-        symbol={coinData.symbol}
-        tweets={coinData.tweets}
-        growth={
-          coinData.tweets ? (coinData.tweets.length > 0 ? "1.5" : "0") : "0"
-        }
-      />
-      <Tiktoks symbol={coinData.symbol} tiktoks={coinData.tiktoks} />
+
+        {showBirdeye && (
+          <div className="rounded-2xl border border-white/10 bg-[#111118] overflow-hidden shadow-2xl">
+            <div className="px-5 py-3 border-b border-white/5 bg-white/[0.02] flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-[14px] font-bold text-white tracking-tight">${coinData.symbol} / SOL</span>
+              </div>
+              <span className="text-[12px] text-[#6B7280] font-medium tracking-wide uppercase">Chart by Birdeye</span>
+            </div>
+            <iframe
+              title={`${coinData.symbol} price chart`}
+              src={birdeyeSrc}
+              className="w-full h-[500px] border-0"
+              allowFullScreen
+            />
+          </div>
+        )}
+        
+        <TimeSeriesChart tokenData={coinData} />
+        
+        <Tweets
+          symbol={coinData.symbol}
+          tweets={coinData.tweets}
+          growth={
+            coinData.tweets ? (coinData.tweets.length > 0 ? "1.5" : "0") : "0"
+          }
+        />
+        
+        <Tiktoks symbol={coinData.symbol} tiktoks={coinData.tiktoks} />
+      </div>
     </div>
   );
 }

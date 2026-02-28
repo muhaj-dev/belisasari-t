@@ -1,7 +1,7 @@
 "use client";
 
 import { useAppAuth } from "@/components/provider/PrivyAppAuthContext";
-import { Check, ChevronDown, LogOut, User } from "lucide-react";
+import { Check, ChevronDown, LogOut, User, Menu, X } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useEnvironmentStore } from "@/components/context";
@@ -29,6 +29,7 @@ export default function Layout({
   const [profileUsername, setProfileUsername] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const authDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -78,11 +79,21 @@ export default function Layout({
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const navLinks = [
+    { label: "🚀 Trending Coins", href: "/trending-coins" },
+    { label: "Feed", href: "/feed" },
+    { label: "Trading (Jupiter)", href: "/trading" },
+    { label: "Portfolio", href: "/portfolio" },
+    { label: "NFTs", href: "/nfts" },
+    { label: "Discover", href: "/discover" },
+  ];
+
   return (
-    <div className="w-full py-4 sm:py-6">
-      <div className="flex flex-col sm:flex-row justify-between items-center px-4 sm:px-6 space-y-4 sm:space-y-0">
+    <div className="w-full py-4 sm:py-6 relative">
+      <div className="flex justify-between items-center px-4 sm:px-6">
+        {/* Logo Section */}
         <div
-          className="flex items-center space-x-3 sm:space-x-4 select-none cursor-pointer"
+          className="flex items-center space-x-3 sm:space-x-4 select-none cursor-pointer shrink-0"
           onClick={() => router.push("/")}
         >
           <Image
@@ -92,122 +103,119 @@ export default function Layout({
             height={40}
             className="rounded-full"
           />
-          <p className="font-bold text-lg sm:text-2xl crypto-futuristic tracking-widest text-iris-primary">
+          <p className="font-bold text-lg sm:text-2xl crypto-futuristic tracking-widest text-iris-primary hidden sm:block">
             Belisasari
           </p>
         </div>
 
-        <CommandMenu />
+        {/* Search Bar - Center */}
+        <div className="hidden lg:flex relative mx-4 justify-center flex-1 max-w-[400px]">
+          <CommandMenu />
+        </div>
 
-        <div className="hidden md:flex space-y-4 sm:space-y-0 sm:space-x-4">
-
-          <Button
-            variant="ghost"
-            className="hover:bg-transparent hover:border-[1px] hover:border-white transform transition hover:scale-105"
-            onClick={() => router.push("/trending-coins")}
-          >
-            <p className="sen text-sm sm:text-md font-bold">🚀 Trending Coins</p>
-          </Button>
-
-          <Button
-            variant="ghost"
-            className="hover:bg-transparent hover:border-[1px] hover:border-white transform transition hover:scale-105"
-            onClick={() => router.push("/feed")}
-          >
-            <p className="sen text-sm sm:text-md font-bold">Feed</p>
-          </Button>
+        {/* Desktop Navbar */}
+        <div className="hidden xl:flex items-center space-x-1 shrink-0">
+          {navLinks.map((link) => (
+            <Button
+              key={link.href}
+              variant="ghost"
+              className="text-white/70 hover:text-[#00D4FF] hover:bg-[#00D4FF]/10 transition-all font-semibold text-sm h-9 px-3"
+              onClick={() => router.push(link.href)}
+            >
+              <span className="sen">{link.label}</span>
+            </Button>
+          ))}
 
           <Button
             variant="ghost"
-            className="hover:bg-transparent hover:border-[1px] hover:border-white transform transition hover:scale-105"
-            onClick={() => router.push("/trading")}
-          >
-            <p className="sen text-sm sm:text-md font-bold">Trading (Jupiter)</p>
-          </Button>
-
-          <Button
-            variant="ghost"
-            className="hover:bg-transparent hover:border-[1px] hover:border-white transform transition hover:scale-105"
-            onClick={() => router.push("/portfolio")}
-          >
-            <p className="sen text-sm sm:text-md font-bold">Portfolio</p>
-          </Button>
-
-          <Button
-            variant="ghost"
-            className="hover:bg-transparent hover:border-[1px] hover:border-white transform transition hover:scale-105"
-            onClick={() => router.push("/nfts")}
-          >
-            <p className="sen text-sm sm:text-md font-bold">NFTs</p>
-          </Button>
-
-          <Button
-            variant="ghost"
-            className="hover:bg-transparent hover:border-[1px] hover:border-white transform transition hover:scale-105"
-            onClick={() => router.push("/discover")}
-          >
-            <p className="sen text-sm sm:text-md font-bold">Discover</p>
-          </Button>
-
-          <Button
-            variant="ghost"
-            className="hidden lg:flex hover:bg-transparent hover:border-[1px] hover:border-white transform transition hover:scale-105"
+            className="text-white/70 hover:text-[#00D4FF] hover:bg-[#00D4FF]/10 transition-all font-semibold text-sm h-9 px-3 group"
             onClick={() => window.open("https://x.com/wojat118721", "_blank")}
           >
-            <p className="sen text-sm sm:text-md font-bold">Follow on</p>
-            <Image src="/x.png" alt="logo" width={20} height={20} className="rounded-full" />
+            <span className="sen mr-2 hidden 2xl:inline">Follow on</span>
+            <Image src="/x.png" alt="logo" width={16} height={16} className="rounded-full opacity-70 group-hover:opacity-100 transition-opacity" />
           </Button>
 
-          {ready && authenticated ? (
-            displayUsername ? (
-              <div className="relative" ref={authDropdownRef}>
-                <CreateProfileContainer onProfileCreated={setProfileUsername} />
-                <Button
-                  className="bg-iris-primary hover:bg-iris-primary/80 transform transition hover:scale-105"
-                  onClick={() => setAuthOpen(!authOpen)}
-                >
-                  <p className="sen text-sm sm:text-md font-bold truncate max-w-[120px]">{displayUsername}</p>
-                  <ChevronDown className="h-4 w-4 ml-1" />
-                </Button>
-                {authOpen && (
-                  <div className="absolute right-0 mt-2 w-48 rounded-md border bg-background shadow-lg z-50 py-1">
-                    <button
-                      type="button"
-                      className="flex w-full items-center px-4 py-2 text-sm hover:bg-muted"
-                      onClick={() => { router.push("/profile"); setAuthOpen(false); }}
-                    >
-                      <User className="h-4 w-4 mr-2" /> My profile
-                    </button>
-                    <button
-                      type="button"
-                      className="flex w-full items-center px-4 py-2 text-sm hover:bg-muted"
-                      onClick={() => { displayWallet && handleCopy(displayWallet); setAuthOpen(false); }}
-                    >
-                      {copied ? <Check className="h-4 w-4 mr-2" /> : null}
-                      {displayWallet ? shortenAddress(displayWallet) : "Copy address"}
-                    </button>
-                    <button
-                      type="button"
-                      className="flex w-full items-center px-4 py-2 text-sm text-destructive hover:bg-muted"
-                      onClick={() => { logout(); setAddress(""); setAuthOpen(false); }}
-                    >
-                      <LogOut className="h-4 w-4 mr-2" /> Log out
-                    </button>
-                  </div>
-                )}
-              </div>
+          {/* User Auth Section Desktop */}
+          <div className="ml-2 flex items-center">
+            {ready && authenticated ? (
+              displayUsername ? (
+                <div className="relative" ref={authDropdownRef}>
+                  <CreateProfileContainer onProfileCreated={setProfileUsername} />
+                  <Button
+                    className="bg-iris-primary hover:bg-iris-primary/80 text-background font-bold h-9 px-4 rounded-lg transform transition hover:scale-[1.02]"
+                    onClick={() => setAuthOpen(!authOpen)}
+                  >
+                    <span className="truncate max-w-[120px] sen">{displayUsername}</span>
+                    <ChevronDown className="h-4 w-4 ml-1" />
+                  </Button>
+                  {authOpen && (
+                    <div className="absolute right-0 mt-2 w-48 rounded-xl border border-white/10 bg-[#111118] shadow-xl z-50 py-1">
+                      <button
+                        type="button"
+                        className="flex w-full items-center px-4 py-2 text-sm text-white/80 hover:bg-white/5 transition-colors"
+                        onClick={() => { router.push("/profile"); setAuthOpen(false); }}
+                      >
+                        <User className="h-4 w-4 mr-2 text-[#00D4FF]" /> My profile
+                      </button>
+                      <button
+                        type="button"
+                        className="flex w-full items-center px-4 py-2 text-sm text-white/80 hover:bg-white/5 transition-colors"
+                        onClick={() => { displayWallet && handleCopy(displayWallet); setAuthOpen(false); }}
+                      >
+                        {copied ? <Check className="h-4 w-4 mr-2 text-green-400" /> : <LogOut className="h-4 w-4 mr-2 opacity-0" />}
+                        {displayWallet ? shortenAddress(displayWallet) : "Copy address"}
+                      </button>
+                      <div className="h-[1px] bg-white/10 my-1 px-2" />
+                      <button
+                        type="button"
+                        className="flex w-full items-center px-4 py-2 text-sm text-[#FF3B3B] hover:bg-white/5 transition-colors"
+                        onClick={() => { logout(); setAddress(""); setAuthOpen(false); }}
+                      >
+                        <LogOut className="h-4 w-4 mr-2" /> Log out
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <>
+                  <CreateProfileContainer onProfileCreated={setProfileUsername} />
+                  <Button className="bg-iris-primary/50 text-background font-bold h-9 px-4 rounded-lg cursor-not-allowed" disabled>
+                    <span className="sen">Create profile…</span>
+                  </Button>
+                </>
+              )
             ) : (
-              <>
-                <CreateProfileContainer onProfileCreated={setProfileUsername} />
-                <Button className="bg-iris-primary/80 cursor-default" disabled>
-                  <p className="sen text-sm sm:text-md font-bold">Create profile…</p>
-                </Button>
-              </>
-            )
-          ) : (
+              <Button
+                className="bg-iris-primary hover:bg-iris-primary/80 text-background font-bold h-9 px-4 rounded-lg group transform transition hover:scale-[1.02]"
+                disabled={!ready || (ready && authenticated)}
+                onClick={() => {
+                  if (ready && !authenticated) {
+                    login({
+                      loginMethods: ["wallet"],
+                      walletChainType: "solana-only",
+                      disableSignup: false,
+                    });
+                  }
+                }}
+              >
+                <div className="w-5 h-5 mr-2 rounded-full overflow-hidden shrink-0 group-hover:scale-110 transition-transform bg-black/10 flex items-center justify-center">
+                  <Image src="/solana.png" width={20} height={20} alt="wallet" />
+                </div>
+                <span className="sen font-bold">
+                  {!ready ? "Loading…" : authenticated && displayWallet ? shortenAddress(displayWallet) : "Log in"}
+                </span>
+              </Button>
+            )}
+          </div>
+        </div>
+
+        {/* Mobile Navbar Hamburger */}
+        <div className="flex xl:hidden items-center space-x-2 shrink-0">
+          {!authenticated ? (
             <Button
-              className="bg-iris-primary hover:bg-iris-primary/80 transform transition hover:scale-105"
-              disabled={!ready || (ready && authenticated)}
+              size="sm"
+              className="bg-iris-primary hover:bg-iris-primary/80 text-background font-bold h-9 px-4"
+              disabled={!ready}
               onClick={() => {
                 if (ready && !authenticated) {
                   login({
@@ -218,95 +226,80 @@ export default function Layout({
                 }
               }}
             >
-              <Image src="/solana.png" width={25} height={25} className="rounded-full" alt="wallet" />
-              <p className="sen text-sm sm:text-md font-bold">
-                {!ready ? "Loading…" : authenticated && displayWallet ? shortenAddress(displayWallet) : "Log in"}
-              </p>
+              Log in
             </Button>
+          ) : (
+            displayUsername ? (
+              <Button
+                size="sm"
+                className="bg-[#111118] border border-white/10 hover:bg-white/5 text-white font-bold h-9 px-3"
+                onClick={() => router.push("/profile")}
+              >
+                <User className="h-4 w-4 text-[#00D4FF]" />
+              </Button>
+            ) : null
           )}
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-white hover:bg-white/10"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </Button>
         </div>
       </div>
-      <div className="flex md:hidden mt-4 justify-center md:justify-start ">
 
-        <Button
-          variant="ghost"
-          className="hover:bg-transparent hover:border-[1px] hover:border-white transform transition hover:scale-105"
-          onClick={() => {
-            router.push("/dashboard");
-          }}
-        >
-          <p className="sen text-sm sm:text-md font-bold">
-            Live Dashboard
-          </p>
-          <div className="w-2 h-2 bg-iris-primary rounded-full animate-pulse ml-2"></div>
-        </Button>
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="xl:hidden absolute top-full left-0 right-0 bg-[#0A0A0F]/95 backdrop-blur-xl border-b border-white/10 z-50 p-4 shadow-2xl flex flex-col max-h-[calc(100vh-80px)] overflow-y-auto">
+          <div className="mb-4">
+            <CommandMenu />
+          </div>
+          <div className="flex flex-col space-y-1">
+            {navLinks.map((link) => (
+              <Button
+                key={link.href}
+                variant="ghost"
+                className="justify-start text-white/80 hover:text-white hover:bg-white/10 text-lg h-12 px-4 rounded-xl font-medium"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  router.push(link.href);
+                }}
+              >
+                {link.label}
+              </Button>
+            ))}
+            
+            <div className="h-[1px] bg-white/10 my-2 mx-4" />
+            
+            <Button
+              variant="ghost"
+              className="justify-start text-white/80 hover:text-white hover:bg-white/10 text-lg h-12 px-4 rounded-xl font-medium"
+              onClick={() => window.open("https://x.com/wojat118721", "_blank")}
+            >
+              Follow on X <Image src="/x.png" alt="logo" width={20} height={20} className="rounded-full ml-3 opacity-80" />
+            </Button>
+            
+            {authenticated && (
+              <Button
+                variant="ghost"
+                className="justify-start mt-2 bg-[#FF3B3B]/10 text-[#FF3B3B] hover:bg-[#FF3B3B]/20 hover:text-[#FF3B3B] text-lg h-12 px-4 rounded-xl font-medium"
+                onClick={() => {
+                  logout();
+                  setAddress("");
+                  setMobileMenuOpen(false);
+                }}
+              >
+                <LogOut className="h-5 w-5 mr-3" /> Log out
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
 
-        <Button
-          variant="ghost"
-          className="hover:bg-transparent hover:border-[1px] hover:border-white transform transition hover:scale-105"
-          onClick={() => router.push("/trending-coins")}
-        >
-          <p className="sen text-sm sm:text-md font-bold">🚀 Trending Coins</p>
-        </Button>
-
-        <Button
-          variant="ghost"
-          className="hover:bg-transparent hover:border-[1px] hover:border-white transform transition hover:scale-105"
-          onClick={() => router.push("/portfolio")}
-        >
-          <p className="sen text-sm sm:text-md font-bold">Portfolio</p>
-        </Button>
-
-        <Button
-          variant="ghost"
-          className="hover:bg-transparent hover:border-[1px] hover:border-white transform transition hover:scale-105"
-          onClick={() => router.push("/nfts")}
-        >
-          <p className="sen text-sm sm:text-md font-bold">NFTs</p>
-        </Button>
-
-        <Button
-          variant="ghost"
-          className="hidden lg:flex hover:bg-transparent hover:border-[1px] hover:border-white transform transition hover:scale-105"
-          onClick={() => window.open("https://x.com/wojat118721", "_blank")}
-        >
-          <p className="sen text-sm sm:text-md font-bold">Follow on</p>
-          <Image
-            src="/x.png"
-            alt="logo"
-            width={20}
-            height={20}
-            className="rounded-full"
-          />
-        </Button>
-
-        <Button
-          className="bg-iris-primary hover:bg-iris-primary/80 transform transition hover:scale-105"
-          disabled={!ready || (ready && authenticated)}
-          onClick={() => {
-            if (ready && !authenticated) {
-              login({
-                loginMethods: ["wallet"],
-                walletChainType: "solana-only",
-                disableSignup: false,
-              });
-            }
-          }}
-        >
-          <Image
-            src={"/solana.png"}
-            width={25}
-            height={25}
-            className="rounded-full"
-            alt="wallet"
-          />
-          <p className="sen text-sm sm:text-md font-bold">
-            {!ready ? "Loading…" : authenticated && displayWallet ? shortenAddress(displayWallet) : "Log in"}
-          </p>
-        </Button>
-      </div>
-
-      <div className="w-full max-w-full overflow-x-hidden">{children}</div>
+      <div className="w-full max-w-full overflow-x-hidden pt-4 xl:pt-8">{children}</div>
     </div>
   );
 }

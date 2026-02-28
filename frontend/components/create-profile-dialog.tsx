@@ -56,16 +56,16 @@ export function CreateProfileDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md bg-[#111118] border-white/10 text-white shadow-2xl">
         <DialogHeader>
-          <DialogTitle>Create profile</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-xl font-bold">Create profile</DialogTitle>
+          <DialogDescription className="text-[#6B7280]">
             Choose a username for your Belisasari profile. You can add a short bio.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="username">Username</Label>
+            <Label htmlFor="username" className="text-white/90">Username</Label>
             <Input
               id="username"
               value={username}
@@ -74,33 +74,40 @@ export function CreateProfileDialog({
               minLength={2}
               maxLength={30}
               required
+              className="bg-white/5 border-white/10 text-white focus-visible:ring-1 focus-visible:ring-[#00D4FF] focus-visible:border-[#00D4FF] placeholder:text-[#6B7280]"
             />
-            <p className="text-xs text-muted-foreground">
+            <p className="text-[12px] text-[#6B7280]">
               Letters, numbers, and underscore only. Min 2 characters.
             </p>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="bio">Bio (optional)</Label>
+            <Label htmlFor="bio" className="text-white/90">Bio (optional)</Label>
             <Input
               id="bio"
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               placeholder="Short bio"
               maxLength={160}
+              className="bg-white/5 border-white/10 text-white focus-visible:ring-1 focus-visible:ring-[#00D4FF] focus-visible:border-[#00D4FF] placeholder:text-[#6B7280]"
             />
           </div>
           {error && (
-            <p className="text-sm text-destructive">{error}</p>
+            <p className="text-sm text-red-500">{error}</p>
           )}
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-3 pt-2 border-t border-white/5">
             <Button
               type="button"
-              variant="outline"
+              variant="ghost"
               onClick={() => onOpenChange(false)}
+              className="text-[#6B7280] hover:text-white hover:bg-white/5"
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={loading || username.replace(/[^a-z0-9_]/g, '').length < 2}>
+            <Button 
+              type="submit" 
+              disabled={loading || username.replace(/[^a-z0-9_]/g, '').length < 2}
+              className="bg-[#00D4FF] text-[#111118] hover:bg-[#00D4FF]/80 hover:text-[#111118]"
+            >
               {loading ? 'Creating...' : 'Create profile'}
             </Button>
           </div>
