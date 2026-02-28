@@ -80,7 +80,7 @@ export default function Layout({
   };
 
   const navLinks = [
-    { label: "🚀 Trending Coins", href: "/trending-coins" },
+    { label: "Trending Coins", href: "/trending-coins" },
     { label: "Feed", href: "/feed" },
     { label: "Dashboard", href: "/dashboard" },
     { label: "Trading (Jupiter)", href: "/trading" },
@@ -90,8 +90,9 @@ export default function Layout({
   ];
 
   return (
-    <div className="w-full py-4 sm:py-6 relative">
-      <div className="flex justify-between items-center px-4 sm:px-6">
+    <div className="w-full relative min-h-screen flex flex-col">
+      {/* Sticky Top Navbar overlaying content */}
+      <nav className="w-full sticky top-0 z-[100] bg-card-bg border-b border-border-light shadow-subtle px-4 sm:px-6 py-3 flex items-center justify-between">
         {/* Logo Section */}
         <div
           className="flex items-center space-x-3 sm:space-x-4 select-none cursor-pointer shrink-0"
@@ -210,7 +211,7 @@ export default function Layout({
           </div>
         </div>
 
-        {/* Mobile Navbar Hamburger */}
+        {/* Mobile Navbar Hamburger & Auth Container */}
         <div className="flex xl:hidden items-center space-x-2 shrink-0">
           {!authenticated ? (
             <Button
@@ -250,52 +251,74 @@ export default function Layout({
             {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </Button>
         </div>
-      </div>
+      </nav>
 
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
-        <div className="xl:hidden absolute top-full left-0 right-0 bg-background-main/95 backdrop-blur-xl border-b border-border-light z-50 p-4 shadow-2xl flex flex-col max-h-[calc(100vh-80px)] overflow-y-auto">
-          <div className="mb-4">
-            <CommandMenu />
-          </div>
-          <div className="flex flex-col space-y-1">
-            {navLinks.map((link) => (
-              <Button
-                key={link.href}
-                variant="ghost"
-                className="justify-start text-text-main/80 hover:text-text-main hover:bg-foreground/10 text-lg h-12 px-4 rounded-xl font-medium"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  router.push(link.href);
-                }}
-              >
-                {link.label}
-              </Button>
-            ))}
-            
-            <div className="h-[1px] bg-border my-2 mx-4" />
-            
-            <Button
-              variant="ghost"
-              className="justify-start text-white/80 hover:text-white hover:bg-white/10 text-lg h-12 px-4 rounded-xl font-medium"
-              onClick={() => window.open("https://x.com/wojat118721", "_blank")}
-            >
-              Follow on X <Image src="/x.png" alt="logo" width={20} height={20} className="rounded-full ml-3 opacity-80" />
-            </Button>
-            
-            {authenticated && (
+        <div className="xl:hidden fixed inset-0 z-[200] flex justify-end">
+          {/* Dark Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          
+          {/* Slide-in Menu Panel */}
+          <div className="relative w-[85%] max-w-sm h-full bg-background-main shadow-2xl flex flex-col pt-6 pb-6 px-4 overflow-y-auto animate-in slide-in-from-right">
+            <div className="flex justify-between items-center mb-6">
+              <span className="font-bold text-lg crypto-futuristic text-text-main">Menu</span>
               <Button
                 variant="ghost"
-                className="justify-start mt-2 bg-[#FF3B3B]/10 text-[#FF3B3B] hover:bg-[#FF3B3B]/20 hover:text-[#FF3B3B] text-lg h-12 px-4 rounded-xl font-medium"
-                onClick={() => {
-                  logout();
-                  setAddress("");
-                  setMobileMenuOpen(false);
-                }}
+                size="icon"
+                className="text-text-main hover:bg-foreground/10"
+                onClick={() => setMobileMenuOpen(false)}
               >
-                <LogOut className="h-5 w-5 mr-3" /> Log out
+                <X className="h-6 w-6" />
               </Button>
-            )}
+            </div>
+
+            <div className="mb-6">
+              <CommandMenu />
+            </div>
+
+            <div className="flex flex-col space-y-1 flex-1">
+              {navLinks.map((link) => (
+                <Button
+                  key={link.href}
+                  variant="ghost"
+                  className="justify-start text-text-main/80 hover:text-text-main hover:bg-foreground/10 text-lg h-12 px-4 rounded-xl font-medium"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    router.push(link.href);
+                  }}
+                >
+                  {link.label}
+                </Button>
+              ))}
+              
+              <div className="h-[1px] bg-border my-4 mx-2" />
+              
+              <Button
+                variant="ghost"
+                className="justify-start text-text-secondary hover:text-text-main hover:bg-background-main/50 text-lg h-12 px-4 pt-4 rounded-xl font-medium"
+                onClick={() => window.open("https://x.com/wojat118721", "_blank")}
+              >
+                Follow on X <Image src="/x.png" alt="logo" width={20} height={20} className="rounded-full ml-3 opacity-80" />
+              </Button>
+              
+              {authenticated && (
+                <Button
+                  variant="ghost"
+                  className="justify-start mt-auto bg-[#FF3B3B]/10 text-[#FF3B3B] hover:bg-[#FF3B3B]/20 hover:text-[#FF3B3B] text-lg h-12 px-4 rounded-xl font-medium"
+                  onClick={() => {
+                    logout();
+                    setAddress("");
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  <LogOut className="h-5 w-5 mr-3" /> Log out
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       )}
